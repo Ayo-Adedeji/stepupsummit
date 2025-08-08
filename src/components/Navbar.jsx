@@ -21,13 +21,14 @@ const Navbar = () => {
       
 
       {/* Sidebar */}
-      <div className= {`md:hidden  fixed top-0 left-0 h-full w-64 bg-primaryBlue text-white transform transition-transform duration-300 z-50 ${
-     isSidebarOpen ? 'translate-x-0' : '-translate-x-full '}`} >
+      <div className= {`md:hidden  fixed top-0 right-0 h-full w-64 bg-primaryBlue text-white transform transition-transform duration-300 z-50 ${
+     isSidebarOpen ? 'translate-x-0' : 'translate-x-full '}`} >
 
-         <div className="flex flex-col">
+         <div className="flex flex-col items-center text-center">
              <button onClick={toggleSidebar}>
-        <IoMdClose />
+        <IoMdClose className="text-5xl mb-3 mt-5 " />
         </button>
+        
         <ul className=" flex flex-col gap-6  ">
           <li className="hover:cursor-pointer hover:underline hover:decoration-accentYellow ">
             About
