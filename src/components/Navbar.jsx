@@ -17,8 +17,8 @@ const Navbar = () => {
 
   return (
     <nav className="bg-primaryBlue text-[#ffffff] p-3 flex justify-between items-center font-semibold text-lg shadow-lg">
-      <div>
-        <img className="w-14 " src={StepUPLogo} alt="sus-logo" />
+      <div className="">
+        <img className="w-16 " src={StepUPLogo} alt="sus-logo" />
         
       </div>
       
@@ -71,7 +71,7 @@ const Navbar = () => {
         </ul>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 ">
         <a className="hidden md:block border-2  md:flex items-center gap-1  border-accentYellow px-3 py-1 rounded-lg  hover:cursor-pointer hover:bg-accentYellowDark text-[#ffffff]">
            <MdPhoneInTalk /> Contact
           </a>

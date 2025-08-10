@@ -8,19 +8,26 @@ import Speakers from '../components/Speakers'
 import Highlights from '../components/Highlights'
 import Seats from '../components/Seats'
 import News from '../components/News'
+import HeroSection from '../components/HeroSection'
+import Head from '../components/Head'
+import Sponsors from '../components/Sponsors'
 
 const Home = () => {
   return (
     <div>
-      {/* <Navbar/> */}
-      {/* <Footer/> */}
-      {/* <AboutSection/> */}
-      {/* <Stats/> */}
-      {/* <Wsa/> */}
-      {/* <Speakers/> */}
-      {/* <Highlights/> */}
-      {/* <Seats/> */}
+       <Navbar/>
+      <Head/>
+      <HeroSection/>
+      <AboutSection/>
+      <Stats/>
+      <Wsa/>
+      <Speakers/>
+      <Highlights/>
+      <Sponsors/>
+      <Seats/>
       <News/>
+      <Footer/>
+
 
     </div>
   )
