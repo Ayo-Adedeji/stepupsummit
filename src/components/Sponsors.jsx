@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import StepUPLogo from "../assets/StepUPLogo.png";
 import StepUPLogo1 from "../assets/StepUPLogo1.png";
+import useScrollAnimation from "../components/useScrollAnimation";
 
 
 const images = [
@@ -16,10 +17,10 @@ const images = [
 
 const Sponsors = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-
+ const [textRef, textVisible] = useScrollAnimation();
   return (
     <section className="text-[#ffffff] bg-accentLightBlue flex flex-col items-center text-center py-10 px-4">
-      <div>
+      <div ref={textRef} className={textVisible ? "animate-fadeInUp" : "animate-fadeOutDown"}>
         <h1 className="mt-2 mb-5 text-2xl font-semibold">Partners & Sponsors</h1>
         <p className="text-lg mb-10 max-w-2xl">
           We thank the organizations whose support makes SUS 2025 possible.
