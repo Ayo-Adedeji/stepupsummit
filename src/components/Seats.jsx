@@ -2,7 +2,7 @@ import React from "react";
 import img4 from "../assets/img4.jpg";
 const Seats = () => {
   return (
-    <section className="mb-20 text-[#ffffff]">
+    <section className=" text-[#ffffff]">
         <div className=" items-center text-center overflow-hidden "
         style={{ backgroundImage: `url(${img4})` }}
         >

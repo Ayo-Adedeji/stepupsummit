@@ -5,6 +5,7 @@ const Highlights = () => {
     <section>
         <h1>Event Highlights</h1>
         
+        
     </section>
   )
 }

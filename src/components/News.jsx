@@ -6,7 +6,7 @@ const News = () => {
   return (
     <section>
       <div className="flex flex-col items-center md:flex-row justify-between">
-        <div className="hidden md:block p-10">
+        <div className="hidden md:block  px-6 ">
           <h1 className="text-4xl font-extrabold mb-32 text-accentLightBlue ">#SUS2025</h1>
           <p className="font-bold md:text-sm text-lg ">GO BEYOND THE WEBSITE</p>
           <p className="">Follow our development and <br/> achievements in these links.</p>
