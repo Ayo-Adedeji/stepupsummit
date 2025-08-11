@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
 import video1 from "../assets/video1.mp4";
 import video2 from "../assets/video2.mp4";
+import summit from "../assets/summit.mp4";
 
-const videos = [video1, video2, video1, video2, video1, video2];
+const videos = [summit, video2, video1, video2, video1, video2];
 
 const Highlights = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -58,7 +59,7 @@ const Highlights = () => {
 
   return (
     <section className="text-center bg-accentDarkBlue p-10">
-      <h1 className="text-2xl font-semibold mb-4">Event Highlights</h1>
+      <h1 className="text-2xl text-[#ffffff] font-semibold mb-4">Event Highlights</h1>
 
       {/* Carousel */}
       <div

@@ -3,6 +3,8 @@ import img1 from "../assets/img1.jpg";
 import img2 from "../assets/img2.jpg";
 import img3 from "../assets/img3.jpg";
 import img4 from "../assets/img4.jpg";
+import { BsCalendar2DateFill } from "react-icons/bs";
+import { FaLocationPinLock, FaMapLocation } from "react-icons/fa6";
 
 const images = [img1, img2, img3, img4];
 
@@ -42,8 +44,8 @@ const HeroSection = () => {
           Step-Up Summit 2025 brings together ideas, people, and opportunities
           that can transform your path in leadership and entrepreneurship.
         </p>
-        <p className="md:text-2xl text-lg font-bold sm:font-semibold mb-12">
-          26th of August, Ibadan, Oyo State
+        <p className="md:text-2xl lg:space-x-20 flex items-center gap-1 text-lg font-bold sm:font-semibold mb-12">
+          <span className="text-accentLightBlue"><BsCalendar2DateFill /></span>  26th of August.  <span className="text-accentLightBlue"><FaMapLocation /></span> Ibadan, Oyo State
         </p>
         <div className="flex justify-center gap-1 sm:gap-7">
           <a

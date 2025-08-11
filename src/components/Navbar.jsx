@@ -57,16 +57,16 @@ const Navbar = () => {
       <div>
         <ul className="hidden md:flex flex-row gap-6  ">
           <li className="flex items-center gap-1 hover:cursor-pointer hover:underline hover:decoration-accentYellow ">
-            <TiInfoLarge /> About
+            <TiInfoLarge className="text-accentYellow" /> About
           </li>
           <li className="flex items-center gap-1 hover:cursor-pointer hover:underline hover:decoration-accentYellow ">
-            <FaUserPlus  /> Join Us
+            <FaUserPlus className="text-accentYellow"  /> Join Us
           </li>
           <li className="flex items-center gap-1 hover:cursor-pointer hover:underline hover:decoration-accentYellow ">
-            <FaRegCalendarAlt /> Event
+            <FaRegCalendarAlt className="text-accentYellow"  /> Event
           </li>
            <li className="flex items-center gap-1 hover:cursor-pointer hover:underline hover:decoration-accentYellow ">
-           <MdStarPurple500 /> Highlights
+           <MdStarPurple500 className="text-accentYellow"  /> Highlights
           </li>
         </ul>
       </div>

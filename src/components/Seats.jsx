@@ -1,6 +1,8 @@
 import React from "react";
 import img4 from "../assets/img4.jpg";
 import useScrollAnimation from "../components/useScrollAnimation";
+
+
 const Seats = () => {
    const [textRef, textVisible] = useScrollAnimation();
   return (
