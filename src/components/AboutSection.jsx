@@ -7,7 +7,7 @@ const AboutSection = () => {
   const [textRef, textVisible] = useScrollAnimation();
 
   return (
-    <section className="lg:w-[85%] mx-auto p-10">
+    <section className="w-[85%] mt-20 mb-20 mx-auto">
       <div className="flex flex-col items-center lg:flex-row md:flex-row md:gap-20 lg:gap-60">
         {/* Logo container */}
         <div

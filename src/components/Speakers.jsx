@@ -37,7 +37,7 @@ const Speakers = () => {
       >
         Meet the Speakers
       </h1>
-      <div className="lg:w-[80%] mx-auto flex justify-between p-2 gap-5 font-semibold lg:text-2xl">
+      <div className=" lg:w-[80%] mx-auto flex justify-between p-2 gap-5 font-semibold lg:text-2xl">
         <p
           ref={textRef}
           className={

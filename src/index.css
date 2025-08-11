@@ -11,3 +11,6 @@
 .animate-slide {
   animation: slide 12s linear infinite;
 }
+html, body {
+  overflow-x: hidden;
+}
