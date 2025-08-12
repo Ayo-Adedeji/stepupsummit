@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import img1 from "../assets/img1.jpg";
-import img2 from "../assets/img2.jpg";
-import img3 from "../assets/img3.jpg";
-import img4 from "../assets/img4.jpg";
+import imag2 from "../assets/imag2.jpg";
+import imag3 from "../assets/imag3.jpg";
+import imag4 from "../assets/imag4.jpg";
+import imag5 from "../assets/imag5.jpg";
 import { BsCalendar2DateFill } from "react-icons/bs";
 import { FaMapLocation } from "react-icons/fa6";
 
-const images = [img1, img2, img3, img4];
+const images = [imag2, imag3, imag4, imag5];
 
 const HeroSection = () => {
   const [current, setCurrent] = useState(0);
