@@ -1,5 +1,5 @@
 import React from "react";
-import precious from "../assets/precious.jpg";
+import precious from "../assets/precious.jpg"
 import useScrollAnimation from "../components/useScrollAnimation";
 
 const Speakers = () => {
