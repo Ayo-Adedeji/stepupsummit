@@ -1,5 +1,5 @@
 import React from "react";
-import img4 from "../assets/img4.jpg";
+import img4 from "../assets/img4.jpg"
 import useScrollAnimation from "../components/useScrollAnimation";
 
 
