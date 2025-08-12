@@ -1,5 +1,5 @@
 import React from "react";
-import img4 from "../assets/img4.jpg"
+import img1 from "../assets/img1.jpg";
 import useScrollAnimation from "../components/useScrollAnimation";
 
 
@@ -8,7 +8,7 @@ const Seats = () => {
   return (
     <section className=" text-[#ffffff]">
         <div className=" items-center text-center overflow-hidden "
-        style={{ backgroundImage: `url(${img4})` }}
+        style={{ backgroundImage: `url(${img1})` }}
         >
         <h1 ref={textRef} className= {`mt-10 mb-8 font-semibold text-2xl ${
           textVisible ? "animate-slideInLeft" : "animate-slideOutRight"
