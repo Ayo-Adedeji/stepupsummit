@@ -1,26 +1,26 @@
 import React from "react";
-import precious from "../assets/precious.jpg"
+import presh from "../assets/presh.jpg"
 import useScrollAnimation from "../components/useScrollAnimation";
 
 const Speakers = () => {
   const items = [
     {
-      img: precious,
+      img: presh,
       title: "PRECIOUS LIJOKA",
       description: "CEO. PRECIOUS CRAFTS.",
     },
     {
-      img: precious,
+      img: presh,
       title: "PRECIOUS LIJOKA",
       description: "CEO. PRECIOUS CRAFTS.",
     },
     {
-      img: precious,
+      img: presh,
       title: "PRECIOUS LIJOKA",
       description: "CEO. PRECIOUS CRAFTS.",
     },
     {
-      img: precious,
+      img: presh,
       title: "PRECIOUS LIJOKA",
       description: "CEO. PRECIOUS CRAFTS.",
     },
