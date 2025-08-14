@@ -4,7 +4,7 @@ import video1 from "../assets/video1.mp4";
 import video2 from "../assets/video2.mp4";
 import summit from "../assets/summit.mp4";
 
-const videos = [summit, video2, video1, video2, video1, video2];
+const videos = [summit, summit, summit, summit, summit, summit];
 
 const Highlights = () => {
   const [activeIndex, setActiveIndex] = useState(0);
