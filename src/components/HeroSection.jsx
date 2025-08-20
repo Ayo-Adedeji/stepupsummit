@@ -5,7 +5,6 @@ import imag4 from "../assets/imag4.jpg";
 import imag5 from "../assets/imag5.jpg";
 import { BsCalendar2DateFill } from "react-icons/bs";
 import { FaMapLocation } from "react-icons/fa6";
-import { Link } from "react-router-dom";
 
 const images = [imag2, imag3, imag4, imag5];
 
@@ -49,19 +48,18 @@ const HeroSection = () => {
           <span className="text-accentLightBlue"><BsCalendar2DateFill /></span>  26th of August.  <span className="text-accentLightBlue"><FaMapLocation /></span> Ibadan, Oyo State
         </p>
         <div className="flex justify-center gap-1 sm:gap-7">
-     <Link
-  to="/tickets"
-  className="border border-accentYellow px-6 py-3 sm:px-8 sm:py-4 bg-accentYellow rounded-xl hover:bg-accentYellowDark transition-all duration-300 ease-in-out text-xl font-semibold"
->
-  Buy Tickets
-</Link>
-
-<Link
-  to="/tickets"
-  className="border border-accentYellow px-6 py-3 sm:px-8 sm:py-4 bg-accentYellow rounded-xl hover:bg-accentYellowDark transition-all duration-300 ease-in-out text-xl font-semibold"
->
-  Partner
-</Link>
+          <a
+            className="border border-accentYellow px-6 py-3 sm:px-8 sm:py-4 bg-accentYellow rounded-xl hover:bg-accentYellowDark transition-all duration-300 ease-in-out text-xl font-semibold"
+            href="/tickets"
+          >
+            Buy Tickets
+          </a>
+          <a
+            className="border border-accentYellow px-6 py-3 sm:px-8 sm:py-4 bg-accentYellow rounded-xl hover:bg-accentYellowDark transition-all duration-300 ease-in-out text-xl font-semibold"
+            href="/tickets"
+          >
+            Partner
+          </a>
         </div>
       </div>
 
