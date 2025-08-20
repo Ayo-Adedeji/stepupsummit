@@ -1,6 +1,7 @@
 import React from "react";
 import img7 from "../assets/img7.jpg";
 import useScrollAnimation from "../components/useScrollAnimation";
+import { Link } from "react-router-dom";
 
 
 const Seats = () => {
@@ -21,7 +22,12 @@ const Seats = () => {
         }`}>Build connections that can lead to your next big collaboration or
         career breakthrough.</p>
         <div className="mb-14">
-        <a href="/tickets" className=" text-[#ffff]  text-lg border py-4 px-9 rounded-lg bg-accentYellow hover:cursor-pointer hover:bg-accentYellowDark transition-all duration-300 ease-in-out">Buy Tickets</a>
+        <Link
+  to="/tickets"
+  className="text-white text-lg border py-4 px-9 rounded-lg bg-accentYellow hover:cursor-pointer hover:bg-accentYellowDark transition-all duration-300 ease-in-out"
+>
+  Buy Tickets
+</Link>
         </div>
         </div>   
     </section>
