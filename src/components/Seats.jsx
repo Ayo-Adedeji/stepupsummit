@@ -7,7 +7,7 @@ const Seats = () => {
    const [textRef, textVisible] = useScrollAnimation();
   return (
     <section className=" text-[#ffffff]">
-        <div className=" items-center text-center overflow-hidden "
+        <div className="bg-contain items-center text-center overflow-hidden "
         style={{ backgroundImage: `url(${img7})` }}
         >
         <h1 ref={textRef} className= {`mt-10 mb-8 font-semibold text-2xl ${

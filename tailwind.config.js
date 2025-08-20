@@ -6,12 +6,15 @@ export default {
   ],
   theme: {
    extend: {
+     fontFamily: {
+        sans: ['Raleway', 'sans-serif'],
+      },
   colors: {
-    primaryBlue: '#003366',
+    primaryBlue: '#111249',
     accentYellow: '#FFC107',
     accentYellowDark: '#E0A800',
     accentLightBlue: '#00B5E2',
-    accentDarkBlue: '#001F4D',
+    accentDarkBlue: '#0D0E36',
     darkGray: '#333333',
     lightGray: '#F5F5F5',
   },

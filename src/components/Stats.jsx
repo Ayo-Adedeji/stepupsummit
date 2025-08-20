@@ -7,7 +7,7 @@ const Counter = ({ target, duration, suffix = "" }) => {
   useEffect(() => {
     let start = 0;
     const end = parseInt(target);
-    const incrementTime = 1000 / 60; // ~60 FPS
+    const incrementTime = 1000 / 60; //
     const totalSteps = Math.round((duration * 1000) / incrementTime);
     let currentStep = 0;
 

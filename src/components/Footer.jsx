@@ -9,7 +9,7 @@ const Footer = () => {
           <img src={StepUPLogo} alt="suslogo" className="w-32 h-32" />
         </div>
 
-        <div className="flex gap-20 text-[#ffffff] sm:flex-row sm:gap-6 lg:gap-36  lg:flex-row">
+        <div className="flex gap-10 md:gap-20 text-[#ffffff] sm:flex-row sm:gap-6 lg:gap-36  lg:flex-row">
           <div>
             {/* <h1 className="">#stepupsummit2025</h1> */}
             <h1 className="text-lg mb-5 mt-6">About Us</h1>
