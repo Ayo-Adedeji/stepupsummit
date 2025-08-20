@@ -5,10 +5,12 @@ import SponsorshipPackages from '../components/SponsorshipPackages'
 import PaymentInstructions from '../components/PaymentInstructions'
 import ContactUs from '../components/ContactUs'
 import Footer from '../components/Footer'
+import Navbar from '../components/Navbar'
 
 const Tickets = () => {
   return (
     <div>
+        <Navbar/>
        <TicketPage/> 
        <RegistrationOptions/>
        <SponsorshipPackages/>

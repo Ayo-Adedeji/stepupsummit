@@ -58,7 +58,7 @@ const Highlights = () => {
   };
 
   return (
-    <section className="text-center bg-accentDarkBlue p-10">
+    <section id="event" className="text-center bg-accentDarkBlue p-10">
       <h1 className="text-2xl text-[#ffffff] font-semibold mb-4">Event Highlights</h1>
 
       {/* Carousel */}

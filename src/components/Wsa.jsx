@@ -5,7 +5,7 @@ import useScrollAnimation from "../components/useScrollAnimation";
 const Wsa = () => {
     const [textRef, textVisible] = useScrollAnimation();
   return (
-    <section className="bg-accentDarkBlue">
+    <section id="join" className="bg-accentDarkBlue">
         <div className="p-2 w-full flex flex-col md:flex-row lg:flex-row gap-5 lg:gap-20 lg:p-14 text-[#ffff] mx-auto">
       <div ref={textRef} className={`p-1 border border-accentLightBlue rounded-lg md:w-1/2 ${
         textVisible
