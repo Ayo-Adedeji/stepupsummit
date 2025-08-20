@@ -5,7 +5,7 @@ const ContactUs = () => {
   const phone = "[Insert Phone Number]";
 
   return (
-    <section className="py-16 bg-gradient-to-br from-primaryBluevia-white to-primaryBlue">
+    <section id="contact" className="py-16 bg-gradient-to-br from-primaryBluevia-white to-primaryBlue">
       <div className="max-w-4xl mx-auto px-6 text-center">
         <h1 className="text-3xl font-bold text-primaryprimaryBlue6">
           Contact Us
