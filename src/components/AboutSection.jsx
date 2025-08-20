@@ -13,9 +13,7 @@ const AboutSection = () => {
         <div
           ref={logoRef}
           className={`transition-all ${
-            logoVisible
-              ? "animate-slideInLeft"
-              : "animate-slideOutLeft"
+            logoVisible ? "animate-slideInLeft" : "animate-slideOutLeft"
           }`}
         >
           <img className="w-80 lg:w-96" src={StepUPLogo1} alt="steuplogo" />
@@ -25,9 +23,7 @@ const AboutSection = () => {
         <div
           ref={textRef}
           className={`flex flex-col items-center justify-center md:w-[50%] lg:items-baseline transition-all ${
-            textVisible
-              ? "animate-slideInRight"
-              : "animate-slideOutRight"
+            textVisible ? "animate-slideInRight" : "animate-slideOutRight"
           }`}
         >
           <h1 className="font-bold text-3xl mb-5 mt-10">ABOUT SUS</h1>

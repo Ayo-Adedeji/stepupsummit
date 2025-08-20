@@ -15,7 +15,7 @@ const PaymentInstructions = () => {
   const confirmationEmail = "[Insert Email Address]";
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section id="payment-instructions" className="py-16 bg-gray-50">
       <div className="max-w-4xl mx-auto px-6">
         <h1 className="text-3xl font-bold text-center text-primaryprimaryBlue10">
           Payment Instructions

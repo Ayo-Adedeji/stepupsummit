@@ -52,14 +52,14 @@ const SponsorshipPackages = () => {
     },
   };
 
-  const PackageCard = ({
-    title,
-    price,
-    benefits,
-    color,
-    icon,
-    highlight,
-  }) => (
+  const scrollToPayment = () => {
+    const section = document.getElementById("payment-instructions");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const PackageCard = ({ title, price, benefits, color, icon, highlight }) => (
     <div
       className={`relative border-4 rounded-2xl p-6 bg-white shadow-lg flex flex-col justify-between transition transform hover:-translate-y-2 ${
         highlight ? "scale-105 z-10" : ""
@@ -67,7 +67,7 @@ const SponsorshipPackages = () => {
     >
       {highlight && (
         <div className="absolute -top-4 -right-8 -translate-x-1/2">
-          <span className="relative px-2 py-1 bg-primaryBlue text-white text-xs font-bold rounded-full ">
+          <span className="relative px-2 py-1 bg-primaryBlue text-white text-xs font-bold rounded-full">
             ⭐ Recommended
           </span>
         </div>
@@ -84,6 +84,7 @@ const SponsorshipPackages = () => {
       </ul>
       <div className="text-center">
         <button
+          onClick={scrollToPayment}
           className={`px-5 py-2 border-2 rounded-full font-semibold transition ${color}`}
         >
           Become a Sponsor
@@ -104,19 +105,15 @@ const SponsorshipPackages = () => {
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Bronze */}
           <PackageCard {...packages.bronze} />
-
-          {/* Silver */}
           <PackageCard {...packages.silver} />
 
-          {/* Platinum (highlighted with glow + Recommended badge) */}
+          {/* Platinum with Recommended badge */}
           <div className="lg:row-span-2 flex justify-center relative group">
             <div className="absolute -inset-6 bg-gradient-to-r from-blue-400 via-primaryBlue to-indigo-500 opacity-30 blur-3xl rounded-3xl transition duration-500 group-hover:opacity-50"></div>
             <PackageCard {...packages.platinum} highlight />
           </div>
 
-          {/* Gold */}
           <PackageCard {...packages.gold} />
         </div>
       </div>

@@ -1,4 +1,11 @@
 const RegistrationOptions = () => {
+
+     const scrollToPayment = () => {
+    const section = document.getElementById("payment-instructions");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-5xl mx-auto px-6">
@@ -24,7 +31,7 @@ const RegistrationOptions = () => {
               </li>
             </ul>
             <div className="text-center">
-              <button className="px-6 py-2 border-2 border-primaryBlue text-primaryBlue font-semibold rounded-full hover:bg-primaryBlue hover:text-white transition">
+              <button onClick={scrollToPayment} className="px-6 py-2 border-2 border-primaryBlue text-primaryBlue font-semibold rounded-full hover:bg-primaryBlue hover:text-white transition">
                 Buy Ticket
               </button>
             </div>
@@ -47,7 +54,7 @@ const RegistrationOptions = () => {
               </li>
             </ul>
             <div className="text-center">
-              <button className="px-6 py-2 border-2 border-amber-500 text-amber-500 font-semibold rounded-full hover:bg-amber-500 hover:text-white transition">
+              <button onClick={scrollToPayment} className="px-6 py-2 border-2 border-amber-500 text-amber-500 font-semibold rounded-full hover:bg-amber-500 hover:text-white transition">
                 Buy Ticket
               </button>
             </div>

@@ -21,7 +21,7 @@ const Seats = () => {
         }`}>Build connections that can lead to your next big collaboration or
         career breakthrough.</p>
         <div className="mb-14">
-        <a className=" text-[#ffff]  text-lg border py-4 px-9 rounded-lg bg-accentYellow hover:cursor-pointer hover:bg-accentYellowDark transition-all duration-300 ease-in-out">Buy Tickets</a>
+        <a href="/tickets" className=" text-[#ffff]  text-lg border py-4 px-9 rounded-lg bg-accentYellow hover:cursor-pointer hover:bg-accentYellowDark transition-all duration-300 ease-in-out">Buy Tickets</a>
         </div>
         </div>   
     </section>

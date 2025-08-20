@@ -50,13 +50,13 @@ const HeroSection = () => {
         <div className="flex justify-center gap-1 sm:gap-7">
           <a
             className="border border-accentYellow px-6 py-3 sm:px-8 sm:py-4 bg-accentYellow rounded-xl hover:bg-accentYellowDark transition-all duration-300 ease-in-out text-xl font-semibold"
-            href=""
+            href="/tickets"
           >
             Buy Tickets
           </a>
           <a
             className="border border-accentYellow px-6 py-3 sm:px-8 sm:py-4 bg-accentYellow rounded-xl hover:bg-accentYellowDark transition-all duration-300 ease-in-out text-xl font-semibold"
-            href=""
+            href="/tickets"
           >
             Partner
           </a>
