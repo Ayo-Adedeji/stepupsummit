@@ -45,15 +45,13 @@ const Navbar = () => {
               <TiInfoLarge className="text-accentYellow" /> About
             </a>
           </li>
-          <li onClick={() => handleScroll("join")} className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
-            <FaUserPlus className="text-accentYellow" /> Join Us
+          <li className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
+           <a href="/tickets" className="flex items-center gap-1"> <FaUserPlus className="text-accentYellow" /> Join Us</a>
           </li>
-          <li onClick={() => handleScroll("event")} className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
+          <li className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
             <FaRegCalendarAlt className="text-accentYellow" /> Event
           </li>
-          <li onClick={() => handleScroll("highlights")} className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
-            <MdStarPurple500 className="text-accentYellow" /> Highlights
-          </li>
+        
         </ul>
       </div>
 
@@ -94,14 +92,11 @@ const Navbar = () => {
                 <TiInfoLarge /> About
               </a>
             </li>
-            <li onClick={() => handleScroll("join")} className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
-              <FaUserPlus /> Join Us
+            <li  className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
+              <a href="/tickets" className="flex items-center gap-1"> <FaUserPlus /> Join Us </a>
             </li>
-            <li onClick={() => handleScroll("event")} className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
+            <li  className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
               <FaRegCalendarAlt /> Event
-            </li>
-            <li onClick={() => handleScroll("highlights")} className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
-              <MdStarPurple500 /> Highlights
             </li>
             <li className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
               <a href="/tickets#contact">

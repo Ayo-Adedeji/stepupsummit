@@ -45,7 +45,7 @@ const HeroSection = () => {
           that can transform your path in leadership and entrepreneurship.
         </p>
         <p className="md:text-2xl lg:space-x-20 flex items-center gap-1 text-lg font-bold sm:font-semibold mb-12">
-          <span className="text-accentLightBlue"><BsCalendar2DateFill /></span>  26th of August.  <span className="text-accentLightBlue"><FaMapLocation /></span> Ibadan, Oyo State
+           26th of August.  Ibadan, Oyo State
         </p>
         <div className="flex justify-center gap-1 sm:gap-7">
           <a
