@@ -1,4 +1,7 @@
+import useScrollAnimation from "./useScrollAnimation";
+
 const RegistrationOptions = () => {
+  const [textRef, textVisible] = useScrollAnimation();
 
      const scrollToPayment = () => {
     const section = document.getElementById("payment-instructions");
@@ -9,13 +12,13 @@ const RegistrationOptions = () => {
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-5xl mx-auto px-6">
-        <h1 className="text-3xl font-bold text-center text-primaryBlue mb-12">
+        <h1 ref={textRef} className={`text-3xl font-bold text-center text-primaryBlue mb-12 ${textVisible? "animate-fadeInUp" : "animate-fadeOutDown"}`}>
           Registration Options
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* General Admission */}
-          <div className="border-4 border-primaryBlue rounded-2xl p-6 bg-white shadow hover:shadow-lg transition">
+          <div ref={textRef} className={`border-4 border-primaryBlue rounded-2xl p-6 bg-white shadow hover:shadow-lg transition ${textVisible? "animate-slideInLeft" : "animate-slideOutRight"}`}>
             <h2 className="text-xl font-semibold text-center text-primaryBlue mb-4">
               General Admission
             </h2>
@@ -38,7 +41,7 @@ const RegistrationOptions = () => {
           </div>
 
           {/* VIP Access */}
-          <div className="border-4 border-amber-500 rounded-2xl p-6 bg-white shadow hover:shadow-lg transition">
+          <div ref={textRef} className={`border-4 border-amber-500 rounded-2xl p-6 bg-white shadow hover:shadow-lg transition ${textVisible? "animate-slideInRight" : "animate-slideOutLeft"}`}>
             <h2 className="text-xl font-semibold text-center text-amber-600 mb-4">
               VIP Access
             </h2>

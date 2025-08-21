@@ -2,7 +2,9 @@ import React from "react";
 import imag2 from "../assets/imag2.jpg";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import useScrollAnimation from "./useScrollAnimation";
 const TicketPage = () => {
+  const [textRef, textVisible] = useScrollAnimation();
 useEffect(() => {
   if (window.location.hash === "#contact") {
     const section = document.getElementById("contact");
@@ -19,7 +21,7 @@ useEffect(() => {
         className="h-[80vh] bg-cover text-center flex flex-col justify-center text-[#ffffff] "
         style={{ backgroundImage: `url(${imag2})` }}
       >
-        <h1 className="text-5xl font-semibold">Registration & Sponsorship</h1>
+        <h1  className="text-5xl font-semibold">Registration & Sponsorship</h1>
         <p className="font-semibold">Step-Up Summit 2025</p>
         <p className="text-lg mb-10 max-w-2xl mx-auto mt-16">
           {" "}

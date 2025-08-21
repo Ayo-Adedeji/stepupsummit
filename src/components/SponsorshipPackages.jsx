@@ -1,6 +1,8 @@
 import { FaMedal, FaGem, FaCrown, FaStar } from "react-icons/fa";
+import useScrollAnimation from "./useScrollAnimation";
 
 const SponsorshipPackages = () => {
+  const [textRef, textVisible] = useScrollAnimation();
   const packages = {
     bronze: {
       title: "Bronze Sponsor",
@@ -72,7 +74,7 @@ const SponsorshipPackages = () => {
           </span>
         </div>
       )}
-      <div className="text-center mb-4">{icon}</div>
+      <div ref={textRef} className="text-center mb-4">{icon}</div>
       <h2 className="text-xl font-semibold text-center mb-2">{title}</h2>
       <p className="text-center font-bold text-lg mb-4">{price}</p>
       <ul className="text-gray-700 space-y-2 mb-6 text-sm">

@@ -1,13 +1,16 @@
+import useScrollAnimation from "./useScrollAnimation";
+
 const Focus = () => {
+  const [textRef, textVisible] = useScrollAnimation();
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-6xl mx-auto px-6">
-        <h1 className="text-3xl font-bold text-center text-primaryBlue mb-12">
+        <h1 ref={textRef} className={`text-3xl font-bold text-center text-primaryBlue mb-12 ${textVisible? "animate-slideInLeft" : "animate-slideOutRight"}`}>
           What to Expect in 2025
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          <div className="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition">
+          <div ref={textRef} className={`bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition ${textVisible? "animate-slideInLeft" : "animate-slideOutRight"} `}>
             <h2 className="text-xl font-semibold text-center text-primaryBlue mb-4">
               Focus Areas
             </h2>
@@ -20,7 +23,7 @@ const Focus = () => {
           </div>
 
         
-          <div className="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition">
+          <div ref={textRef} className={`bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition ${textVisible? "animate-fadeInUp" : "animate-fadeOutDown"} `}>
             <h2 className="text-xl font-semibold text-center text-primaryBlue mb-4">
               Program Features
             </h2>
@@ -35,7 +38,7 @@ const Focus = () => {
           </div>
 
           
-          <div className="bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition">
+          <div ref={textRef} className={`bg-white rounded-2xl shadow-md p-6 hover:shadow-xl transition ${textVisible? "animate-slideInRight" : "animate-slideOutLeft"} `}>
             <h2 className="text-xl font-semibold text-center text-primaryBlue mb-4">
               Our Impact Goals
             </h2>
