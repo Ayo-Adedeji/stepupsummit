@@ -37,7 +37,7 @@ const Speakers = () => {
       >
         Meet the Speakers
       </h1>
-      <div className=" lg:w-[80%] mx-auto flex justify-between p-2 gap-5 font-semibold lg:text-2xl">
+      {/* <div className=" lg:w-[80%] mx-auto flex justify-between p-2 gap-5 font-semibold lg:text-2xl">
         <p
           ref={textRef}
           className={
@@ -58,7 +58,7 @@ const Speakers = () => {
         >
           Influential thought leaders
         </p>
-      </div>
+      </div> */}
 
       {/* Photos */}
       <div ref={textRef} className= {`grid lg:grid-cols-4 sm:grid-cols-2 md:grid-cols-3 text-center  mt-10 ${
@@ -72,7 +72,7 @@ const Speakers = () => {
             <img
               src={item.img}
               alt={item.title}
-              className="border-4 border-accentDarkBlue shadow-xl shadow-gray-500 w-60 h-60  rounded-full object-cover"
+              className="border-2 border-accentDarkBlue shadow-xl shadow-gray-500 w-60 h-60  rounded-xl object-cover"
             />
             <p className="mt-3 mb-3 sm:text-lg sm:font-semibold">
               {item.title}

@@ -1,57 +1,77 @@
-import React, { useState } from "react";
-import StepUPLogo from "../assets/StepUPLogo.png";
-import StepUPLogo1 from "../assets/StepUPLogo1.png";
+import React, { useState, useEffect } from "react";
+import sponsor1 from "../assets/sponsor1.png";
+import sponsor3 from "../assets/sponsor3.png";
+import sponsor4 from "../assets/sponsor4.png";
+import sponsor6 from "../assets/sponsor6.png";
 import useScrollAnimation from "../components/useScrollAnimation";
 
 const images = [
-  StepUPLogo,
-  StepUPLogo1,
-  StepUPLogo,
-  StepUPLogo1,
-  StepUPLogo,
-  StepUPLogo1,
-  StepUPLogo,
-  StepUPLogo1,
+  sponsor1,
+  sponsor3,
+  sponsor4,
+  sponsor6,
 ];
 
 const Sponsors = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [prevIndex, setPrevIndex] = useState(0);
+  const [direction, setDirection] = useState("next"); // "next" or "prev"
   const [textRef, textVisible] = useScrollAnimation();
+
+  // Auto change logo every 3 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNext();
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleNext = () => {
+    setDirection("next");
+    setPrevIndex(activeIndex);
+    setActiveIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  const handleDotClick = (index) => {
+    setDirection(index > activeIndex ? "next" : "prev");
+    setPrevIndex(activeIndex);
+    setActiveIndex(index);
+  };
+
   return (
-    <section className="text-[#ffffff] bg-accentLightBlue flex flex-col items-center text-center py-10 px-4">
+    <section className="text-[#ffffff] bg-primaryBlue flex flex-col items-center text-center py-10 px-4 overflow-hidden">
       <div
         ref={textRef}
         className={textVisible ? "animate-fadeInUp" : "animate-fadeOutDown"}
       >
-        <h1 className="mt-2 mb-5 text-2xl font-semibold">
-          Partners & Sponsors
-        </h1>
-         <p className="text-lg mb-10 max-w-2xl">
+        <h1 className="mt-2 mb-5 text-2xl font-semibold">Partners & Sponsors</h1>
+        <p className="text-lg mb-10 max-w-2xl">
           Step-Up Summit thrives through the support of partners who share our
           vision. Sponsors gain direct engagement with ambitious young leaders,
           access to exhibition opportunities, and significant media visibility.
         </p>
-        <p className="text-lg mb-10 max-w-2xl">
-          We thank the organizations whose support makes SUS 2025 possible.
-          Their commitment helps inspire and equip the next generation of
-          leaders.
-        </p>
-       
       </div>
 
-      {/* Logos */}
-      <div className="flex flex-wrap justify-center gap-10 mb-6">
-        {images.map((logo, index) => (
-          <img
-            key={index}
-            src={logo}
-            alt={`Sponsor ${index + 1}`}
-            onClick={() => setActiveIndex(index)}
-            className={`border rounded-2xl w-48 h-40 object-contain p-3 bg-white cursor-pointer transition-transform duration-300 ${
-              activeIndex === index ? "scale-110 shadow-lg" : "scale-100"
-            }`}
-          />
-        ))}
+      {/* Sliding Logo Carousel */}
+      <div className="relative w-48 h-40 mb-6 overflow-hidden">
+        {/* Previous image */}
+        <img
+          key={prevIndex}
+          src={images[prevIndex]}
+          alt={`Sponsor ${prevIndex + 1}`}
+          className={`absolute top-0 left-0 w-full h-full object-contain p-3 bg-white rounded-2xl border shadow-lg transition-transform duration-700 ${
+            direction === "next" ? "-translate-x-full" : "translate-x-full"
+          }`}
+        />
+        {/* Active image */}
+        <img
+          key={activeIndex}
+          src={images[activeIndex]}
+          alt={`Sponsor ${activeIndex + 1}`}
+          className={`absolute top-0 left-0 w-full h-full object-contain p-3 bg-white rounded-2xl border shadow-lg transition-transform duration-700 ${
+            direction === "next" ? "translate-x-0" : "translate-x-0"
+          }`}
+        />
       </div>
 
       {/* Dots */}
@@ -59,7 +79,7 @@ const Sponsors = () => {
         {images.map((_, index) => (
           <div
             key={index}
-            onClick={() => setActiveIndex(index)}
+            onClick={() => handleDotClick(index)}
             className={`w-3 h-3 rounded-full cursor-pointer transition-all ${
               activeIndex === index
                 ? "bg-accentDarkBlue scale-125"

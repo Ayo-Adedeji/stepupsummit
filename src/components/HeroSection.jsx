@@ -44,8 +44,8 @@ const HeroSection = () => {
           Step-Up Summit 2025 brings together ideas, people, and opportunities
           that can transform your path in leadership and entrepreneurship.
         </p>
-        <p className="md:text-2xl lg:space-x-20 flex items-center gap-1 text-lg font-bold sm:font-semibold mb-12">
-           26th of August.  Ibadan, Oyo State
+        <p className="sm:p-1 rounded-lg bg-black/80 md:text-2xl lg:space-x-20 flex items-center gap-1 text-lg font-bold sm:font-semibold mb-12">
+           15th December, 2025 | Ibadan, Oyo State.
         </p>
         <div className="flex justify-center gap-1 sm:gap-7">
           <a

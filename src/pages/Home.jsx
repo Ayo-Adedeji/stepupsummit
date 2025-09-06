@@ -34,7 +34,7 @@ const Home = () => {
       <Stats />
       <Wsa />
       <Speakers />
-      <Highlights />
+      {/* <Highlights /> */}
       <Sponsors />
       <Seats />
       <News />
