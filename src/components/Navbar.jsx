@@ -29,52 +29,54 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-primaryBlue text-white px-6 py-3 flex items-center justify-between font-semibold text-lg shadow-lg">
-      {/* Logo */}
-      <div className="flex items-center">
-        <a href="/">
-          <img className="w-16" src={StepUPLogo} alt="sus-logo" />
-        </a>
-      </div>
+    <nav className="bg-primaryBlue text-white px-6 py-3 shadow-lg">
+  <div className="flex items-center justify-between md:justify-center mx-auto max-w-6xl w-full">
+    {/* Logo (always visible on left for mobile, centered in desktop group) */}
+    <a href="/" className="flex items-center">
+      <img className="w-16" src={StepUPLogo} alt="sus-logo" />
+    </a>
 
-      {/* Desktop Nav */}
-      <div className="hidden md:flex items-center gap-6">
-        <ul className="flex flex-row gap-6">
-          <li>
-            <a href="/about" className="flex items-center gap-1 hover:underline hover:decoration-accentYellow">
-              <TiInfoLarge className="text-accentYellow" /> About
-            </a>
-          </li>
-          <li className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
-           <a href="/tickets" className="flex items-center gap-1"> <FaUserPlus className="text-accentYellow" /> Join Us</a>
-          </li>
-          <li className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
-            <FaRegCalendarAlt className="text-accentYellow" /> Event
-          </li>
-        
-        </ul>
-      </div>
+    {/* Desktop Nav */}
+    <div className="hidden md:flex items-center gap-6 mx-10">
+      <ul className="flex flex-row gap-6">
+        <li>
+          <a
+            href="/about"
+            className="flex items-center gap-1 hover:underline hover:decoration-accentYellow"
+          >
+            <TiInfoLarge className="text-accentYellow" /> About
+          </a>
+        </li>
+        <li>
+          <a
+            href="/tickets"
+            className="flex items-center gap-1 hover:underline hover:decoration-accentYellow"
+          >
+            <FaUserPlus className="text-accentYellow" /> Join Us
+          </a>
+        </li>
+        <li className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
+          <FaRegCalendarAlt className="text-accentYellow" /> Event
+        </li>
+      </ul>
+    </div>
 
-      {/* Right buttons */}
-      <div className="flex items-center gap-3">
-        <a href="/tickets#contact"
-          // onClick={handleContactClick}
-          className="hidden md:flex border-2 items-center gap-1 border-accentYellow px-3 py-1 rounded-lg hover:bg-accentYellowDark text-white"
-        >
-          <MdPhoneInTalk /> Contact
-        </a>
-        <a
-          href="/tickets"
-          className="hidden md:flex border-2 border-accentYellow px-3 py-1 rounded-lg bg-accentYellow hover:bg-accentYellowDark text-white"
-        >
-          Buy Tickets
-        </a>
+    {/* Right side */}
+    <div className="flex items-center gap-3">
+      {/* Desktop Buy Tickets */}
+      <a
+        href="/tickets"
+        className="hidden md:flex border-2 border-accentYellow px-3 py-1 rounded-lg bg-accentYellow hover:bg-accentYellowDark text-white"
+      >
+        Buy Tickets
+      </a>
 
-        {/* Mobile Hamburger */}
-        <button onClick={toggleSidebar} className="md:hidden">
-          <RxHamburgerMenu className="text-4xl" />
-        </button>
-      </div>
+      {/* Mobile Hamburger */}
+      <button onClick={toggleSidebar} className="md:hidden">
+        <RxHamburgerMenu className="text-4xl" />
+      </button>
+    </div>
+    </div>
 
       {/* Mobile Sidebar */}
       <div

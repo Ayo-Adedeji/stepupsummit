@@ -1,28 +1,44 @@
 import React from "react";
-import presh from "../assets/presh.jpg"
+import speaker from "../assets/speaker.jpg"
+import speaker1 from "../assets/speaker1.jpg"
+import speaker2 from "../assets/speaker2.jpg"
+import speaker3 from "../assets/speaker3.jpg"
+import speaker4 from "../assets/speaker4.jpg"
+import speaker5 from "../assets/speaker5.jpg"
+
 import useScrollAnimation from "../components/useScrollAnimation";
 
 const Speakers = () => {
   const items = [
     {
-      img: presh,
+      img: speaker,
       title: "PRECIOUS LIJOKA",
       description: "CEO. PRECIOUS CRAFTS.",
     },
     {
-      img: presh,
-      title: "PRECIOUS LIJOKA",
-      description: "CEO. PRECIOUS CRAFTS.",
+      img: speaker1,
+      title: "OlUSHOLA OLALEYE",
+      // description: "CEO. PRECIOUS CRAFTS.",
     },
     {
-      img: presh,
-      title: "PRECIOUS LIJOKA",
-      description: "CEO. PRECIOUS CRAFTS.",
+      img: speaker2,
+      title: "OCHE WRITES",
+      // description: "CEO. PRECIOUS CRAFTS.",
     },
     {
-      img: presh,
-      title: "PRECIOUS LIJOKA",
-      description: "CEO. PRECIOUS CRAFTS.",
+      img: speaker3,
+      title: "STEPHEN CAMILERRI",
+      // description: "CEO. PRECIOUS CRAFTS.",
+    },
+     {
+      img: speaker4,
+      title: "HAOMA WORGWU",
+      // description: "CEO. PRECIOUS CRAFTS.",
+    },
+     {
+      img: speaker5,
+      title: "IYO PROSPER",
+      // description: "CEO. PRECIOUS CRAFTS.",
     },
   ];
   const [textRef, textVisible] = useScrollAnimation();

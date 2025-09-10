@@ -22,21 +22,47 @@ const Wsa = () => {
         </p>
       </div>
 
-       <div ref={textRef} className={`p-1 rounded-lg border border-accentLightBlue md:w-1/2 ${
- textVisible
-       ? "animate-slideInRight"
-       : "animate-slideOutLeft"
-       }`} 
-       
-       >
-        <h1 className="font-bold text-2xl text-center sm:text-3xl md:text-4xl mt-5 mb-10">Why you should join.</h1>
-        <ul className="flex flex-col items-center sm:text-lg font-semibold mb-6  md:pl-6 lg:items-start  lg:pl-24 ">
-        <li className="flex md:items-start lg:items-start gap-2 "> <IoCheckmarkDoneSharp className="text-accentYellow mt-1"/>Gain strategies you can put into action immediately.</li>
-        <li className="flex lg:items-start gap-2  "> <IoCheckmarkDoneSharp className="text-accentYellow  mt-1" />  Meet potential collaborators, mentors, and investors</li>
-        <li className="flex lg:items-start gap-2  "> <IoCheckmarkDoneSharp className="text-accentYellow mt-1" />   Pitch your ideas and receive valuable feedback.</li>
-        <li className="flex lg:items-start gap-2 "> <IoCheckmarkDoneSharp className="text-accentYellow mt-1" />  Leave with a clear plan for your next step.</li>
-        </ul>
-      </div>
+       <div
+  ref={textRef}
+  className={`p-1 rounded-lg border border-accentLightBlue md:w-1/2 ${
+    textVisible ? "animate-slideInRight" : "animate-slideOutLeft"
+  }`}
+>
+  <h1 className="font-bold text-2xl text-center sm:text-3xl md:text-4xl mt-5 mb-10">
+    Why you should join.
+  </h1>
+
+  <ul className="flex flex-col gap-4 sm:text-lg font-semibold mb-6 md:pl-6 lg:pl-24">
+    <li className="flex items-start gap-3">
+      <IoCheckmarkDoneSharp className="text-accentYellow text-xl flex-shrink-0 mt-1" />
+      <p className="leading-relaxed">
+        Gain strategies you can put into action immediately.
+      </p>
+    </li>
+
+    <li className="flex items-start gap-3">
+      <IoCheckmarkDoneSharp className="text-accentYellow text-xl flex-shrink-0 mt-1" />
+      <p className="leading-relaxed">
+        Meet potential collaborators, mentors, and investors.
+      </p>
+    </li>
+
+    <li className="flex items-start gap-3">
+      <IoCheckmarkDoneSharp className="text-accentYellow text-xl flex-shrink-0 mt-1" />
+      <p className="leading-relaxed">
+        Pitch your ideas and receive valuable feedback.
+      </p>
+    </li>
+
+    <li className="flex items-start gap-3">
+      <IoCheckmarkDoneSharp className="text-accentYellow text-xl flex-shrink-0 mt-1" />
+      <p className="leading-relaxed">
+        Leave with a clear plan for your next step.
+      </p>
+    </li>
+  </ul>
+</div>
+
       </div>
     </section>
   );

@@ -30,7 +30,7 @@ const Countdown = ({ targetDate }) => {
   }, [targetDate]);
 
   return (
-    <div className="flex  justify-center gap-7 lg:gap-56 md:gap-36 sm:gap-20  bg-purple-900 text-white py-6">
+    <div className=" flex  justify-center gap-7 lg:gap-56 md:gap-36 sm:gap-20  bg-purple-950 text-white py-6">
       <div className="text-center">
         <h2 className="text-5xl font-bold">{timeLeft.days}</h2>
         <p className="uppercase text-lg mt-2">Days</p>
