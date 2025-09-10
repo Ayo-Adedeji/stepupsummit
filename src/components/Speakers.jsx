@@ -28,7 +28,7 @@ const Speakers = () => {
   const [textRef, textVisible] = useScrollAnimation();
 
   return (
-    <section>
+    <section className="mb-20">
       <h1
         ref={textRef}
         className={`text-center mt-10 mb-10 text-3xl font-bold ${

@@ -12,6 +12,7 @@ import HeroSection from "../components/HeroSection";
 import Head from "../components/Head";
 import Sponsors from "../components/Sponsors";
 import { useEffect } from "react";
+import Countdown from "../components/Countdown";
 
 const Home = () => {
   useEffect(() => {
@@ -30,6 +31,7 @@ const Home = () => {
       <Navbar />
       <Head />
       <HeroSection />
+      <Countdown targetDate="2025-12-15T00:00:00"/>
       <AboutSection />
       <Stats />
       <Wsa />
