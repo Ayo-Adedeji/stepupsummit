@@ -30,59 +30,63 @@ const Navbar = () => {
 
   return (
     <nav className="bg-primaryBlue text-white px-6 py-3 shadow-lg">
-  <div className="flex items-center justify-between md:justify-center mx-auto max-w-6xl w-full">
-    {/* Logo (always visible on left for mobile, centered in desktop group) */}
-    <a href="/" className="flex items-center">
-      <img className="w-16" src={StepUPLogo} alt="sus-logo" />
-    </a>
+      <div className="flex items-center justify-between md:justify-center mx-auto max-w-6xl w-full">
+        {/* Logo (always visible on left for mobile, centered in desktop group) */}
+        <a href="/" className="flex items-center">
+          <img className="w-16" src={StepUPLogo} alt="sus-logo" />
+        </a>
 
-    {/* Desktop Nav */}
-    <div className="hidden md:flex items-center gap-6 mx-10">
-      <ul className="flex flex-row gap-6">
-        <li>
-          <a
-            href="/about"
-            className="flex items-center gap-1 hover:underline hover:decoration-accentYellow"
-          >
-            <TiInfoLarge className="text-accentYellow" /> About
-          </a>
-        </li>
-        <li>
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-6 mx-10">
+          <ul className="flex flex-row gap-6">
+            <li>
+              <a
+                href="/about"
+                className="flex items-center gap-1 hover:underline hover:decoration-accentYellow"
+              >
+                <TiInfoLarge className="text-accentYellow" /> About
+              </a>
+            </li>
+            <li>
+              <a
+                href="/tickets"
+                className="flex items-center gap-1 hover:underline hover:decoration-accentYellow"
+              >
+                <FaUserPlus className="text-accentYellow" /> Join Us
+              </a>
+            </li>
+            <li>
+              <a href="/contact"
+                className="flex items-center gap-1 hover:underline
+                hover:decoration-accentYellow cursor-pointer">
+                <FaRegCalendarAlt className="text-accentYellow" /> Event
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        {/* Right side */}
+        <div className="flex items-center gap-3">
+          {/* Desktop Buy Tickets */}
           <a
             href="/tickets"
-            className="flex items-center gap-1 hover:underline hover:decoration-accentYellow"
+            className="hidden md:flex border-2 border-accentYellow px-3 py-1 rounded-lg bg-accentYellow hover:bg-accentYellowDark text-white"
           >
-            <FaUserPlus className="text-accentYellow" /> Join Us
+            Buy Tickets
           </a>
-        </li>
-        <li className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
-          <FaRegCalendarAlt className="text-accentYellow" /> Event
-        </li>
-      </ul>
-    </div>
+          <a
+            href="/sponsors"
+            className="hidden md:flex border-2 border-accentYellow px-3 py-1 rounded-lg bg-accentYellow hover:bg-accentYellowDark text-white"
+          >
+            Be a Sponsor
+          </a>
 
-    {/* Right side */}
-    <div className="flex items-center gap-3">
-      {/* Desktop Buy Tickets */}
-      <a
-        href="/tickets"
-        className="hidden md:flex border-2 border-accentYellow px-3 py-1 rounded-lg bg-accentYellow hover:bg-accentYellowDark text-white"
-      >
-        Buy Tickets
-      </a>
-      <a
-        href="/sponsors"
-        className="hidden md:flex border-2 border-accentYellow px-3 py-1 rounded-lg bg-accentYellow hover:bg-accentYellowDark text-white"
-      >
-        Be a Sponsor
-      </a>
-
-      {/* Mobile Hamburger */}
-      <button onClick={toggleSidebar} className="md:hidden">
-        <RxHamburgerMenu className="text-4xl" />
-      </button>
-    </div>
-    </div>
+          {/* Mobile Hamburger */}
+          <button onClick={toggleSidebar} className="md:hidden">
+            <RxHamburgerMenu className="text-4xl" />
+          </button>
+        </div>
+      </div>
 
       {/* Mobile Sidebar */}
       <div
@@ -96,28 +100,43 @@ const Navbar = () => {
           </button>
           <ul className="flex flex-col gap-6">
             <li>
-              <a href="/about" className="flex items-center gap-1 hover:underline hover:decoration-accentYellow" onClick={toggleSidebar}>
+              <a
+                href="/about"
+                className="flex items-center gap-1 hover:underline hover:decoration-accentYellow"
+                onClick={toggleSidebar}
+              >
                 <TiInfoLarge /> About
               </a>
             </li>
-            <li  className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
-              <a href="/tickets" className="flex items-center gap-1"> <FaUserPlus /> Join Us </a>
+            <li className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
+              <a href="/tickets" className="flex items-center gap-1">
+                {" "}
+                <FaUserPlus /> Join Us{" "}
+              </a>
             </li>
-            <li  className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
+            <li className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
               <FaRegCalendarAlt /> Event
             </li>
             <li className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
               <a href="/tickets#contact">
-              <MdPhoneInTalk /> Contact
+                <MdPhoneInTalk /> Contact
               </a>
             </li>
             <li>
-              <a href="/tickets" className="flex items-center gap-1 border-2 border-accentYellow px-3 py-1 rounded-lg bg-accentYellow hover:bg-accentYellowDark text-white" onClick={toggleSidebar}>
+              <a
+                href="/tickets"
+                className="flex items-center gap-1 border-2 border-accentYellow px-3 py-1 rounded-lg bg-accentYellow hover:bg-accentYellowDark text-white"
+                onClick={toggleSidebar}
+              >
                 Buy Tickets
               </a>
             </li>
             <li>
-              <a href="/sponsors" className="flex items-center gap-1 border-2 border-accentYellow px-3 py-1 rounded-lg bg-accentYellow hover:bg-accentYellowDark text-white" onClick={toggleSidebar}>
+              <a
+                href="/sponsors"
+                className="flex items-center gap-1 border-2 border-accentYellow px-3 py-1 rounded-lg bg-accentYellow hover:bg-accentYellowDark text-white"
+                onClick={toggleSidebar}
+              >
                 Be a Sponsor
               </a>
             </li>
