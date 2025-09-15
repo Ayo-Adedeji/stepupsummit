@@ -70,6 +70,12 @@ const Navbar = () => {
       >
         Buy Tickets
       </a>
+      <a
+        href="/sponsors"
+        className="hidden md:flex border-2 border-accentYellow px-3 py-1 rounded-lg bg-accentYellow hover:bg-accentYellowDark text-white"
+      >
+        Be a Sponsor
+      </a>
 
       {/* Mobile Hamburger */}
       <button onClick={toggleSidebar} className="md:hidden">
@@ -108,6 +114,11 @@ const Navbar = () => {
             <li>
               <a href="/tickets" className="flex items-center gap-1 border-2 border-accentYellow px-3 py-1 rounded-lg bg-accentYellow hover:bg-accentYellowDark text-white" onClick={toggleSidebar}>
                 Buy Tickets
+              </a>
+            </li>
+            <li>
+              <a href="/sponsors" className="flex items-center gap-1 border-2 border-accentYellow px-3 py-1 rounded-lg bg-accentYellow hover:bg-accentYellowDark text-white" onClick={toggleSidebar}>
+                Be a Sponsor
               </a>
             </li>
           </ul>

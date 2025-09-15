@@ -6,6 +6,8 @@ import PaymentInstructions from '../components/PaymentInstructions'
 import ContactUs from '../components/ContactUs'
 import Footer from '../components/Footer'
 import Navbar from '../components/Navbar'
+import News from '../components/News'
+
 
 const Tickets = () => {
   return (
@@ -13,9 +15,10 @@ const Tickets = () => {
         <Navbar/>
        <TicketPage/> 
        <RegistrationOptions/>
-       <SponsorshipPackages/>
-       <PaymentInstructions/>
-       <ContactUs/>
+       {/* <SponsorshipPackages/> */}
+       {/* <PaymentInstructions/> */}
+       {/* <ContactUs/> */}
+       <News/>
        <Footer/>
     </div>
   )
