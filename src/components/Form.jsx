@@ -3,7 +3,7 @@ import React from 'react'
 const Form = () => {
   return (
     <form className="flex justify-center">
-      <div className="w-full max-w-6xl mb-10">
+      <div className="w-full max-w-6xl mb-10 p-3">
         <h1 className="text-xl font-semibold mb-6">Please fill in your details</h1>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

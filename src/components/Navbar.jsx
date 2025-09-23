@@ -59,7 +59,7 @@ const Navbar = () => {
               <a href="/contact"
                 className="flex items-center gap-1 hover:underline
                 hover:decoration-accentYellow cursor-pointer">
-                <FaRegCalendarAlt className="text-accentYellow" /> Event
+                <MdPhoneInTalk className="text-accentYellow" /> Contact
               </a>
             </li>
           </ul>
@@ -114,11 +114,9 @@ const Navbar = () => {
                 <FaUserPlus /> Join Us{" "}
               </a>
             </li>
-            <li className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
-              <FaRegCalendarAlt /> Event
-            </li>
-            <li className="flex items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
-              <a href="/tickets#contact">
+           
+            <li className="flex flex-row items-center gap-1 hover:underline hover:decoration-accentYellow cursor-pointer">
+              <a href="/contact">
                 <MdPhoneInTalk /> Contact
               </a>
             </li>
