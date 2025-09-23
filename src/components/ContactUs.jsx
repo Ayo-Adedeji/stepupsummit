@@ -42,12 +42,7 @@ const ContactUs = () => {
         </div>
 
         {/* Tagline */}
-        <div className="mt-12">
-          <p className="text-xl font-bold text-accentYellowDark">
-            Step up. <span className="text-primaryBlue">Stand out.</span>{" "}
-            <span className="text-green-600">Shape the future.</span>
-          </p>
-        </div>
+        
       </div>
     </section>
   );
