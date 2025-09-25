@@ -119,15 +119,7 @@ const SponsorshipPackages = () => {
           <PackageCard {...packages.gold} />
         </div>
       </div>
-      <div className="mt-10 space-y-3  max-w-6xl mx-auto p-3 ">
-        <p className="font-semibold">Ask for any other thing you may want that is not on the list. What a privilege...😊</p>
-      <textarea
-            name="message"
-            className="border  w-full border-primaryBlue bg-secondary rounded-xl p-3 outline-none h-36 "
-            placeholder="Your message"
-            required
-          ></textarea>
-          </div>
+      
     </section>
   );
 };

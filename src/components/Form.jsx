@@ -2,6 +2,16 @@ import React from 'react'
 
 const Form = () => {
   return (
+<>
+     <div className="mt-10 space-y-3  max-w-6xl mx-auto p-3 ">
+        <p className="font-semibold">Ask for any other thing you may want that is not on the list. What a privilege...😊</p>
+      <textarea
+            name="message"
+            className="border  w-full border-primaryBlue bg-secondary rounded-xl p-3 outline-none h-36 "
+            placeholder="Your message"
+            required
+          ></textarea>
+          </div>
     <form className="flex justify-center">
       <div className="w-full max-w-6xl mb-10 p-3">
         <h1 className="text-xl font-semibold mb-6">Please fill in your details</h1>
@@ -83,6 +93,7 @@ const Form = () => {
         </div>
       </div>
     </form>
+    </>
   )
 }
 
