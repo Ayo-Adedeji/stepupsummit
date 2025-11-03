@@ -1,3 +1,4 @@
+import PaymentForm from "./PaymentForm";
 import useScrollAnimation from "./useScrollAnimation";
 
 const RegistrationOptions = () => {
@@ -28,7 +29,7 @@ const RegistrationOptions = () => {
             </p>
             <ul className="text-gray-700 space-y-2 text-center mb-6">
               <li>
-                <span className="font-bold">Early Bird:</span> $25 (₦25,000)
+                <span className="font-bold">Early Bird:</span> $25 (₦50)
               </li>
               <li>
                 <span className="font-bold">Regular:</span> $40 (₦40,000)
@@ -71,6 +72,7 @@ const RegistrationOptions = () => {
         </p>
       </div>
       
+      <PaymentForm/>
     </section>
   
   );

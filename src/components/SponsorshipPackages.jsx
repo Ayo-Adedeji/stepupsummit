@@ -1,8 +1,11 @@
+// SponsorshipPackages.jsx
 import { FaMedal, FaGem, FaCrown, FaStar } from "react-icons/fa";
 import useScrollAnimation from "./useScrollAnimation";
+import SponsorshipForm from "./SponsorshipForm";
 
 const SponsorshipPackages = () => {
-  const [textRef, textVisible] = useScrollAnimation();
+  const [textRef] = useScrollAnimation();
+
   const packages = {
     bronze: {
       title: "Bronze Sponsor",
@@ -54,27 +57,27 @@ const SponsorshipPackages = () => {
     },
   };
 
-  const scrollToPayment = () => {
-    const section = document.getElementById("payment-instructions");
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
+  const scrollToForm = () => {
+    const section = document.getElementById("sponsorship-form");
+    if (section) section.scrollIntoView({ behavior: "smooth" });
   };
 
   const PackageCard = ({ title, price, benefits, color, icon, highlight }) => (
     <div
-      className={`relative border-4 rounded-2xl p-6 bg-white shadow-lg flex flex-col justify-between transition transform hover:-translate-y-2 ${
-        highlight ? "scale-105 z-10" : ""
+      className={`relative border-4 rounded-2xl p-6 bg-white shadow-lg flex flex-col justify-between transition-transform hover:-translate-y-2 hover:shadow-xl ${
+        highlight ? "z-10" : ""
       } ${color.split(" ")[0]}`}
     >
       {highlight && (
-        <div className="absolute -top-4 -right-8 -translate-x-1/2">
+        <div className="absolute -top-4 -right-8 pointer-events-none">
           <span className="relative px-2 py-1 bg-primaryBlue text-white text-xs font-bold rounded-full">
             ⭐ Recommended
           </span>
         </div>
       )}
-      <div ref={textRef} className="text-center mb-4">{icon}</div>
+      <div ref={textRef} className="text-center mb-4">
+        {icon}
+      </div>
       <h2 className="text-xl font-semibold text-center mb-2">{title}</h2>
       <p className="text-center font-bold text-lg mb-4">{price}</p>
       <ul className="text-gray-700 space-y-2 mb-6 text-sm">
@@ -86,8 +89,8 @@ const SponsorshipPackages = () => {
       </ul>
       <div className="text-center">
         <button
-          onClick={scrollToPayment}
-          className={`px-5 py-2 border-2 rounded-full font-semibold transition ${color}`}
+          onClick={scrollToForm}
+          className={`px-5 py-2 border-2 rounded-full font-semibold transition ${color} hover:text-white`}
         >
           Become a Sponsor
         </button>
@@ -96,31 +99,35 @@ const SponsorshipPackages = () => {
   );
 
   return (
-    <section className="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
-      <div className="max-w-6xl mx-auto px-6">
-        <h1 className="text-3xl font-bold text-center text-primaryBlue mb-6">
-          Sponsorship Packages
-        </h1>
-        <p className="text-center text-gray-700 mb-12 max-w-3xl mx-auto">
-          Join us in empowering the next generation while positioning your brand
-          at the forefront of innovation and leadership.
-        </p>
+    <>
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="max-w-6xl mx-auto px-6">
+          <h1 className="text-3xl font-bold text-center text-primaryBlue mb-6">
+            Sponsorship Packages
+          </h1>
+          <p className="text-center text-gray-700 mb-12 max-w-3xl mx-auto">
+            Join us in empowering the next generation while positioning your
+            brand at the forefront of innovation and leadership.
+          </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <PackageCard {...packages.bronze} />
-          <PackageCard {...packages.silver} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <PackageCard {...packages.bronze} />
+            <PackageCard {...packages.silver} />
 
-          {/* Platinum with Recommended badge */}
-          <div className="lg:row-span-2 flex justify-center relative group">
-            <div className="absolute -inset-6 bg-gradient-to-r from-blue-400 via-primaryBlue to-indigo-500 opacity-30 blur-3xl rounded-3xl transition duration-500 group-hover:opacity-50"></div>
-            <PackageCard {...packages.platinum} highlight />
+            {/* Platinum with Recommended badge */}
+            <div className="lg:row-span-2 flex justify-center relative">
+              <div className="absolute -inset-6 bg-gradient-to-r from-blue-400 via-primaryBlue to-indigo-500 opacity-30 blur-3xl rounded-3xl pointer-events-none"></div>
+              <PackageCard {...packages.platinum} highlight />
+            </div>
+
+            <PackageCard {...packages.gold} />
           </div>
-
-          <PackageCard {...packages.gold} />
         </div>
-      </div>
+      </section>
+
       
-    </section>
+      <SponsorshipForm />
+    </>
   );
 };
 
