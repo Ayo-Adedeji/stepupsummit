@@ -54,6 +54,36 @@ router.post("/webhook", async (req, res) => {
             return res.status(500).json({ message: "QR code creation failed" });
         }
 
+        // ✅ Save ticket to file
+const TICKETS_FILE = path.join(process.cwd(), "tickets.json");
+
+const newTicket = {
+  ticketId,
+  reference,
+  name,
+  email,
+  phone,
+  ticketType,
+  amount,
+  note,
+  used: false,
+  createdAt: new Date().toISOString(),
+};
+
+// Load existing tickets
+let tickets = [];
+if (fs.existsSync(TICKETS_FILE)) {
+  const fileData = fs.readFileSync(TICKETS_FILE, "utf8");
+  if (fileData.trim()) tickets = JSON.parse(fileData);
+}
+
+// Add the new one
+tickets.push(newTicket);
+
+// Save back to file
+fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
+console.log("💾 Ticket saved:", reference);
+
         // ✅ EMAIL SETUP
         const transporter = nodemailer.createTransport({
             service: "gmail",
@@ -135,5 +165,55 @@ router.post("/webhook", async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 });
+
+// ✅ Verify Ticket Endpoint (reads from tickets.json)
+router.get("/verify", async (req, res) => {
+  try {
+    const { ref } = req.query;
+
+    if (!ref) {
+      return res.status(400).json({ message: "Ticket reference is required" });
+    }
+
+    const TICKETS_FILE = path.join(process.cwd(), "tickets.json");
+
+    if (!fs.existsSync(TICKETS_FILE)) {
+      return res.status(404).json({ message: "No tickets found" });
+    }
+
+    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE, "utf8"));
+    const ticket = tickets.find((t) => t.reference === ref);
+
+    if (!ticket) {
+      return res.status(404).json({ message: "Invalid or expired ticket reference" });
+    }
+
+    // ✅ Optional: mark as used if scanned first time
+    if (!ticket.used) {
+      ticket.used = true;
+      ticket.usedAt = new Date().toISOString();
+      fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
+      console.log(`🎟️ Ticket ${ref} marked as used.`);
+    }
+
+    res.status(200).json({
+      message: "✅ Ticket verified successfully",
+      ticket: {
+        name: ticket.name,
+        email: ticket.email,
+        phone: ticket.phone,
+        ticketType: ticket.ticketType,
+        amount: ticket.amount,
+        used: ticket.used,
+        usedAt: ticket.usedAt || null,
+      },
+    });
+  } catch (error) {
+    console.error("❌ Error verifying ticket:", error);
+    res.status(500).json({ message: "Server error verifying ticket" });
+  }
+});
+
+
 
 module.exports = router;
