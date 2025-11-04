@@ -15,29 +15,24 @@ const VerifyTicket = () => {
     }
 
     const fetchTicket = async () => {
-      try {
-        const res = await axios.get(
-          `https://api.stepupsummit.org/api/tickets/verify?ref=${reference}`
-        );
+  try {
+    const res = await axios.get(
+      `https://api.stepupsummit.org/api/tickets/verify?ref=${reference}`
+    );
 
-        const message = res.data.message?.toLowerCase() || "";
+    console.log("API response:", res.data);
 
-        if (message.includes("already been verified")) {
-          setStatus("used");
-        } else if (message.includes("verified")) {
-          setTicket(res.data);
-          setStatus("success");
-        } else {
-          setStatus("error");
-        }
-      } catch (err) {
-        console.error(err);
-        setStatus("error");
-      }
-    };
-
-    fetchTicket();
-  }, [reference]);
+    if (res.data.message && res.data.message.toLowerCase().includes("verified")) {
+      setTicket(res.data.ticket || res.data); // Use `ticket` if present, or fallback
+      setStatus("success");
+    } else {
+      setStatus("error");
+    }
+  } catch (err) {
+    console.error(err);
+    setStatus("error");
+  }
+};
 
   // ⏳ Loading
   if (status === "loading")
