@@ -22,18 +22,14 @@ const VerifyTicket = () => {
 
         console.log("API response:", res.data);
 
-        // ✅ Handle "already verified" and "verified" messages
-        if (
-          res.data.message &&
-          res.data.message.toLowerCase().includes("already")
-        ) {
+        const msg = res.data.message?.toLowerCase() || "";
+
+        if (msg.includes("already verified")) {
           setStatus("used");
-        } else if (
-          res.data.message &&
-          res.data.message.toLowerCase().includes("verified")
-        ) {
-          setTicket(res.data.ticket || res.data);
+          setTicket(res.data.ticket || {});
+        } else if (msg.includes("verified")) {
           setStatus("success");
+          setTicket(res.data.ticket || res.data);
         } else {
           setStatus("error");
         }
@@ -43,11 +39,10 @@ const VerifyTicket = () => {
       }
     };
 
-    // ✅ Important: actually call the function
     fetchTicket();
   }, [reference]);
 
-  // ⏳ Loading state
+  // Loading spinner
   if (status === "loading")
     return (
       <div className="flex flex-col items-center justify-center h-screen text-center">
@@ -56,7 +51,7 @@ const VerifyTicket = () => {
       </div>
     );
 
-  // ❌ Invalid or expired ticket
+  // Invalid or expired
   if (status === "error")
     return (
       <div className="flex flex-col items-center justify-center h-screen text-center">
@@ -69,7 +64,7 @@ const VerifyTicket = () => {
       </div>
     );
 
-  // ⚠️ Ticket already verified
+  // Already verified
   if (status === "used")
     return (
       <div className="flex flex-col items-center justify-center h-screen text-center">
@@ -86,7 +81,7 @@ const VerifyTicket = () => {
       </div>
     );
 
-  // ✅ Ticket successfully verified
+  // Verified successfully
   return (
     <div className="flex flex-col items-center justify-center h-screen text-center">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-[90%] max-w-md">
@@ -96,7 +91,7 @@ const VerifyTicket = () => {
         <div className="text-left space-y-2">
           <p>
             <span className="font-semibold">Name:</span>{" "}
-            {ticket.name || ticket.fullName}
+            {ticket.fullName || ticket.name}
           </p>
           <p>
             <span className="font-semibold">Email:</span> {ticket.email}
