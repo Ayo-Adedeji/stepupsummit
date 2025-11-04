@@ -15,26 +15,39 @@ const VerifyTicket = () => {
     }
 
     const fetchTicket = async () => {
-  try {
-    const res = await axios.get(
-      `https://api.stepupsummit.org/api/tickets/verify?ref=${reference}`
-    );
+      try {
+        const res = await axios.get(
+          `https://api.stepupsummit.org/api/tickets/verify?ref=${reference}`
+        );
 
-    console.log("API response:", res.data);
+        console.log("API response:", res.data);
 
-    if (res.data.message && res.data.message.toLowerCase().includes("verified")) {
-      setTicket(res.data.ticket || res.data); // Use `ticket` if present, or fallback
-      setStatus("success");
-    } else {
-      setStatus("error");
-    }
-  } catch (err) {
-    console.error(err);
-    setStatus("error");
-  }
-};
+        // ✅ Handle "already verified" and "verified" messages
+        if (
+          res.data.message &&
+          res.data.message.toLowerCase().includes("already")
+        ) {
+          setStatus("used");
+        } else if (
+          res.data.message &&
+          res.data.message.toLowerCase().includes("verified")
+        ) {
+          setTicket(res.data.ticket || res.data);
+          setStatus("success");
+        } else {
+          setStatus("error");
+        }
+      } catch (err) {
+        console.error(err);
+        setStatus("error");
+      }
+    };
 
-  // ⏳ Loading
+    // ✅ Important: actually call the function
+    fetchTicket();
+  }, [reference]);
+
+  // ⏳ Loading state
   if (status === "loading")
     return (
       <div className="flex flex-col items-center justify-center h-screen text-center">
@@ -43,7 +56,7 @@ const VerifyTicket = () => {
       </div>
     );
 
-  // ❌ Invalid or expired
+  // ❌ Invalid or expired ticket
   if (status === "error")
     return (
       <div className="flex flex-col items-center justify-center h-screen text-center">
@@ -56,7 +69,7 @@ const VerifyTicket = () => {
       </div>
     );
 
-  // ⚠️ Already verified
+  // ⚠️ Ticket already verified
   if (status === "used")
     return (
       <div className="flex flex-col items-center justify-center h-screen text-center">
@@ -73,7 +86,7 @@ const VerifyTicket = () => {
       </div>
     );
 
-  // ✅ Verified successfully
+  // ✅ Ticket successfully verified
   return (
     <div className="flex flex-col items-center justify-center h-screen text-center">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-[90%] max-w-md">
