@@ -22,16 +22,20 @@ const VerifyTicket = () => {
 
         console.log("API response:", res.data);
 
-        const msg = res.data.message?.toLowerCase() || "";
-
-        if (msg.includes("already verified")) {
-          setStatus("used");
-          setTicket(res.data.ticket || {});
-        } else if (msg.includes("verified")) {
-          setStatus("success");
-          setTicket(res.data.ticket || res.data);
-        } else {
+        // Check if ticket data exists
+        const data = res.data.ticket || res.data;
+        if (!data) {
           setStatus("error");
+          return;
+        }
+
+        setTicket(data);
+
+        // Use the actual "used" flag to decide what to show
+        if (data.used === true) {
+          setStatus("used");
+        } else {
+          setStatus("success");
         }
       } catch (err) {
         console.error(err);
@@ -42,7 +46,6 @@ const VerifyTicket = () => {
     fetchTicket();
   }, [reference]);
 
-  // Loading spinner
   if (status === "loading")
     return (
       <div className="flex flex-col items-center justify-center h-screen text-center">
@@ -51,7 +54,6 @@ const VerifyTicket = () => {
       </div>
     );
 
-  // Invalid or expired
   if (status === "error")
     return (
       <div className="flex flex-col items-center justify-center h-screen text-center">
@@ -64,7 +66,6 @@ const VerifyTicket = () => {
       </div>
     );
 
-  // Already verified
   if (status === "used")
     return (
       <div className="flex flex-col items-center justify-center h-screen text-center">
@@ -81,7 +82,6 @@ const VerifyTicket = () => {
       </div>
     );
 
-  // Verified successfully
   return (
     <div className="flex flex-col items-center justify-center h-screen text-center">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-[90%] max-w-md">
@@ -91,7 +91,7 @@ const VerifyTicket = () => {
         <div className="text-left space-y-2">
           <p>
             <span className="font-semibold">Name:</span>{" "}
-            {ticket.fullName || ticket.name}
+            {ticket.name || ticket.fullName}
           </p>
           <p>
             <span className="font-semibold">Email:</span> {ticket.email}
