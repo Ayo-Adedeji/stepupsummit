@@ -96,7 +96,7 @@ console.log("💾 Ticket saved:", reference);
         // ✅ EMAIL TO BUYER
         const mailOptionsBuyer = {
             from: process.env.EMAIL_USER,
-            to: email || "dummybuyer@email.com",
+            to: email,
             subject: "🎟️ Step Up Summit Ticket Confirmation",
             html: `
         <div style="font-family:sans-serif;line-height:1.6;background:#f9f9f9;padding:20px;border-radius:10px;max-width:600px;margin:auto;">

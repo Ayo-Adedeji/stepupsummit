@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 const VerifyTicket = () => {
   const [params] = useSearchParams();
-  const [status, setStatus] = useState("loading");
+  const [status, setStatus] = useState("loading"); // loading | success | used | error
   const [ticket, setTicket] = useState(null);
   const reference = params.get("ref");
 
@@ -19,8 +19,17 @@ const VerifyTicket = () => {
         const res = await axios.get(
           `https://api.stepupsummit.org/api/tickets/verify?ref=${reference}`
         );
-        setTicket(res.data);
-        setStatus("success");
+
+        const message = res.data.message?.toLowerCase() || "";
+
+        if (message.includes("already been verified")) {
+          setStatus("used");
+        } else if (message.includes("verified")) {
+          setTicket(res.data);
+          setStatus("success");
+        } else {
+          setStatus("error");
+        }
       } catch (err) {
         console.error(err);
         setStatus("error");
@@ -30,6 +39,7 @@ const VerifyTicket = () => {
     fetchTicket();
   }, [reference]);
 
+  // ⏳ Loading
   if (status === "loading")
     return (
       <div className="flex flex-col items-center justify-center h-screen text-center">
@@ -38,6 +48,7 @@ const VerifyTicket = () => {
       </div>
     );
 
+  // ❌ Invalid or expired
   if (status === "error")
     return (
       <div className="flex flex-col items-center justify-center h-screen text-center">
@@ -50,6 +61,24 @@ const VerifyTicket = () => {
       </div>
     );
 
+  // ⚠️ Already verified
+  if (status === "used")
+    return (
+      <div className="flex flex-col items-center justify-center h-screen text-center">
+        <div className="bg-yellow-50 border border-yellow-300 shadow-md rounded-2xl p-8 w-[90%] max-w-md">
+          <h2 className="text-3xl font-bold mb-4 text-yellow-600">
+            ⚠️ Ticket Already Verified
+          </h2>
+          <p className="text-gray-700 mb-4">
+            This ticket has already been checked in. Please confirm with the
+            event staff if this is unexpected.
+          </p>
+          <p className="text-gray-500 text-sm">Ref: {reference}</p>
+        </div>
+      </div>
+    );
+
+  // ✅ Verified successfully
   return (
     <div className="flex flex-col items-center justify-center h-screen text-center">
       <div className="bg-white shadow-lg rounded-2xl p-8 w-[90%] max-w-md">
@@ -58,7 +87,8 @@ const VerifyTicket = () => {
         </h2>
         <div className="text-left space-y-2">
           <p>
-            <span className="font-semibold">Name:</span> {ticket.fullName}
+            <span className="font-semibold">Name:</span>{" "}
+            {ticket.name || ticket.fullName}
           </p>
           <p>
             <span className="font-semibold">Email:</span> {ticket.email}
