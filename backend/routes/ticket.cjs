@@ -167,7 +167,9 @@ console.log("💾 Ticket saved:", reference);
 });
 
 // ✅ Verify Ticket Endpoint (reads from tickets.json)
-router.get("/verify", async (req, res) => {
+// router.get("/verify", async (req, res) => {
+    router.get("/", async (req, res) => { 
+
   try {
     const { ref } = req.query;
 

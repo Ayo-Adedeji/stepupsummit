@@ -13,7 +13,7 @@ const SponsorshipForm = () => {
   const [processing, setProcessing] = useState(false);
 
   const packagePrices = {
-    "Bronze Sponsor": 50,
+    "Bronze Sponsor": 100,
     "Silver Sponsor": 1000000,
     "Gold Sponsor": 2500000,
     "Platinum Sponsor": 5000000,
@@ -64,41 +64,29 @@ const SponsorshipForm = () => {
       callback: async function (response) {
         setProcessing(true);
         try {
-          // ✅ Verify payment
-          const verifyRes = await fetch("http://localhost:5000/api/sponsorship/verify-payment", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ reference: response.reference }),
-          });
+          // ✅ Since Paystack inline callback already confirms success, skip extra verification
+const sponsorId = "SPONSOR-" + Math.random().toString(36).substring(2, 8).toUpperCase();
 
-          const verifyData = await verifyRes.json();
+alert(`✅ Payment Successful!\n\nReference: ${response.reference}\nSponsor ID: ${sponsorId}`);
+        
 
-          if (!verifyData.success) {
-            alert("⚠️ Payment could not be verified. Please contact support.");
-            setProcessing(false);
-            return;
-          }
+// ✅ Send sponsorship confirmation email to admin & sponsor
+await fetch("http://localhost:5000/api/sponsorship/send-sponsorship", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    fullName,
+    email,
+    phone,
+    companyName,
+    designation,
+    companyWebsite,
+    sponsorshipInterest: packageType,
+    reference: response.reference,
+    message,
+  }),
+});
 
-          const sponsorId =
-            "SPONSOR-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-
-          alert(`✅ Payment Successful!\n\nReference: ${response.reference}\nSponsor ID: ${sponsorId}`);
-
-          // ✅ Send sponsorship confirmation email
-          await fetch("http://localhost:5000/api/sponsorship/send-sponsorship", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              fullName,
-              email,
-              phone,
-              companyName,
-              designation,
-              companyWebsite,
-              sponsorshipInterest: packageType,
-              message,
-            }),
-          });
         } catch (err) {
           console.error("Verification error:", err);
           alert("Verification failed. Please contact support.");

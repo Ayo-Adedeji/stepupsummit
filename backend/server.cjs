@@ -31,7 +31,9 @@ if (!fs.existsSync(QR_FOLDER)) fs.mkdirSync(QR_FOLDER);
 app.use("/qrcodes", express.static(QR_FOLDER));
 
 // Routes
-app.use("/api/tickets", ticketRoutes);
+// app.use("/api/tickets", ticketRoutes);
+app.use("/verify-ticket", ticketRoutes);
+
 app.use("/api/sponsorship", sponsorshipRoutes);
 
 const PORT = process.env.PORT || 3000;
