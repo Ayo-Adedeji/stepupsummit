@@ -62,38 +62,37 @@ const SponsorshipForm = () => {
         message,
       },
       callback: async function (response) {
-        setProcessing(true);
-        try {
-          // ✅ Since Paystack inline callback already confirms success, skip extra verification
-const sponsorId = "SPONSOR-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+  setProcessing(true);
+  try {
+    const sponsorId = "SPONSOR-" + Math.random().toString(36).substring(2, 8).toUpperCase();
 
-alert(`✅ Payment Successful!\n\nReference: ${response.reference}\nSponsor ID: ${sponsorId}`);
-        
+    alert(`✅ Payment Successful!\n\nReference: ${response.reference}\nSponsor ID: ${sponsorId}`);
 
-// ✅ Send sponsorship confirmation email to admin & sponsor
-await fetch("http://localhost:5000/api/sponsorship/send-sponsorship", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    fullName,
-    email,
-    phone,
-    companyName,
-    designation,
-    companyWebsite,
-    sponsorshipInterest: packageType,
-    reference: response.reference,
-    message,
-  }),
-});
+    // ✅ Send sponsorship verification + emails to backend
+    await fetch("https://stepupsummit.org/api/sponsorship/verify-and-send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        reference: response.reference,
+        fullName,
+        email,
+        phone,
+        companyName,
+        designation,
+        companyWebsite,
+        sponsorshipInterest: packageType,
+        message,
+      }),
+    });
 
-        } catch (err) {
-          console.error("Verification error:", err);
-          alert("Verification failed. Please contact support.");
-        } finally {
-          setProcessing(false);
-        }
-      },
+  } catch (err) {
+    console.error("Error verifying sponsorship:", err);
+    alert("Something went wrong while verifying your payment, but your payment was successful.");
+  } finally {
+    setProcessing(false);
+  }
+},
+
       onClose: function () {
         alert("Transaction cancelled.");
         setProcessing(false);
