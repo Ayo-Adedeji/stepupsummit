@@ -108,7 +108,7 @@ const VerifyTicket = () => {
             <p><span className="font-semibold">Amount:</span> ₦{ticket.amount}</p>
             <p><span className="font-semibold">Note:</span> {ticket.note || "None"}</p>
             <p><span className="font-semibold">Reference:</span> {ticket.reference}</p>
-            <p><span className="font-semibold">Used At:</span> {ticket.usedAt}</p>
+          
           </div>
         )}
         <p className="mt-6 text-green-700 font-medium">
