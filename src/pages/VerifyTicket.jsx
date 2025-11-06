@@ -22,20 +22,20 @@ const VerifyTicket = () => {
 
         console.log("API response:", res.data);
 
-        // Check if ticket data exists
-        const data = res.data.ticket || res.data;
-        if (!data) {
+        if (!res.data) {
           setStatus("error");
           return;
         }
 
-        setTicket(data);
+        setTicket(res.data.ticket);
 
-        // Use the actual "used" flag to decide what to show
-        if (data.used === true) {
+        // ✅ Use backend status instead of ticket.used
+        if (res.data.status === "verified") {
+          setStatus("success");
+        } else if (res.data.status === "already_used") {
           setStatus("used");
         } else {
-          setStatus("success");
+          setStatus("error");
         }
       } catch (err) {
         console.error(err);
@@ -77,7 +77,18 @@ const VerifyTicket = () => {
             This ticket has already been checked in. Please confirm with the
             event staff if this is unexpected.
           </p>
-          <p className="text-gray-500 text-sm">Ref: {reference}</p>
+          {ticket && (
+            <div className="text-left space-y-2">
+              <p><span className="font-semibold">Name:</span> {ticket.name}</p>
+              <p><span className="font-semibold">Email:</span> {ticket.email}</p>
+              <p><span className="font-semibold">Phone:</span> {ticket.phone}</p>
+              <p><span className="font-semibold">Package:</span> {ticket.ticketType}</p>
+              <p><span className="font-semibold">Amount:</span> ₦{ticket.amount}</p>
+              <p><span className="font-semibold">Note:</span> {ticket.note || "None"}</p>
+              <p><span className="font-semibold">Reference:</span> {ticket.reference}</p>
+              <p><span className="font-semibold">Used At:</span> {ticket.usedAt}</p>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -88,22 +99,18 @@ const VerifyTicket = () => {
         <h2 className="text-3xl font-bold mb-4 text-green-600">
           ✅ Ticket Verified
         </h2>
-        <div className="text-left space-y-2">
-          <p>
-            <span className="font-semibold">Name:</span>{" "}
-            {ticket.name || ticket.fullName}
-          </p>
-          <p>
-            <span className="font-semibold">Email:</span> {ticket.email}
-          </p>
-          <p>
-            <span className="font-semibold">Ticket Type:</span>{" "}
-            {ticket.ticketType}
-          </p>
-          <p>
-            <span className="font-semibold">Reference:</span> {reference}
-          </p>
-        </div>
+        {ticket && (
+          <div className="text-left space-y-2">
+            <p><span className="font-semibold">Name:</span> {ticket.name}</p>
+            <p><span className="font-semibold">Email:</span> {ticket.email}</p>
+            <p><span className="font-semibold">Phone:</span> {ticket.phone}</p>
+            <p><span className="font-semibold">Package:</span> {ticket.ticketType}</p>
+            <p><span className="font-semibold">Amount:</span> ₦{ticket.amount}</p>
+            <p><span className="font-semibold">Note:</span> {ticket.note || "None"}</p>
+            <p><span className="font-semibold">Reference:</span> {ticket.reference}</p>
+            <p><span className="font-semibold">Used At:</span> {ticket.usedAt}</p>
+          </div>
+        )}
         <p className="mt-6 text-green-700 font-medium">
           Welcome to StepUp Summit 🎉
         </p>

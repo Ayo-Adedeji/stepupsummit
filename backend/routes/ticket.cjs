@@ -4,6 +4,8 @@ const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 const path = require("path");
 const fs = require("fs");
+const axios = require("axios");
+const sendSponsorshipEmails = require("../utils/sendSponsorshipEmails.cjs");
 
 dotenv.config();
 const router = express.Router();
@@ -12,207 +14,205 @@ const router = express.Router();
 const QR_FOLDER = path.join(process.cwd(), "qrcodes");
 if (!fs.existsSync(QR_FOLDER)) fs.mkdirSync(QR_FOLDER, { recursive: true });
 
+// Health check
 router.get("/", (req, res) => {
   res.send("🎟️ Tickets API running ✅");
 });
 
-// ✅ Paystack webhook endpoint
+// =================== Webhook (tickets + sponsorship detection) ===================
 router.post("/webhook", async (req, res) => {
-    try {
-        const event = req.body.event;
-
-        if (event !== "charge.success") {
-            console.log("⚠️ Ignored non-successful Paystack event");
-            return res.sendStatus(200);
-        }
-
-        const data = req.body.data;
-
-        // ✅ Extract info from Paystack webhook
-        const name = data.metadata?.name || "Unknown Buyer";
-        const email = data.customer?.email;
-        const phone = data.metadata?.phone || "Not provided";
-        const ticketType = data.metadata?.ticketType || "General";
-        const note = data.metadata?.note || "";
-        const amount = data.amount / 100;
-        const reference = data.reference;
-
-        const ticketId = `EVT-${Date.now()}`;
-        const verifyURL = `https://stepupsummit.org/verify-ticket?ref=${reference}`;
-
-        // ✅ QR CODE GENERATION
-        const qrPath = path.join(QR_FOLDER, `${ticketId}.png`);
-        try {
-            await QRCode.toFile(qrPath, verifyURL, {
-                color: { dark: "#000", light: "#FFF" },
-                margin: 2,
-                width: 250,
-            });
-            console.log("✅ QR generated:", qrPath);
-        } catch (err) {
-            console.error("❌ QR generation failed:", err.message);
-            return res.status(500).json({ message: "QR code creation failed" });
-        }
-
-        // ✅ Save ticket to file
-const TICKETS_FILE = path.join(process.cwd(), "tickets.json");
-
-const newTicket = {
-  ticketId,
-  reference,
-  name,
-  email,
-  phone,
-  ticketType,
-  amount,
-  note,
-  used: false,
-  createdAt: new Date().toISOString(),
-};
-
-// Load existing tickets
-let tickets = [];
-if (fs.existsSync(TICKETS_FILE)) {
-  const fileData = fs.readFileSync(TICKETS_FILE, "utf8");
-  if (fileData.trim()) tickets = JSON.parse(fileData);
-}
-
-// Add the new one
-tickets.push(newTicket);
-
-// Save back to file
-fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
-console.log("💾 Ticket saved:", reference);
-
-        // ✅ EMAIL SETUP
-        const transporter = nodemailer.createTransport({
-            service: "gmail",
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            },
-        });
-
-        // ✅ EMAIL TO BUYER
-        const mailOptionsBuyer = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: "🎟️ Step Up Summit Ticket Confirmation",
-            html: `
-        <div style="font-family:sans-serif;line-height:1.6;background:#f9f9f9;padding:20px;border-radius:10px;max-width:600px;margin:auto;">
-          <h2 style="color:#333;">✅ Payment Successful!</h2>
-          <p>Dear <b>${name}</b>, thank you for your payment of <b>₦${amount}</b>.</p>
-          <p>Your ticket ID is <b>${ticketId}</b>.</p>
-          <p>Scan this QR code at the event to verify your entry:</p>
-          <div style="text-align:center;margin:20px 0;">
-            <img src="cid:qrcode" alt="QR Code" style="width:200px;height:200px;border:1px solid #ddd;border-radius:10px;">
-          </div>
-          <p>Or click <a href="${verifyURL}">${verifyURL}</a> to verify manually.</p>
-          <p>See you at <b>StepUp Summit</b>!</p>
-        </div>
-      `,
-            attachments: [
-                {
-                    filename: "qrcode.png",
-                    path: qrPath,
-                    cid: "qrcode",
-                },
-            ],
-        };
-
-        // ✅ EMAIL TO ADMIN
-        const mailOptionsAdmin = {
-            from: process.env.EMAIL_USER,
-            to: process.env.ADMIN_EMAIL || "dummyadmin@stepupsummit.org",
-            subject: `🎫 New Ticket Purchase - ${ticketId}`,
-            html: `
-        <div style="font-family:sans-serif;line-height:1.6;background:#fff;padding:20px;border-radius:10px;max-width:600px;margin:auto;">
-          <h2>🎟️ New Ticket Purchased</h2>
-          <p><b>Name:</b> ${name}</p>
-          <p><b>Email:</b> ${email}</p>
-          <p><b>Phone:</b> ${phone}</p>
-          <p><b>Ticket Type:</b> ${ticketType}</p>
-          <p><b>Amount:</b> ₦${amount}</p>
-          <p><b>Reference:</b> ${reference}</p>
-          <p><b>Note:</b> ${note}</p>
-          <p><b>Verification URL:</b> <a href="${verifyURL}">${verifyURL}</a></p>
-          <div style="text-align:center;margin-top:20px;">
-            <img src="cid:qrcode" alt="QR Code" style="width:150px;height:150px;border:1px solid #ddd;border-radius:10px;">
-          </div>
-        </div>
-      `,
-            attachments: [
-                {
-                    filename: "qrcode.png",
-                    path: qrPath,
-                    cid: "qrcode",
-                },
-            ],
-        };
-
-        await transporter.sendMail(mailOptionsBuyer);
-        await transporter.sendMail(mailOptionsAdmin);
-        console.log("📧 Emails sent to buyer and admin successfully");
-
-        res.json({
-            success: true,
-            message: "Ticket created and emails sent",
-            ticketId,
-            verifyURL,
-        });
-    } catch (err) {
-        console.error("❌ Error:", err);
-        res.status(500).json({ message: "Internal server error" });
-    }
-});
-
-// ✅ Verify Ticket Endpoint (reads from tickets.json)
-// router.get("/verify", async (req, res) => {
-    router.get("/", async (req, res) => { 
+  console.log("⚡ /api/tickets/webhook payload:", req.body);
 
   try {
-    const { ref } = req.query;
+    const event = req.body.event;
+    if (event !== "charge.success") return res.sendStatus(200);
 
-    if (!ref) {
-      return res.status(400).json({ message: "Ticket reference is required" });
+    const data = req.body.data;
+    const metadata = data.metadata || {};
+    const reference = data.reference;
+    const isSponsorship =
+      Boolean(metadata.sponsorshipPackage) ||
+      (typeof reference === "string" && reference.startsWith("SPONSOR-"));
+
+    if (isSponsorship) {
+      console.log("🔁 Webhook detected sponsorship payment — sending sponsorship emails instead of ticket creation.");
+
+      // Prepare payload expected by sponsor email
+      const sponsorPayload = {
+        reference,
+        fullName: metadata.fullName || metadata.name || "Sponsor",
+        email: data.customer?.email || metadata.email,
+        phone: metadata.phone,
+        companyName: metadata.companyName,
+        designation: metadata.designation,
+        companyWebsite: metadata.companyWebsite,
+        sponsorshipInterest: metadata.sponsorshipPackage || "Sponsorship",
+        message: metadata.message || "",
+      };
+
+      const ok = await sendSponsorshipEmails(sponsorPayload);
+      return res.json({ success: ok, message: ok ? "Sponsorship emails sent (via webhook)" : "Failed to send sponsorship emails" });
     }
+
+    // ----- Ticket flow (unchanged) -----
+    const name = metadata.name || "Unknown Buyer";
+    const email = data.customer?.email;
+    const phone = metadata.phone || "Not provided";
+    const ticketType = metadata.ticketType || "General";
+    const note = metadata.note || "";
+    const amount = data.amount / 100;
+
+    const ticketId = `EVT-${Date.now()}`;
+    const verifyURL = `https://stepupsummit.org/verify-ticket?ref=${reference}`;
+
+    // QR CODE
+    const qrPath = path.join(QR_FOLDER, `${ticketId}.png`);
+    await QRCode.toFile(qrPath, verifyURL, { color: { dark: "#000", light: "#FFF" }, margin: 2, width: 250 });
+    console.log("✅ QR generated:", qrPath);
+
+    // Save ticket to tickets.json
+    const TICKETS_FILE = path.join(process.cwd(), "tickets.json");
+    const newTicket = { ticketId, reference, name, email, phone, ticketType, amount, note, used: false, createdAt: new Date().toISOString() };
+
+    let tickets = [];
+    if (fs.existsSync(TICKETS_FILE)) {
+      const fileData = fs.readFileSync(TICKETS_FILE, "utf8");
+      if (fileData.trim()) tickets = JSON.parse(fileData);
+    }
+    tickets.push(newTicket);
+    fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
+    console.log("💾 Ticket saved:", reference);
+
+    // Email setup (ticket emails use EMAIL_USER / EMAIL_PASS as before)
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+    });
+
+    const mailOptionsBuyer = {
+  from: process.env.EMAIL_USER,
+  to: email || "dummybuyer@email.com",
+  subject: "Step Up Summit Ticket Confirmation",
+  html: `
+    <div style="font-family:Arial, sans-serif; color:#333;">
+      <h2>Your StepUp Summit Ticket</h2>
+      <p>Dear ${name},</p>
+      <p>Thank you for purchasing a ticket to <b>StepUp Summit</b>.</p>
+      <p><b>Ticket Details:</b></p>
+      <ul>
+        <li><b>Name:</b> ${name}</li>
+        <li><b>Email:</b> ${email}</li>
+        <li><b>Phone:</b> ${phone}</li>
+        <li><b>Package:</b> ${ticketType}</li>
+        <li><b>Amount Paid:</b> ₦${amount}</li>
+        <li><b>Reference:</b> ${reference}</li>
+      </ul>
+      <p>Please present this QR code at the event check-in:</p>
+      <img src="cid:qrcode" alt="Ticket QR Code" style="width:200px;"/>
+      <p>Or click here to verify: <a href="${verifyURL}">${verifyURL}</a></p>
+      <p>We look forward to seeing you!</p>
+    </div>
+  `,
+  attachments: [
+    { filename: "qrcode.png", path: qrPath, cid: "qrcode" }
+  ],
+};
+
+
+    const mailOptionsAdmin = {
+  from: process.env.EMAIL_USER,
+  to: process.env.EMAIL_USER, // admin = same Gmail
+  subject: `New Ticket Purchase - ${ticketId}`,
+  html: `
+    <div style="font-family:Arial, sans-serif; color:#333;">
+      <h2>New Ticket Purchase</h2>
+      <p>A new ticket has been purchased for <b>StepUp Summit</b>.</p>
+      <p><b>Buyer Details:</b></p>
+      <ul>
+        <li><b>Name:</b> ${name}</li>
+        <li><b>Email:</b> ${email}</li>
+        <li><b>Phone:</b> ${phone}</li>
+        <li><b>Package:</b> ${ticketType}</li>
+        <li><b>Amount Paid:</b> ₦${amount}</li>
+        <li><b>Reference:</b> ${reference}</li>
+      </ul>
+      <p>QR Code for verification:</p>
+      <img src="cid:qrcode" alt="Ticket QR Code" style="width:200px;"/>
+      <p>Verify here: <a href="${verifyURL}">${verifyURL}</a></p>
+    </div>
+  `,
+  attachments: [
+    { filename: "qrcode.png", path: qrPath, cid: "qrcode" }
+  ],
+};
+
+
+    try { await transporter.sendMail(mailOptionsBuyer); console.log("📧 Buyer email sent"); } catch (err) { console.error("❌ Buyer email failed", err); }
+    try { await transporter.sendMail(mailOptionsAdmin); console.log("📧 Admin email sent"); } catch (err) { console.error("❌ Admin email failed", err); }
+
+    return res.json({ success: true, message: "Ticket created and emails attempted", ticketId, verifyURL });
+  } catch (err) {
+    console.error("❌ Error in /api/tickets/webhook:", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// =================== Verify endpoint (for frontend) ===================
+router.get("/verify", async (req, res) => {
+  try {
+    const { ref } = req.query;
+    if (!ref) return res.status(400).json({ message: "Ticket reference is required" });
 
     const TICKETS_FILE = path.join(process.cwd(), "tickets.json");
-
-    if (!fs.existsSync(TICKETS_FILE)) {
-      return res.status(404).json({ message: "No tickets found" });
-    }
+    if (!fs.existsSync(TICKETS_FILE)) return res.status(404).json({ message: "No tickets database found" });
 
     const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE, "utf8"));
-    const ticket = tickets.find((t) => t.reference === ref);
+    const ticket = tickets.find(t => t.reference === ref);
+    if (!ticket) return res.status(404).json({ message: "Invalid or expired ticket reference" });
 
-    if (!ticket) {
-      return res.status(404).json({ message: "Invalid or expired ticket reference" });
+    if (ticket.used) {
+      return res.status(200).json({
+        status: "already_used",
+        message: "⚠️ Ticket Already Verified",
+        ticket: {
+          ticketId: ticket.ticketId,
+          reference: ticket.reference,
+          name: ticket.name,
+          email: ticket.email,
+          phone: ticket.phone,
+          ticketType: ticket.ticketType,
+          note: ticket.note,
+          amount: ticket.amount,
+          used: true,
+          usedAt: ticket.usedAt,
+        },
+      });
     }
 
-    // ✅ Optional: mark as used if scanned first time
-    if (!ticket.used) {
-      ticket.used = true;
-      ticket.usedAt = new Date().toISOString();
-      fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
-      console.log(`🎟️ Ticket ${ref} marked as used.`);
-    }
+    // First-time scan → mark as used
+    ticket.used = true;
+    ticket.usedAt = new Date().toISOString();
+    fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
 
-    res.status(200).json({
-      message: "✅ Ticket verified successfully",
+    return res.status(200).json({
+      status: "verified",
+      message: "✅ Ticket Verified Successfully",
       ticket: {
+        ticketId: ticket.ticketId,
+        reference: ticket.reference,
         name: ticket.name,
         email: ticket.email,
         phone: ticket.phone,
         ticketType: ticket.ticketType,
+        note: ticket.note,
         amount: ticket.amount,
-        used: ticket.used,
-        usedAt: ticket.usedAt || null,
+        used: true,
+        usedAt: ticket.usedAt,
       },
     });
   } catch (error) {
     console.error("❌ Error verifying ticket:", error);
-    res.status(500).json({ message: "Server error verifying ticket" });
+    return res.status(500).json({ message: "Server error verifying ticket" });
   }
 });
 

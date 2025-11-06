@@ -223,7 +223,7 @@ const SponsorshipForm = () => {
           }`}
           disabled={processing}
         >
-          {processing ? "Processing..." : "Pay with Card"}
+          {processing ? "Processing..." : "Pay"}
         </button>
       </div>
     </section>
