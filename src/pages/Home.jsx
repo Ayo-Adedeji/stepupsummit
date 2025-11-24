@@ -31,7 +31,7 @@ const Home = () => {
       <Navbar />
       <Head />
       <HeroSection />
-      <Countdown targetDate="2025-12-15T00:00:00"/>
+      <Countdown targetDate="2025-12-12T00:00:00"/>
       <AboutSection />
       <Stats />
       <Wsa />

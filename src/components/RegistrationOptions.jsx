@@ -29,10 +29,13 @@ const RegistrationOptions = () => {
             </p>
             <ul className="text-gray-700 space-y-2 text-center mb-6">
               <li>
-                <span className="font-bold">Early Bird:</span> $25 (₦50)
+                <span className="font-bold">Student:</span> ₦2000
               </li>
               <li>
-                <span className="font-bold">Regular:</span> $40 (₦40,000)
+                <span className="font-bold">Regular:</span> ₦5000
+              </li>
+              <li>
+                <span className="font-bold">Premium:</span> ₦10000
               </li>
             </ul>
             <div className="text-center">
@@ -52,10 +55,10 @@ const RegistrationOptions = () => {
             </p>
             <ul className="text-gray-700 space-y-2 text-center mb-6">
               <li>
-                <span className="font-bold">Early Bird:</span> $50 (₦50,000)
+                <span className="font-bold">VIP:</span> ₦20,000
               </li>
               <li>
-                <span className="font-bold">Regular:</span> $70 (₦70,000)
+                <span className="font-bold">VVIP:</span> ₦50,000
               </li>
             </ul>
             <div className="text-center">

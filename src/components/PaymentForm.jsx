@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 const PaymentForm = ({
   defaultTicket = "General Admission",
-  defaultAmount = 100,
+  defaultAmount = 2000,
 }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -117,17 +117,19 @@ const PaymentForm = ({
                 onChange={(e) => {
                   const val = e.target.value;
                   setTicketType(val);
-                  if (val === "General Admission (Early Bird)") setAmount(25000);
-                  else if (val === "General Admission (Regular)") setAmount(40000);
-                  else if (val === "VIP (Early Bird)") setAmount(50000);
-                  else if (val === "VIP (Regular)") setAmount(70000);
+                  if (val === "General Admission (Student)") setAmount(2000);
+                  else if (val === "General Admission (Regular)") setAmount(5000);
+                  else if (val === "General Admission (Premium)") setAmount(10000);
+                  else if (val === "VIP") setAmount(20000);
+                  else if (val === "VVIP") setAmount(50000);
                 }}
                 className="mt-1 p-2 border rounded"
               >
-                <option>General Admission (Early Bird)</option>
+                <option>General Admission (Student)</option>
                 <option>General Admission (Regular)</option>
-                <option>VIP (Early Bird)</option>
-                <option>VIP (Regular)</option>
+                <option>General Admission (Premium)</option>
+                <option>VIP</option>
+                <option>VVIP</option>
               </select>
             </label>
           </div>
