@@ -54,6 +54,19 @@ const PaymentForm = ({
         note,
       },
       callback: (response) => {
+
+        // META PURCHASE EVENT HERE
+        if (window.fbq) {
+          try {
+            window.fbq("track", "Purchase", {
+              value: amount,
+              currency: "NGN",
+            });
+          } catch (err) {
+            console.warn("fbq error:", err);
+          }
+        }
+
         alert(
           `✅ Payment successful!\n\nReference: ${response.reference}\n\nA confirmation email with your QR ticket will be sent shortly.`
         );

@@ -1,8 +1,18 @@
 import PaymentForm from "./PaymentForm";
 import useScrollAnimation from "./useScrollAnimation";
+import { useEffect } from "react";
+
+
+
 
 const RegistrationOptions = () => {
   const [textRef, textVisible] = useScrollAnimation();
+
+  useEffect(() => {
+  if (window.fbq) {
+    window.fbq("track", "ViewContent");
+  }
+}, []);
 
      const scrollToPayment = () => {
     const section = document.getElementById("payment-instructions");
