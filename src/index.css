@@ -5,17 +5,33 @@
 @keyframes slide {
   0% { transform: translateX(100%); }
   100% { transform: translateX(-100%); }
-  
 }
 
 .animate-slide {
   animation: slide 12s linear infinite;
 }
-html, body {
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+body {
   overflow-x: hidden;
 }
 @layer base {
   body {
     @apply font-sans;
+  }
+  h1, h2, h3, h4 {
+    @apply font-heading;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-slide,
+  .animate-float {
+    animation: none !important;
   }
 }

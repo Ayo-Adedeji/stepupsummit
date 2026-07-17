@@ -10,6 +10,31 @@ const sendSponsorshipEmails = require("../utils/sendSponsorshipEmails.cjs");
 dotenv.config();
 const router = express.Router();
 
+// Append a successful registration to a Google Sheet via the Sheets API.
+// Replaces EmailJS as the durable record-keeping system for attendees.
+// Add Google Sheets API credentials and Sheet ID when ready (set in .env):
+//   GOOGLE_SHEET_ID, GOOGLE_SHEETS_API_KEY  (or a service-account access token)
+async function recordToSheet(record) {
+  const sheetId = process.env.GOOGLE_SHEET_ID;
+  const apiKey = process.env.GOOGLE_SHEETS_API_KEY;
+  if (!sheetId || !apiKey) {
+    // Not configured yet — keep existing flows untouched.
+    return;
+  }
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Registrants:append?valueInputOption=USER_ENTERED&key=${apiKey}`;
+  const values = [[
+    record.createdAt,
+    record.name,
+    record.email,
+    record.phone,
+    record.ticketType,
+    record.amount,
+    record.reference,
+    record.ticketId,
+  ]];
+  await axios.post(url, { values }, { headers: { "Content-Type": "application/json" } });
+}
+
 // ✅ Folder to store QR codes locally
 const QR_FOLDER = path.join(process.cwd(), "qrcodes");
 if (!fs.existsSync(QR_FOLDER)) fs.mkdirSync(QR_FOLDER, { recursive: true });
@@ -64,6 +89,17 @@ router.post("/webhook", async (req, res) => {
 
     const ticketId = `EVT-${Date.now()}`;
     const verifyURL = `https://stepupsummit.org/verify-ticket?ref=${reference}`;
+
+    // Record registrant in Google Sheet (best-effort — never blocks the flow)
+    // Add Google Sheets API credentials and Sheet ID when ready
+    try {
+      await recordToSheet({
+        name, email, phone, ticketType, amount, reference, ticketId,
+        createdAt: new Date().toISOString(),
+      });
+    } catch (sheetErr) {
+      console.error("⚠️ Google Sheets record skipped:", sheetErr.message);
+    }
 
     // QR CODE
     const qrPath = path.join(QR_FOLDER, `${ticketId}.png`);
