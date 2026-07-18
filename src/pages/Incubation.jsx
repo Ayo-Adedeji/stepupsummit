@@ -5,7 +5,7 @@ import PageHero from "../components/PageHero";
 import ScrollReveal from "../components/ScrollReveal";
 import { Spark, Eyebrow } from "../components/ui";
 
-import academyImg from "../assets/speaker.jpg";
+import academyImg from "../assets/academy.png";
 
 const incubation = [
   { n: "01", title: "Practical skills training", text: "Hands-on learning in the digital and business skills the market actually pays for — taught to be applied, not admired." },
@@ -53,7 +53,7 @@ const Incubation = () => {
             </a>
           </ScrollReveal>
           <ScrollReveal delay={0.15}>
-            <img src={academyImg} alt="Step-Up Academy" className="aspect-[3/4] w-full rounded-2xl object-cover object-top pt-4 shadow-lg" />
+            <img src={academyImg} alt="Step-Up Academy" className="w-full rounded-2xl object-contain shadow-lg ring-1 ring-white/10" />
           </ScrollReveal>
         </div>
       </section>

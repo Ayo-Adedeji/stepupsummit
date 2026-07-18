@@ -7,6 +7,11 @@
   100% { transform: translateX(-100%); }
 }
 
+@keyframes typewriterBlink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
 .animate-slide {
   animation: slide 12s linear infinite;
 }

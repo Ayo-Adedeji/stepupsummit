@@ -35,7 +35,7 @@ const HeroPhotoCard = ({ images }) => {
         </div>
 
         {/* TOP-LEFT badge — half on / half off the card */}
-        <div className="absolute -left-8 -top-2 flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 text-left shadow-xl ring-1 ring-brand-blue/20">
+        <div className="absolute -left-8 -top-2 flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 text-left shadow-xl">
           <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-brand-gold" />
           <span className="leading-tight">
             <span className="block text-sm font-extrabold text-brand-dark">1,100+</span>
@@ -44,7 +44,7 @@ const HeroPhotoCard = ({ images }) => {
         </div>
 
         {/* BOTTOM-RIGHT badge — half on / half off the card */}
-        <div className="absolute -bottom-4 -right-4 flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 text-left shadow-xl ring-1 ring-brand-blue/20">
+        <div className="absolute -bottom-4 -right-4 flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 text-left shadow-xl">
           <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-brand-gold" />
           <span className="leading-tight">
             <span className="block text-sm font-extrabold text-brand-dark">3rd Edition</span>

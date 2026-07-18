@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Brain, Zap, Users, ChevronDown, Plane } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import ScrambleText from "../components/ScrambleText";
+import RevealText from "../components/TypewriterText";
 import CountUp from "../components/CountUp";
 import ScrollReveal from "../components/ScrollReveal";
 import Marquee from "../components/Marquee";
@@ -17,7 +17,7 @@ import themeImg from "../assets/imag4.jpg";
 import edition1Img from "../assets/img1.JPG";
 import edition2Img from "../assets/4.jpg";
 import pitchImg from "../assets/img4.JPG";
-import speakerImg from "../assets/speaker.jpg";
+import speakerImg from "../assets/academy.png";
 import haomaImg from "../assets/haoma.png";
 import heroCard1 from "../assets/4.jpg";
 import heroCard2 from "../assets/5.jpg";
@@ -26,11 +26,12 @@ import heroCard4 from "../assets/8.jpg";
 import sponsor1 from "../assets/sponsor1.png";
 import sponsor2 from "../assets/sponsor2.png";
 import sponsor3 from "../assets/sponsor3.png";
-import sponsor4 from "../assets/sponsor4.png";
-import sponsor6 from "../assets/sponsor6.png";
-import speaker2Img from "../assets/speaker2.jpg";
-import speaker3Img from "../assets/speaker3.jpg";
-import speaker6Img from "../assets/speaker6.png";
+import cirveeLogo from "../assets/cirvee logo.jpeg";
+import goodyLogo from "../assets/Goody.PNG";
+import oluboriImg from "../assets/Adobe Ex.png";
+import adeifeImg from "../assets/Adeife.png";
+import israelImg from "../assets/Adobe E.png";
+import stephenImg from "../assets/Stephen Camilleri.png";
 
 const stagger = {
   visible: { transition: { staggerChildren: 0.1 } },
@@ -58,9 +59,9 @@ const Home = () => {
 
   const speakersPreview = [
     { name: "Haoma Worgwu", role: "Speaker · Editions 1.0 & 2.0", photo: haomaImg },
-    { name: "Stephen Camilleri", role: "Speaker · Editions 1.0 & 2.0", photo: speaker3Img },
-    { name: "Oche Writes", role: "Speaker · Edition 2.0", photo: speaker2Img },
-    { name: "Lanre Basamta", role: "Speaker · Edition 2.0", photo: speaker6Img },
+    { name: "Stephen Camilleri", role: "Speaker · Editions 1.0 & 2.0", photo: stephenImg },
+    { name: "Olubori Paul Kehinde", role: "Speaker · Edition 1.0", photo: oluboriImg },
+    { name: "Adeife Adeoye", role: "Panelist · Edition 1.0", photo: adeifeImg },
   ];
 
   const pitchSteps = [
@@ -76,7 +77,7 @@ const Home = () => {
   ];
 
   // Replace with actual partner logos when available
-  const sponsorLogos = [sponsor1, sponsor2, sponsor3, sponsor4, sponsor6];
+  const sponsorLogos = [cirveeLogo, goodyLogo, sponsor1, sponsor2, sponsor3];
 
   return (
     <div className="bg-white">
@@ -93,30 +94,34 @@ const Home = () => {
           style={{ background: "linear-gradient(180deg, rgba(11,31,92,0.82) 0%, rgba(6,13,31,0.9) 100%)" }}
         />
         <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center gap-12 px-5 pt-28 pb-16 lg:flex-row lg:items-center lg:justify-between lg:gap-8 lg:px-8">
-          <div className="flex flex-col items-start md:max-w-2xl">
-            <span className="mb-6 inline-flex items-center gap-2 rounded-full bg-brand-gold px-4 py-2 text-sm font-semibold text-brand-dark">
-              <Plane size={16} /> December 2026 · ICC Hall, University of Ibadan
+          <div className="flex w-full flex-col items-center px-1 text-center sm:items-start sm:px-0 sm:text-left md:max-w-2xl">
+             <span className="mb-6 inline-flex max-w-full flex-wrap justify-center gap-2 rounded-full border-2 border-brand-gold bg-transparent px-4 py-2 text-center text-xs font-bold text-brand-gold sm:text-sm">
+              <Plane size={16} className="rotate-[45deg]" fill="currentColor" strokeWidth={0} /> December 2026 · ICC Hall, University of Ibadan
             </span>
-            <ScrambleText
-              as="h1"
-              text="The Entrepreneur Rising"
-              className="max-w-4xl font-heading text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl"
-            />
+            <h1 className="w-full max-w-4xl font-heading text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-6xl">
+              <RevealText
+                as="span"
+                text="The Entrepreneur Rising"
+                accent="Rising"
+                accentClass="text-brand-gold"
+                className="text-white"
+              />
+            </h1>
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.6, duration: 0.6 }}
-              className="mt-4 font-heading text-lg font-semibold text-brand-gold-light sm:text-xl"
+              className="mt-4 w-full font-heading text-lg font-semibold text-white sm:text-xl"
             >
-              Shifting minds. Raising Africa’s next generation of entrepreneurs.
+              Shifting Minds. Raising Africa’s Next Generation Of Entrepreneurs.
             </motion.p>
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.9, duration: 0.6 }}
-              className="mt-5 max-w-2xl text-base text-brand-muted sm:text-lg"
+              className="mt-5 w-full max-w-2xl text-base text-white sm:text-lg"
             >
-              Step-Up Summit 3.0 is taking off — one day of world-class speakers,
+              Step-Up Summit 3.0 is taking off, one day of world-class speakers,
               hands-on workshops, pitch battles, and the room that turns students
               into founders. Your seat is free. Your future isn’t waiting.
             </motion.p>
@@ -124,17 +129,17 @@ const Home = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 2.1, duration: 0.6 }}
-              className="mt-8 flex flex-wrap gap-4"
+              className="mt-8 flex flex-wrap justify-center gap-3 sm:justify-start"
             >
               <Link
                 to="/register"
-                className="rounded-full bg-brand-gold px-8 py-4 font-heading text-base font-semibold text-brand-dark transition hover:bg-brand-gold-light"
+                className="rounded-full bg-brand-gold px-6 py-3 font-heading text-sm font-semibold text-brand-dark transition hover:bg-brand-gold-light sm:px-8 sm:py-4 sm:text-base"
               >
                 Register Now
               </Link>
               <Link
                 to="/sponsors"
-                className="rounded-full border-2 border-white/60 px-8 py-4 font-heading text-base font-semibold text-white transition hover:border-brand-gold hover:text-brand-gold"
+                className="rounded-full border-2 border-white/60 px-6 py-3 font-heading text-sm font-semibold text-white transition hover:border-brand-gold hover:text-brand-gold sm:px-8 sm:py-4 sm:text-base"
               >
                 Become a Sponsor
               </Link>
@@ -282,7 +287,7 @@ const Home = () => {
                 <div className="mt-4 flex justify-center gap-8 text-center">
                   <div><b className="block font-heading text-2xl text-brand-gold">700+</b><span className="text-xs uppercase text-brand-muted">Attendees</span></div>
                   <div><b className="block font-heading text-2xl text-brand-gold">8</b><span className="text-xs uppercase text-brand-muted">Speakers</span></div>
-                  <div><b className="block font-heading text-2xl text-brand-gold">11,600+</b><span className="text-xs uppercase text-brand-muted">Impressions</span></div>
+                  <div><b className="block font-heading text-2xl text-brand-gold">Alumni Hall, UI</b><span className="text-xs uppercase text-brand-muted">Venue</span></div>
                 </div>
               </div>
             </ScrollReveal>
@@ -322,7 +327,7 @@ const Home = () => {
                 <div className="rounded-2xl bg-white p-3 text-center shadow-md transition hover:-translate-y-1 hover:shadow-xl">
                   <div className="flex aspect-[3/3.4] items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-brand-blue to-brand-blue-mid">
                     {s.photo ? (
-                      <img src={s.photo} alt={s.name} className="h-full w-full object-cover object-top" />
+                      <img src={s.photo} alt={s.name} className="h-full w-full object-contain" />
                     ) : (
                       <Users className="text-brand-gold/70" size={48} />
                     )}
@@ -389,7 +394,9 @@ const Home = () => {
           {/* // Replace with actual partner logos when available */}
           <div className="mt-10 grid grid-cols-2 items-center gap-6 sm:grid-cols-3 md:grid-cols-5">
             {sponsorLogos.map((logo, i) => (
-              <img key={i} src={logo} alt="Partner logo" className="mx-auto max-h-14 w-auto object-contain opacity-90 transition hover:opacity-100" />
+              <div key={i} className="flex h-24 items-center justify-center rounded-xl bg-white px-4 shadow-sm">
+                <img src={logo} alt="Partner logo" className="max-h-16 w-auto object-contain opacity-90 transition hover:opacity-100" />
+              </div>
             ))}
           </div>
           <div className="mt-10 flex flex-wrap items-center gap-4">
@@ -406,7 +413,7 @@ const Home = () => {
       </section>
 
       {/* REGISTRATION CTA */}
-      <section className="bg-brand-gold py-20 text-brand-dark">
+      <section className="bg-brand-off-white py-20 text-brand-dark">
         <div className="mx-auto max-w-3xl px-5 text-center lg:px-8">
           <h2 className="font-heading text-3xl font-bold sm:text-4xl">Save your seat at 3.0</h2>
           <ul className="mx-auto mt-6 max-w-md space-y-2 text-left text-base font-medium">
@@ -449,7 +456,7 @@ const Home = () => {
             </a>
           </ScrollReveal>
           <ScrollReveal delay={0.15}>
-            <img src={speakerImg} alt="Step-Up Academy" className="aspect-[3/4] w-full rounded-2xl object-cover object-top pt-4 shadow-lg" />
+            <img src={speakerImg} alt="Step-Up Academy" className="w-full rounded-2xl object-contain shadow-lg ring-1 ring-white/10" />
           </ScrollReveal>
         </div>
       </section>

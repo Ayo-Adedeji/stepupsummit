@@ -68,13 +68,13 @@ const PastEditions = () => {
                 mindset-shifting closing charge.
               </p>
               <p className="mt-4 leading-relaxed text-gray-600">
-                Beyond the hall, the summit generated over 11,600 LinkedIn
-                impressions — amplifying the message far past the venue walls.
+                The first edition was hosted at Alumni Hall, University of
+                Ibadan — the room where the movement began.
               </p>
               <div className="mt-6 flex gap-8">
                 <div><b className="block font-heading text-2xl text-brand-dark">700+</b><span className="text-xs uppercase text-gray-500">Attendees</span></div>
                 <div><b className="block font-heading text-2xl text-brand-dark">8</b><span className="text-xs uppercase text-gray-500">Thought leaders</span></div>
-                <div><b className="block font-heading text-2xl text-brand-dark">11,600+</b><span className="text-xs uppercase text-gray-500">Impressions</span></div>
+                <div><b className="block font-heading text-2xl text-brand-dark">Alumni Hall, UI</b><span className="text-xs uppercase text-gray-500">Venue</span></div>
               </div>
             </ScrollReveal>
             <ScrollReveal delay={0.15}>

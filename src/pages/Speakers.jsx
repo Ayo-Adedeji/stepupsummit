@@ -7,15 +7,27 @@ import ScrollReveal from "../components/ScrollReveal";
 import { Spark } from "../components/ui";
 
 import haoma from "../assets/haoma.png";
-import speaker2 from "../assets/speaker2.jpg";
-import speaker3 from "../assets/speaker3.jpg";
-import speaker6 from "../assets/speaker6.png";
+import stephen from "../assets/Stephen Camilleri.png";
+import olubori from "../assets/Adobe Ex.png";
+import adeife from "../assets/Adeife.png";
+import israel from "../assets/Adobe E.png";
+import babatunde from "../assets/Babatunde.jpeg";
+import oche from "../assets/speaker2.jpg";
+import lanre from "../assets/speaker6.png";
+import abiodun from "../assets/speaker1.png";
+import tosin from "../assets/speaker5.png";
 
 const speakerPhotos = {
   "Haoma Worgwu": haoma,
-  "Stephen Camilleri": speaker3,
-  "Oche Writes": speaker2,
-  "Lanre Basamta": speaker6,
+  "Stephen Camilleri": stephen,
+  "Oche Writes": oche,
+  "Tosin Adegoke": tosin,
+  "Olubori Paul Kehinde": olubori,
+  "Adeife Adeoye": adeife,
+  "Lanre Basamta": lanre,
+  "Dr. Abiodun Oluwatobi": abiodun,
+  "Israel Olaniyan LL.B., B.L.": israel,
+  "Babatunde Abiodun": babatunde,
 };
 
 const pastSpeakers = [
@@ -64,7 +76,7 @@ const Speakers = () => {
                   <div className="group rounded-2xl bg-white p-3 text-center shadow-md transition hover:-translate-y-1 hover:border-brand-gold hover:shadow-xl">
                     <div className="flex aspect-[3/3.4] items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-brand-blue to-brand-blue-mid">
                       {photo ? (
-                        <img src={photo} alt={s.name} className="h-full w-full object-cover object-top" />
+                        <img src={photo} alt={s.name} className="h-full w-full object-contain" />
                       ) : (
                         <User className="text-brand-gold/70" size={48} />
                       )}
