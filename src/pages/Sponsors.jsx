@@ -6,8 +6,16 @@ import ScrollReveal from "../components/ScrollReveal";
 import CountUp from "../components/CountUp";
 import { Spark, Eyebrow } from "../components/ui";
 
+import sponsor1 from "../assets/sponsor1.png";
+import sponsor2 from "../assets/sponsor2.png";
+import sponsor3 from "../assets/sponsor3.png";
+import sponsor4 from "../assets/sponsor4.png";
+import sponsor6 from "../assets/sponsor6.png";
+import cirveeLogo from "../assets/cirvee logo.jpeg";
+import goodyLogo from "../assets/Goody.PNG";
+
 // Separate Formspree form endpoint for
-// sponsor inquiries — keeps them organised
+// sponsor inquiries , keeps them organised
 // separately from registrations and pitch apps
 const FORMSPREE_SPONSOR_ENDPOINT = "https://formspree.io/f/REPLACE_WITH_SPONSOR_FORM_ID";
 
@@ -65,7 +73,7 @@ const SponsorInquiryForm = ({ prefill, setPrefill }) => {
       <input
         type="hidden"
         name="_subject"
-        value="Sponsorship Inquiry — Step-Up Summit 3.0"
+        value="Sponsorship Inquiry , Step-Up Summit 3.0"
       />
 
       <div className="space-y-4">
@@ -167,7 +175,7 @@ const Sponsors = () => {
       <PageHero
         title="Put your brand beside the builders"
         breadcrumb="Sponsors"
-        subtitle="Over 20 partners have stood with Step-Up Summit — reaching 1,100+ ambitious young people in the room and thousands more online."
+        subtitle="Over 20 partners have stood with Step-Up Summit , reaching 1,100+ ambitious young people in the room and thousands more online."
       />
 
       {/* STATS */}
@@ -181,9 +189,9 @@ const Sponsors = () => {
           </ScrollReveal>
           <ScrollReveal>
             <span className="font-heading text-4xl font-extrabold text-brand-gold sm:text-5xl">
-              <CountUp end={11600} suffix="+" />
+              <CountUp end={15} />
             </span>
-            <p className="mt-2 text-sm font-semibold text-brand-muted">Impressions from one edition</p>
+              <p className="mt-2 text-sm font-semibold text-brand-muted">Speakers hosted</p>
           </ScrollReveal>
           <ScrollReveal>
             <span className="font-heading text-4xl font-extrabold text-brand-gold sm:text-5xl">
@@ -204,19 +212,19 @@ const Sponsors = () => {
       <section className="bg-white py-20">
         <div className="mx-auto max-w-3xl px-5 text-center lg:px-8">
           <Spark center />
-          <Eyebrow className="mt-4">Why sponsor</Eyebrow>
-          <h2 className="mt-3 font-heading text-3xl font-bold text-brand-dark sm:text-4xl">
-            This audience is the future — meet them first
+          <Eyebrow className="mt-4 text-center">Why sponsor</Eyebrow>
+          <h2 className="mt-3 font-heading text-center text-3xl font-bold text-brand-dark sm:text-4xl">
+            This audience is the future , meet them first
           </h2>
           <p className="mt-4 leading-relaxed text-gray-600">
             Step-Up Summit gathers the exact demographic every forward-thinking
             brand wants: ambitious students, young founders, and early-career
-            professionals at the moment they’re forming loyalties — to tools, banks,
+            professionals at the moment they’re forming loyalties , to tools, banks,
             platforms, and brands.
           </p>
           <p className="mt-4 leading-relaxed text-gray-600">
             Sponsorship isn’t charity here. It’s early access to Nigeria’s next
-            generation of customers, employees, and founders — wrapped in the
+            generation of customers, employees, and founders , wrapped in the
             goodwill of backing their rise.
           </p>
         </div>
@@ -224,18 +232,16 @@ const Sponsors = () => {
 
       {/* CURRENT PARTNERS */}
       <section className="bg-brand-off-white py-20">
-        <div className="mx-auto max-w-6xl px-5 lg:px-8">
-          <Spark />
-          <Eyebrow className="mt-4">Partners & sponsors</Eyebrow>
-          <h2 className="mt-3 font-heading text-3xl font-bold text-brand-dark sm:text-4xl">
+        <div className="mx-auto max-w-6xl px-5 text-center lg:px-8">
+          <Spark center />
+          <Eyebrow className="mt-4 text-center">Partners & sponsors</Eyebrow>
+          <h2 className="mt-3 text-center font-heading text-3xl font-bold text-brand-dark sm:text-4xl">
             Brands that back the builders
           </h2>
           {/* // Replace with actual partner logos */}
           <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
-            {Array.from({ length: 10 }).map((_, i) => (
-              <div key={i} className="flex aspect-[2.4/1] items-center justify-center rounded-xl border border-gray-200 bg-gray-50 text-xs font-semibold text-gray-400">
-                LOGO
-              </div>
+            {[cirveeLogo, goodyLogo, sponsor1, sponsor2, sponsor3, sponsor4, sponsor6].map((logo, i) => (
+              <img key={i} src={logo} alt="Partner logo" className="mx-auto h-12 w-auto object-contain" />
             ))}
           </div>
         </div>

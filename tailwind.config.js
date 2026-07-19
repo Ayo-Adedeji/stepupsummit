@@ -12,15 +12,16 @@ export default {
         body: ['DM Sans', 'sans-serif'],
         orbitron: ['Orbitron', 'sans-serif'],
       },
-   colors: {
-     primaryBlue: '#111249',
-     accentYellow: '#FFC107',
-     accentYellowDark: '#E0A800',
-     accentLightBlue: '#00B5E2',
-     accentDarkBlue: '#0D0E36',
-     darkGray: '#333333',
-     lightGray: '#F5F5F5',
-     brand: {
+    colors: {
+      primaryBlue: '#111249',
+      accentYellow: '#FFC107',
+      accentYellowDark: '#E0A800',
+      accentLightBlue: '#00B5E2',
+      accentDarkBlue: '#0D0E36',
+      darkGray: '#333333',
+      lightGray: '#F5F5F5',
+      'blue-white': '#B8C8E8',
+      brand: {
        blue: '#0B1F5C',
        'blue-mid': '#1E3A9F',
        'blue-light': '#2B4EC8',

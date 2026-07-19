@@ -14,7 +14,7 @@ const HeroPhotoCard = ({ images }) => {
   }, [images.length, reduce]);
 
   return (
-    <div className="relative hidden w-full max-w-md shrink-0 md:block">
+    <div className="relative w-full max-w-[280px] shrink-0 sm:max-w-md">
       <div className="relative aspect-[4/5] w-full">
         <div className="relative h-full w-full overflow-hidden rounded-2xl ring-1 ring-white/10 shadow-lg">
           {images.map((img, i) => (
@@ -34,21 +34,21 @@ const HeroPhotoCard = ({ images }) => {
           />
         </div>
 
-        {/* TOP-LEFT badge — half on / half off the card */}
-        <div className="absolute -left-8 -top-2 flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 text-left shadow-xl">
-          <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-brand-gold" />
+        {/* TOP-LEFT badge , half on / half off the card */}
+        <div className="absolute -left-6 -top-2 flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-3 py-2 text-left shadow-xl sm:-left-8 sm:px-5 sm:py-3">
+          <span className="h-2 w-2 flex-shrink-0 rounded-full bg-brand-gold sm:h-2.5 sm:w-2.5" />
           <span className="leading-tight">
-            <span className="block text-sm font-extrabold text-brand-dark">1,100+</span>
-            <span className="block text-[0.6rem] font-bold uppercase tracking-wide text-brand-dark">Students Impacted</span>
+            <span className="block text-xs font-extrabold text-brand-dark sm:text-sm">1,100+</span>
+            <span className="block text-[0.6rem] font-bold uppercase tracking-wide text-brand-dark sm:text-[0.6rem]">Students Impacted</span>
           </span>
         </div>
 
-        {/* BOTTOM-RIGHT badge — half on / half off the card */}
-        <div className="absolute -bottom-4 -right-4 flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-5 py-3 text-left shadow-xl">
-          <span className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-brand-gold" />
+        {/* BOTTOM-RIGHT badge , half on / half off the card */}
+        <div className="absolute -bottom-3 -right-3 flex items-center gap-2 rounded-2xl border border-white/15 bg-white px-3 py-2 text-left shadow-xl sm:-bottom-4 sm:-right-4 sm:px-5 sm:py-3">
+          <span className="h-2 w-2 flex-shrink-0 rounded-full bg-brand-gold sm:h-2.5 sm:w-2.5" />
           <span className="leading-tight">
-            <span className="block text-sm font-extrabold text-brand-dark">3rd Edition</span>
-            <span className="block text-[0.6rem] font-bold uppercase tracking-wide text-brand-dark">Biggest Yet</span>
+            <span className="block text-xs font-extrabold text-brand-dark sm:text-sm">3rd Edition</span>
+            <span className="block text-[0.6rem] font-bold uppercase tracking-wide text-brand-dark sm:text-[0.6rem]">Biggest Yet</span>
           </span>
         </div>
       </div>

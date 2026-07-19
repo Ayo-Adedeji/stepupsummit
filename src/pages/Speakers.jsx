@@ -6,6 +6,7 @@ import PageHero from "../components/PageHero";
 import ScrollReveal from "../components/ScrollReveal";
 import { Spark } from "../components/ui";
 
+import speaker4 from "../assets/haoma.png";
 import haoma from "../assets/haoma.png";
 import stephen from "../assets/Stephen Camilleri.png";
 import olubori from "../assets/Adobe Ex.png";
@@ -18,7 +19,7 @@ import abiodun from "../assets/speaker1.png";
 import tosin from "../assets/speaker5.png";
 
 const speakerPhotos = {
-  "Haoma Worgwu": haoma,
+  "Haoma Worgwu": speaker4,
   "Stephen Camilleri": stephen,
   "Oche Writes": oche,
   "Tosin Adegoke": tosin,
@@ -52,7 +53,7 @@ const Speakers = () => {
       <PageHero
         title="Voices that shift minds"
         breadcrumb="Speakers"
-        subtitle="Fifteen founders, executives, and thought leaders have taken the Step-Up stage across two editions — sharing wisdom that turned attendees into builders. The 3.0 lineup is loading."
+        subtitle="Fifteen founders, executives, and thought leaders have taken the Step-Up stage across two editions , sharing wisdom that turned attendees into builders. The 3.0 lineup is loading."
       />
 
       {/* PAST SPEAKERS */}
@@ -63,7 +64,7 @@ const Speakers = () => {
             The calibre to expect
           </h2>
           <p className="mt-3 max-w-2xl leading-relaxed text-gray-600">
-            From leadership and AI to business and personal growth — our speakers
+            From leadership and AI to business and personal growth , our speakers
             don’t recite theory. They’ve built, failed, rebuilt, and come to hand
             you the map.
           </p>
@@ -73,17 +74,19 @@ const Speakers = () => {
               const photo = speakerPhotos[s.name];
               return (
                 <ScrollReveal key={s.name} delay={(i % 4) * 0.08}>
-                  <div className="group rounded-2xl bg-white p-3 text-center shadow-md transition hover:-translate-y-1 hover:border-brand-gold hover:shadow-xl">
-                    <div className="flex aspect-[3/3.4] items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-brand-blue to-brand-blue-mid">
-                      {photo ? (
-                        <img src={photo} alt={s.name} className="h-full w-full object-contain" />
-                      ) : (
-                        <User className="text-brand-gold/70" size={48} />
-                      )}
-                    </div>
-                    <h4 className="mt-3 font-heading text-base font-semibold text-brand-dark">{s.name}</h4>
-                    <span className="text-sm text-gray-500">{s.role}</span>
-                  </div>
+              <div className={`flex h-full flex-col rounded-2xl p-3 text-center shadow-md transition hover:-translate-y-1 hover:shadow-xl ${i % 2 === 0 ? "bg-brand-blue text-white" : "bg-brand-gold text-brand-dark"}`}>
+                    <div className={`mx-auto h-32 w-32 flex-shrink-0 sm:h-48 sm:w-48 overflow-hidden rounded-2xl ${i % 2 === 0 ? "bg-gradient-to-br from-brand-blue to-brand-blue-mid" : "bg-white/60"}`}>
+                  {photo ? (
+                    <img src={photo} alt={s.name} className="h-full w-full object-cover object-top" />
+                  ) : (
+                    <User className={i % 2 === 0 ? "text-brand-gold/70" : "text-brand-blue/70"} size={48} />
+                  )}
+                </div>
+                <div className="mt-3 flex flex-1 flex-col">
+                  <h4 className={`font-heading text-base font-semibold leading-tight ${i % 2 === 0 ? "text-white" : "text-brand-dark"}`}>{s.name}</h4>
+                  <span className={`mt-1 text-sm leading-tight ${i % 2 === 0 ? "text-brand-muted" : "text-brand-blue"}`}>{s.role}</span>
+                </div>
+              </div>
                 </ScrollReveal>
               );
             })}
@@ -98,8 +101,8 @@ const Speakers = () => {
           <h2 className="mt-4 font-heading text-3xl font-bold sm:text-4xl">Have wisdom worth sharing?</h2>
           <p className="mt-4 text-brand-muted">
             We’re curating the 3.0 lineup around The Entrepreneur Rising. If your
-            story can shift a student’s mind — on leadership, finance, digital
-            skills, or building in Africa — we want to hear it.
+            story can shift a student’s mind , on leadership, finance, digital
+            skills, or building in Africa , we want to hear it.
           </p>
           <a
             href="mailto:stepupsummit@gmail.com?subject=Speaking at Step-Up Summit 3.0"
@@ -114,12 +117,12 @@ const Speakers = () => {
       <section className="bg-white py-16">
         <div className="mx-auto max-w-3xl px-5">
           <ScrollReveal>
-            <blockquote className="border-l-4 border-brand-gold pl-6 font-heading text-2xl font-medium italic leading-relaxed text-brand-dark">
-              “He redefined leadership — not as power, but as influence, vision, and
+            <blockquote className="border-l-4 border-brand-gold pl-6 font-heading text-lg font-medium italic leading-relaxed text-brand-dark">
+              “He redefined leadership , not as power, but as influence, vision, and
               service. His message was a timely reminder of what true leaders
               embody.”
             </blockquote>
-            <p className="mt-4 pl-6 text-sm font-semibold text-gray-500">— Attendee reflection on Stephen Camilleri, Edition 1.0</p>
+            <p className="mt-4 pl-6 text-sm font-semibold text-gray-500">, Attendee reflection on Stephen Camilleri, Edition 1.0</p>
           </ScrollReveal>
         </div>
       </section>

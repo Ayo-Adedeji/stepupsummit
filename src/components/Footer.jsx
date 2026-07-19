@@ -12,7 +12,7 @@ const Footer = () => {
               <img src="/favicon.png" alt="StepUp Summit" className="h-12 w-auto" />
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed">
-              Shifting the mindset of students and entrepreneurs — leadership,
+              Shifting the mindset of students and entrepreneurs , leadership,
               finance, digital skills mastery, and business networking.
             </p>
             <div className="mt-5 flex justify-center gap-3 md:justify-start">

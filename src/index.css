@@ -7,6 +7,16 @@
   100% { transform: translateX(-100%); }
 }
 
+@keyframes scroll-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes scroll-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
 @keyframes typewriterBlink {
   0%, 50% { opacity: 1; }
   50.01%, 100% { opacity: 0; }
@@ -15,6 +25,27 @@
 .animate-slide {
   animation: slide 12s linear infinite;
 }
+
+.marquee-track {
+  animation: scroll-left 30s linear infinite;
+}
+
+.marquee-track-reverse {
+  animation: scroll-right 30s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .animate-slide,
+  .animate-float,
+  .marquee-track,
+  .marquee-track-reverse {
+    animation: none !important;
+  }
+}
+
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
@@ -28,15 +59,5 @@ body {
   }
   h1, h2, h3, h4 {
     @apply font-heading;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  .animate-slide,
-  .animate-float {
-    animation: none !important;
   }
 }

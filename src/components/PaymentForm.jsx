@@ -87,7 +87,7 @@ const PaymentForm = ({
           `✅ Payment successful!\n\nReference: ${response.reference}\n\nA confirmation email with your QR ticket will be sent shortly.`
         );
         console.log("💰 Paystack response:", response);
-        // No further calls needed — webhook handles everything server-side
+        // No further calls needed , webhook handles everything server-side
         setProcessing(false);
       },
       onClose: () => {

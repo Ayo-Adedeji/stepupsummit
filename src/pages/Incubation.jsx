@@ -8,10 +8,10 @@ import { Spark, Eyebrow } from "../components/ui";
 import academyImg from "../assets/academy.png";
 
 const incubation = [
-  { n: "01", title: "Practical skills training", text: "Hands-on learning in the digital and business skills the market actually pays for — taught to be applied, not admired." },
-  { n: "02", title: "Personal branding", text: "Learn to package and position yourself — so opportunities can find you before you go looking for them." },
-  { n: "03", title: "Real work experience", text: "Projects and placements that put your skills to work — because ‘experience required’ shouldn’t be a locked door." },
-  { n: "04", title: "A tribe of builders", text: "Accountability, collaboration, and connections with peers on the same climb — the quiet engine behind every rise." },
+  { n: "01", title: "Practical skills training", text: "Hands-on learning in the digital and business skills the market actually pays for , taught to be applied, not admired." },
+  { n: "02", title: "Personal branding", text: "Learn to package and position yourself , so opportunities can find you before you go looking for them." },
+  { n: "03", title: "Real work experience", text: "Projects and placements that put your skills to work , because ‘experience required’ shouldn’t be a locked door." },
+  { n: "04", title: "A tribe of builders", text: "Accountability, collaboration, and connections with peers on the same climb , the quiet engine behind every rise." },
 ];
 
 const Incubation = () => {
@@ -21,7 +21,7 @@ const Incubation = () => {
       <PageHero
         title="The summit lights the fire. The Academy keeps it burning."
         breadcrumb="Our Incubation"
-        subtitle="Step-Up Academy is our online incubation programme — practical skills, personal branding, and real work experience, all year round."
+        subtitle="Step-Up Academy is our online incubation programme , practical skills, personal branding, and real work experience, all year round."
       />
 
       <section className="bg-white py-20">
@@ -33,7 +33,7 @@ const Incubation = () => {
               One day can inspire you. A season can transform you.
             </h2>
             <p className="mt-4 leading-relaxed text-gray-600">
-              The summit shifts your mind in a day — but building takes months.
+              The summit shifts your mind in a day , but building takes months.
               Step-Up Academy is the bridge: an online incubation academy that
               equips you with practical skills, personal branding, and real work
               experience.
@@ -90,7 +90,7 @@ const Incubation = () => {
               “An online incubation academy that equips you with practical skills,
               personal branding, and real work experience.”
             </blockquote>
-            <p className="mt-4 pl-6 text-sm font-semibold text-gray-500">— Step-Up Academy</p>
+            <p className="mt-4 pl-6 text-sm font-semibold text-gray-500">, Step-Up Academy</p>
           </ScrollReveal>
         </div>
       </section>

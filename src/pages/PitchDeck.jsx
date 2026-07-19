@@ -6,7 +6,8 @@ import PageHero from "../components/PageHero";
 import ScrollReveal from "../components/ScrollReveal";
 import { Spark, Eyebrow } from "../components/ui";
 
-import pitchImg from "../assets/imag5.jpg";
+import pitchHeroImg from "../assets/pitch1.jpg";
+import pitchBottomImg from "../assets/pitch1.jpg";
 
 // Use same Formspree account, different
 // form endpoint for pitch applications
@@ -17,6 +18,7 @@ const FORMSPREE_PITCH_ENDPOINT = "https://formspree.io/f/REPLACE_WITH_PITCH_FORM
 const PitchApplicationForm = () => {
   const [sent, setSent] = useState(false);
   const [idea, setIdea] = useState("");
+  const [cacRegistered, setCacRegistered] = useState("");
 
   if (sent) {
     return (
@@ -26,7 +28,7 @@ const PitchApplicationForm = () => {
         </h3>
         <p className="mt-4 text-gray-600">
           Your application is in. We&apos;ll be in touch within 48 hours. In the
-          meantime — keep building.
+          meantime , keep building.
         </p>
       </div>
     );
@@ -36,12 +38,13 @@ const PitchApplicationForm = () => {
     <form
       action={FORMSPREE_PITCH_ENDPOINT}
       method="POST"
+      encType="multipart/form-data"
       className="rounded-2xl bg-white p-7 shadow-lg sm:p-10"
     >
       <input
         type="hidden"
         name="_subject"
-        value="Pitch Deck Application — Step-Up Summit 3.0"
+        value="Pitch Deck Application , Step-Up Summit 3.0"
       />
 
       <div className="space-y-4">
@@ -118,6 +121,36 @@ const PitchApplicationForm = () => {
           </select>
         </label>
 
+        <label className="flex flex-col">
+          <span className="text-sm font-semibold text-brand-dark">Is your business CAC registered?</span>
+          <select
+            name="CAC Registered"
+            required
+            value={cacRegistered}
+            onChange={(e) => setCacRegistered(e.target.value)}
+            className="mt-1 rounded-xl border border-gray-300 bg-[#FBFCFF] p-3 text-brand-dark outline-none transition focus:border-brand-blue-light focus:ring-2 focus:ring-brand-blue-light/20"
+          >
+            <option value="">Select an option</option>
+            <option>Yes</option>
+            <option>No</option>
+            <option>In Progress</option>
+          </select>
+        </label>
+
+        {(cacRegistered === "Yes" || cacRegistered === "In Progress") && (
+          <label className="flex flex-col">
+            <span className="text-sm font-semibold text-brand-dark">Upload your CAC document</span>
+            <input
+              type="file"
+              name="CAC Document"
+              accept=".pdf,.jpg,.jpeg,.png"
+              className="mt-1 rounded-xl border border-gray-300 bg-[#FBFCFF] p-3 text-brand-dark outline-none transition focus:border-brand-blue-light focus:ring-2 focus:ring-brand-blue-light/20"
+            />
+            <span className="mt-1 text-xs text-gray-500">Upload a photo or scan of your CAC certificate or registration document</span>
+            {/* Formspree free tier supports file uploads up to 20MB per submission */}
+          </label>
+        )}
+
         <button
           type="submit"
           className="w-full rounded-full bg-brand-gold px-8 py-4 font-heading text-base font-semibold text-brand-dark transition hover:bg-brand-gold-light"
@@ -130,8 +163,8 @@ const PitchApplicationForm = () => {
 };
 
 const steps = [
-  { n: "01", title: "Apply with your idea", text: "Tick ‘Yes’ to the pitch competition when you register, and tell us about your business idea. No polished deck needed yet — clarity beats decoration." },
-  { n: "02", title: "Get shortlisted & pitch-ready", text: "Selected founders receive guidance on structuring a pitch deck investors actually want to see — problem, solution, market, model, ask." },
+  { n: "01", title: "Apply with your idea", text: "Tick ‘Yes’ to the pitch competition when you register, and tell us about your business idea. No polished deck needed yet , clarity beats decoration." },
+  { n: "02", title: "Get shortlisted & pitch-ready", text: "Selected founders receive guidance on structuring a pitch deck investors actually want to see , problem, solution, market, model, ask." },
   { n: "03", title: "Pitch live at 3.0", text: "Take the ICC Hall stage in December before judges and 1,000+ peers. Win prizes, mentorship, and the attention of people who can move your idea forward." },
 ];
 
@@ -142,39 +175,46 @@ const PitchDeck = () => {
       <PageHero
         title="Your idea. Our stage. Real stakes."
         breadcrumb="Pitch Deck"
-        subtitle="The Pitch Deck competition is where Step-Up stops being a summit and becomes a launchpad — students pitch live before judges, investors, and 1,000+ peers."
+        subtitle="The Pitch Deck competition is where Step-Up stops being a summit and becomes a launchpad , students pitch live before judges, investors, and 1,000+ peers."
       />
 
       {/* WHY */}
       <section className="bg-white py-20">
-        <div className="mx-auto max-w-3xl px-5 lg:px-8">
-          <Spark />
-          <Eyebrow className="mt-4">The pitch deck</Eyebrow>
-          <h2 className="mt-3 font-heading text-3xl font-bold text-brand-dark sm:text-4xl">
-            Ideas die in silence. We built a stage.
-          </h2>
-          <p className="mt-4 leading-relaxed text-gray-600">
-            Every campus is full of brilliant business ideas trapped in notebooks
-            and group chats. The Pitch Deck exists to pull them into the light — to
-            force clarity, invite feedback, and reward courage.
-          </p>
-          <p className="mt-4 leading-relaxed text-gray-600">
-            Winners walk away with prizes and mentorship. But every contestant
-            walks away with something rarer: the experience of standing up and
-            selling their idea to a real audience. That muscle changes everything
-            after.
-          </p>
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-5 lg:grid-cols-2 lg:px-8">
+          <ScrollReveal>
+            <Spark />
+            <Eyebrow className="mt-4">The pitch deck</Eyebrow>
+            <h2 className="mt-3 font-heading text-3xl font-bold text-brand-dark sm:text-4xl">
+              Ideas die in silence. We built a stage.
+            </h2>
+            <p className="mt-4 leading-relaxed text-gray-600">
+              Every campus is full of brilliant business ideas trapped in notebooks
+              and group chats. The Pitch Deck exists to pull them into the light , to
+              force clarity, invite feedback, and reward courage.
+            </p>
+            <p className="mt-4 leading-relaxed text-gray-600">
+              Winners walk away with prizes and mentorship. But every contestant
+              walks away with something rarer: the experience of standing up and
+              selling their idea to a real audience. That muscle changes everything
+              after.
+            </p>
+          </ScrollReveal>
+          <ScrollReveal delay={0.15}>
+            <img src={pitchHeroImg} alt="Pitch session" className="aspect-[4/3] max-w-lg w-full rounded-2xl object-cover shadow-lg" />
+          </ScrollReveal>
         </div>
       </section>
 
       {/* HOW IT WORKS */}
       <section className="bg-brand-off-white py-20">
         <div className="mx-auto max-w-6xl px-5 lg:px-8">
-          <Spark />
-          <Eyebrow className="mt-4">How it works</Eyebrow>
-          <h2 className="mt-3 font-heading text-3xl font-bold text-brand-dark sm:text-4xl">
-            From idea to stage in three steps
-          </h2>
+          <div className="mt-8">
+            <Spark />
+            <Eyebrow className="mt-4">How it works</Eyebrow>
+            <h2 className="mt-3 font-heading text-3xl font-bold text-brand-dark sm:text-4xl">
+              From idea to stage in three steps
+            </h2>
+          </div>
           <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
             {steps.map((s, i) => (
               <ScrollReveal key={s.n} delay={i * 0.1}>
@@ -193,7 +233,7 @@ const PitchDeck = () => {
       <section className="px-5 pb-20 lg:px-8">
         <ScrollReveal>
           <img
-            src={pitchImg}
+            src={pitchBottomImg}
             alt="Pitch competition moment"
             className="mx-auto aspect-[16/9] w-full max-w-6xl rounded-2xl object-cover shadow-lg"
           />
@@ -229,7 +269,7 @@ const PitchDeck = () => {
               <div className="h-full rounded-2xl border-l-4 border-brand-blue bg-brand-off-white p-7 shadow-md">
                 <h3 className="mb-2 font-heading text-xl font-semibold text-brand-dark">A real problem</h3>
                 <p className="text-sm leading-relaxed text-gray-600">
-                  Not an idea in search of a problem — a pain you’ve seen, felt, or
+                  Not an idea in search of a problem , a pain you’ve seen, felt, or
                   measured, and can describe in one sentence.
                 </p>
               </div>
@@ -247,7 +287,7 @@ const PitchDeck = () => {
               <div className="h-full rounded-2xl border-l-4 border-brand-blue bg-brand-off-white p-7 shadow-md">
                 <h3 className="mb-2 font-heading text-xl font-semibold text-brand-dark">A founder who’s moving</h3>
                 <p className="text-sm leading-relaxed text-gray-600">
-                  Evidence you’ve already started — research, a prototype, first
+                  Evidence you’ve already started , research, a prototype, first
                   customers. Judges back momentum, not just dreams.
                 </p>
               </div>
@@ -265,7 +305,7 @@ const PitchDeck = () => {
               business workshop, networking opportunities, meaningful connections and
               lots more.”
             </blockquote>
-            <p className="mt-4 pl-6 text-sm font-semibold text-gray-500">— What to expect, from the 2.0 experience</p>
+            <p className="mt-4 pl-6 text-sm font-semibold text-gray-500">, What to expect, from the 2.0 experience</p>
           </ScrollReveal>
         </div>
       </section>

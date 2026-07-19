@@ -7,22 +7,25 @@ import Footer from "../components/Footer";
 import RevealText from "../components/TypewriterText";
 import CountUp from "../components/CountUp";
 import ScrollReveal from "../components/ScrollReveal";
-import Marquee from "../components/Marquee";
 import HeroPhotoCard from "../components/HeroPhotoCard";
 import { Spark, Eyebrow } from "../components/ui";
 
 import heroImg from "../assets/imag2.jpg";
-import audienceImg from "../assets/imag3.jpg";
 import themeImg from "../assets/imag4.jpg";
+import aboutImg from "../assets/12.jpeg";
 import edition1Img from "../assets/img1.JPG";
-import edition2Img from "../assets/4.jpg";
-import pitchImg from "../assets/img4.JPG";
+import edition2Img from "../assets/8.jpg";
+import pitchImg from "../assets/pitch1.jpg";
 import speakerImg from "../assets/academy.png";
+import speaker4 from "../assets/haoma.png";
 import haomaImg from "../assets/haoma.png";
-import heroCard1 from "../assets/4.jpg";
+import heroCard1 from "../assets/3.jpg";
 import heroCard2 from "../assets/5.jpg";
 import heroCard3 from "../assets/7.jpg";
-import heroCard4 from "../assets/8.jpg";
+import heroCard5 from "../assets/1.jpg";
+import heroCard6 from "../assets/2.jpg";
+import heroCard7 from "../assets/6.jpg";
+import heroCard8 from "../assets/9.jpg";
 import sponsor1 from "../assets/sponsor1.png";
 import sponsor2 from "../assets/sponsor2.png";
 import sponsor3 from "../assets/sponsor3.png";
@@ -30,7 +33,6 @@ import cirveeLogo from "../assets/cirvee logo.jpeg";
 import goodyLogo from "../assets/Goody.PNG";
 import oluboriImg from "../assets/Adobe Ex.png";
 import adeifeImg from "../assets/Adeife.png";
-import israelImg from "../assets/Adobe E.png";
 import stephenImg from "../assets/Stephen Camilleri.png";
 
 const stagger = {
@@ -52,31 +54,24 @@ const Home = () => {
   ];
 
   const pillars = [
-    { icon: Brain, title: "Shift the mindset", text: "We dismantle the “wait for a job” default and replace it with ownership thinking — because entrepreneurship starts in the mind before it appears in the market." },
-    { icon: Zap, title: "Sharpen the skills", text: "Leadership, finance, digital skills, and pitch mastery — taught practically by people who have actually built things, not theory read from slides." },
-    { icon: Users, title: "Open the room", text: "Founders, executives, and investors in the same hall as students. The network you can’t buy — offered free, on purpose." },
+    { icon: Brain, title: "Shift the mindset", text: "We dismantle the “wait for a job” default and replace it with ownership thinking , because entrepreneurship starts in the mind before it appears in the market." },
+    { icon: Zap, title: "Sharpen the skills", text: "Leadership, finance, digital skills, and pitch mastery , taught practically by people who have actually built things, not theory read from slides." },
+    { icon: Users, title: "Open the room", text: "Founders, executives, and investors in the same hall as students. The network you can’t buy , offered free, on purpose." },
   ];
 
   const speakersPreview = [
-    { name: "Haoma Worgwu", role: "Speaker · Editions 1.0 & 2.0", photo: haomaImg },
+    { name: "Haoma Worgwu", role: "Speaker · Editions 1.0 & 2.0", photo: speaker4 },
     { name: "Stephen Camilleri", role: "Speaker · Editions 1.0 & 2.0", photo: stephenImg },
     { name: "Olubori Paul Kehinde", role: "Speaker · Edition 1.0", photo: oluboriImg },
     { name: "Adeife Adeoye", role: "Panelist · Edition 1.0", photo: adeifeImg },
   ];
 
   const pitchSteps = [
-    { n: "01", title: "Apply with your idea", text: "Submit your business idea when registration opens. No polished deck needed yet — clarity beats decoration." },
+    { n: "01", title: "Apply with your idea", text: "Submit your business idea when registration opens. No polished deck needed yet , clarity beats decoration." },
     { n: "02", title: "Get pitch-ready", text: "Shortlisted founders get guidance on structuring a deck that investors actually want to see." },
     { n: "03", title: "Pitch live at 3.0", text: "Take the stage at ICC Hall in December. Win prizes, mentorship, and the attention of people who can move your idea forward." },
   ];
 
-  const tiers = [
-    { title: "Supporting Partner", points: ["Logo on website & event banners", "Social media recognition", "Verbal recognition at the summit"] },
-    { title: "Headline Sponsor", feature: true, points: ["“Powered by” branding across all materials", "Speaking slot or product showcase on stage", "Branded booth & direct audience engagement", "Full digital campaign integration"] },
-    { title: "Prize & Kind Sponsor", points: ["Brand tied to a named prize or moment", "On-stage presentation of your prize", "Content features across our channels"] },
-  ];
-
-  // Replace with actual partner logos when available
   const sponsorLogos = [cirveeLogo, goodyLogo, sponsor1, sponsor2, sponsor3];
 
   return (
@@ -111,15 +106,15 @@ const Home = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.6, duration: 0.6 }}
-              className="mt-4 w-full font-heading text-lg font-semibold text-white sm:text-xl"
+              className="mt-4 w-full font-heading text-lg font-semibold text-brand-gold sm:text-xl"
             >
-              Shifting Minds. Raising Africa’s Next Generation Of Entrepreneurs.
+              Shifting Minds: Raising Africa&apos;s Next Generation Of Entrepreneurs.
             </motion.p>
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.9, duration: 0.6 }}
-              className="mt-5 w-full max-w-2xl text-base text-white sm:text-lg"
+              className="mt-5 w-full max-w-2xl text-base text-blue-white sm:text-lg"
             >
               Step-Up Summit 3.0 is taking off, one day of world-class speakers,
               hands-on workshops, pitch battles, and the room that turns students
@@ -129,29 +124,35 @@ const Home = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 2.1, duration: 0.6 }}
-              className="mt-8 flex flex-wrap justify-center gap-3 sm:justify-start"
+              className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:justify-start"
             >
               <Link
                 to="/register"
-                className="rounded-full bg-brand-gold px-6 py-3 font-heading text-sm font-semibold text-brand-dark transition hover:bg-brand-gold-light sm:px-8 sm:py-4 sm:text-base"
+                className="rounded-full bg-brand-gold px-8 py-3 font-heading text-sm font-semibold text-brand-dark transition hover:bg-brand-gold-light sm:px-8 sm:py-3 sm:text-base min-w-[180px] text-center"
               >
                 Register Now
               </Link>
               <Link
                 to="/sponsors"
-                className="rounded-full border-2 border-white/60 px-6 py-3 font-heading text-sm font-semibold text-white transition hover:border-brand-gold hover:text-brand-gold sm:px-8 sm:py-4 sm:text-base"
+                className="rounded-full border-2 border-white/60 px-8 py-3 font-heading text-sm font-semibold text-white transition hover:border-brand-gold hover:text-brand-gold sm:px-8 sm:py-3 sm:text-base min-w-[180px] text-center"
               >
                 Become a Sponsor
               </Link>
             </motion.div>
 
-            <Marquee
-              items={["Leadership", "Finance", "Digital Skills", "Pitch Mastery", "Networking"]}
-              className="mt-10 w-full border-t border-white/10 pt-5"
-            />
+            <div className="mt-6 flex flex-wrap justify-center gap-2 sm:justify-start">
+              {["Leadership", "Finance", "Digital Skills", "Pitch Mastery", "Networking"].map((item) => (
+                <span
+                  key={item}
+                  className="inline-flex rounded-full border-2 border-brand-gold bg-transparent px-4 py-2 text-center text-xs font-bold text-brand-gold sm:text-sm cursor-default"
+                >
+                  {item}
+                </span>
+              ))}
+            </div>
           </div>
 
-          <HeroPhotoCard images={[heroCard1, heroCard2, heroCard3, heroCard4]} />
+          <HeroPhotoCard images={[heroCard1, heroCard2, heroCard3, heroCard5, heroCard6, heroCard7, heroCard8]} />
         </div>
 
         <motion.a
@@ -193,7 +194,7 @@ const Home = () => {
               </h2>
               <p className="mt-5 leading-relaxed text-gray-600">
                 Step-Up Summit is Ibadan’s boldest gathering of students, young
-                founders, and future leaders — built on one conviction: Africa’s
+                founders, and future leaders , built on one conviction: Africa’s
                 next generation of entrepreneurs is already on campus. They just
                 need the mindset, the skills, and the room.
               </p>
@@ -206,8 +207,8 @@ const Home = () => {
             </ScrollReveal>
             <ScrollReveal delay={0.15}>
               <img
-                src={audienceImg}
-                alt="Audience at Step-Up Summit"
+                src={aboutImg}
+                alt="Step-Up Summit"
                 className="aspect-[4/3] w-full rounded-2xl object-cover shadow-lg"
               />
             </ScrollReveal>
@@ -247,17 +248,17 @@ const Home = () => {
           </ScrollReveal>
           <ScrollReveal delay={0.15}>
             <Spark />
-            <Eyebrow className="mt-4">Theme — 3.0</Eyebrow>
+            <Eyebrow className="mt-4">Theme , 3.0</Eyebrow>
             <h2 className="mt-3 font-heading text-3xl font-bold sm:text-4xl">The Entrepreneur Rising</h2>
             <p className="mt-4 text-brand-muted">
               Edition 3.0 is a call to every student who has ever had an idea and
-              sat on it — this is the year you rise.
+              sat on it , this is the year you rise.
             </p>
             <ul className="mt-6 space-y-3">
               {[
                 "Keynotes and panels from founders and industry leaders shaping Africa’s future",
                 "Business and finance workshops you can apply the same week",
-                "The Pitch Deck competition — stand on stage, sell your idea, win support",
+                "The Pitch Deck competition , stand on stage, sell your idea, win support",
                 "Giveaways, networking sessions, and connections that outlive the day",
               ].map((pt) => (
                 <li key={pt} className="flex items-start gap-3 text-brand-muted">
@@ -316,29 +317,33 @@ const Home = () => {
       {/* SPEAKERS PREVIEW */}
       <section className="bg-brand-off-white py-20">
         <div className="mx-auto max-w-6xl px-5 lg:px-8">
-          <Spark />
-          <Eyebrow className="mt-4">Voices that shift minds</Eyebrow>
-          <h2 className="mt-3 font-heading text-3xl font-bold text-brand-dark sm:text-4xl">
-            Speakers who’ve walked the talk
-          </h2>
+          <div className="text-center sm:text-left">
+            <Spark center />
+            <Eyebrow className="mt-4">Voices that shift minds</Eyebrow>
+            <h2 className="mt-3 font-heading text-3xl font-bold text-brand-dark sm:text-4xl">
+              Speakers who've walked the talk
+            </h2>
+          </div>
           <div className="mt-12 grid grid-cols-2 gap-6 lg:grid-cols-4">
             {speakersPreview.map((s, i) => (
               <ScrollReveal key={i} delay={i * 0.1}>
-                <div className="rounded-2xl bg-white p-3 text-center shadow-md transition hover:-translate-y-1 hover:shadow-xl">
-                  <div className="flex aspect-[3/3.4] items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-brand-blue to-brand-blue-mid">
+                <div className={`flex h-full flex-col rounded-2xl p-3 text-center shadow-md transition hover:-translate-y-1 hover:shadow-xl ${i % 2 === 0 ? "bg-brand-blue text-white" : "bg-brand-gold text-brand-dark"}`}>
+                  <div className={`mx-auto h-32 w-32 flex-shrink-0 sm:h-44 sm:w-44 overflow-hidden rounded-full ${i % 2 === 0 ? "bg-gradient-to-br from-brand-blue to-brand-blue-mid" : "bg-white/60"}`}>
                     {s.photo ? (
-                      <img src={s.photo} alt={s.name} className="h-full w-full object-contain" />
+                      <img src={s.photo} alt={s.name} className="h-full w-full object-cover object-top" />
                     ) : (
                       <Users className="text-brand-gold/70" size={48} />
                     )}
                   </div>
-                  <h4 className="mt-3 font-heading text-base font-semibold text-brand-dark">{s.name}</h4>
-                  <span className="text-sm text-gray-500">{s.role}</span>
+                  <div className="mt-3 flex flex-1 flex-col">
+                    <h4 className={`font-heading text-base font-semibold leading-tight ${i % 2 === 0 ? "text-white" : "text-brand-dark"}`}>{s.name}</h4>
+                    <span className={`mt-1 text-sm leading-tight ${i % 2 === 0 ? "text-brand-muted" : "text-brand-blue"}`}>{s.role}</span>
+                  </div>
                 </div>
               </ScrollReveal>
             ))}
           </div>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-4 sm:justify-start">
             <Link to="/speakers" className="rounded-full border-2 border-brand-blue px-7 py-3 font-semibold text-brand-blue transition hover:bg-brand-blue hover:text-white">
               See all speakers
             </Link>
@@ -394,9 +399,7 @@ const Home = () => {
           {/* // Replace with actual partner logos when available */}
           <div className="mt-10 grid grid-cols-2 items-center gap-6 sm:grid-cols-3 md:grid-cols-5">
             {sponsorLogos.map((logo, i) => (
-              <div key={i} className="flex h-24 items-center justify-center rounded-xl bg-white px-4 shadow-sm">
-                <img src={logo} alt="Partner logo" className="max-h-16 w-auto object-contain opacity-90 transition hover:opacity-100" />
-              </div>
+              <img key={i} src={logo} alt="Partner logo" className="mx-auto h-12 w-auto object-contain opacity-90 transition hover:opacity-100" />
             ))}
           </div>
           <div className="mt-10 flex flex-wrap items-center gap-4">
@@ -412,23 +415,17 @@ const Home = () => {
         </div>
       </section>
 
-      {/* REGISTRATION CTA */}
+      {/* SAVE YOUR SEAT */}
       <section className="bg-brand-off-white py-20 text-brand-dark">
         <div className="mx-auto max-w-3xl px-5 text-center lg:px-8">
-          <h2 className="font-heading text-3xl font-bold sm:text-4xl">Save your seat at 3.0</h2>
-          <ul className="mx-auto mt-6 max-w-md space-y-2 text-left text-base font-medium">
-            <li>✓ Free access to every keynote, panel, and workshop</li>
-            <li>✓ Pitch competition entry — pitch your idea live</li>
-            <li>✓ Networking access to founders, executives, and builders</li>
-            <li>✓ Giveaways & certificates of participation</li>
-          </ul>
+          <h2 className="font-heading text-3xl font-bold sm:text-4xl">Your seat at 3.0 is reserved</h2>
+          <p className="mt-4 text-base text-gray-600 sm:text-lg">December 2026 &bull; ICC Hall, University of Ibadan &bull; Editions 1.0 and 2.0 both filled up &bull; Register Early</p>
           <Link
             to="/register"
-            className="mt-8 inline-block rounded-full bg-brand-blue px-10 py-4 font-heading text-lg font-semibold text-white transition hover:bg-brand-blue-mid"
+            className="mt-8 inline-block rounded-full bg-brand-gold px-10 py-4 font-heading text-lg font-semibold text-brand-dark transition hover:bg-brand-gold-light"
           >
-            Register Now — Save My Seat
+            I Want to Register Now
           </Link>
-          <p className="mt-4 text-sm font-semibold">No payment. Ever.</p>
         </div>
       </section>
 
@@ -443,7 +440,7 @@ const Home = () => {
             </h2>
             <p className="mt-4 text-brand-muted">
               Our online incubation academy equips you with practical skills,
-              personal branding, and real work experience — so the fire you catch
+              personal branding, and real work experience , so the fire you catch
               in December keeps burning through the year.
             </p>
             <a
