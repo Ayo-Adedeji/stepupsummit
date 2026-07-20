@@ -49,6 +49,9 @@
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  /* Prevent Samsung/Android browsers from auto-scaling text based on system font size */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 body {
   overflow-x: hidden;

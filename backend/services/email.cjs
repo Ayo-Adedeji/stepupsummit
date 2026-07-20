@@ -10,15 +10,22 @@ const sheets = require("./googleSheets.cjs");
 //   host: 'mail.stepupsummit.org', port: 465
 // All use: secure: true, auth: { user, pass }
 const SMTP_HOST = process.env.SMTP_HOST || "smtp.gmail.com";
-const SMTP_PORT = parseInt(process.env.SMTP_PORT || "465", 10);
+// Port 465 is blocked on Render free tier — use 587 with STARTTLS instead.
+// secure:false + port 587 = STARTTLS (upgrades to TLS automatically).
+// secure:true + port 465 = SSL from the start (blocked on Render).
+const SMTP_PORT = parseInt(process.env.SMTP_PORT || "587", 10);
+const SMTP_SECURE = SMTP_PORT === 465;
 
 const transporter = nodemailer.createTransport({
   host: SMTP_HOST,
   port: SMTP_PORT,
-  secure: true,
+  secure: SMTP_SECURE,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false,
   },
 });
 
