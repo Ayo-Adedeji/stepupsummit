@@ -307,6 +307,12 @@ app.use("/api/register", ticketRoutes);
 app.use("/api/paystack", ticketRoutes);
 app.use("/api/paystack/sponsor", sponsorshipRoutes);
 
+// Alias: /api/verify-ticket → ticketRoutes POST /verify-ticket
+app.post("/api/verify-ticket", (req, res, next) => {
+  req.url = "/verify-ticket";
+  ticketRoutes(req, res, next);
+});
+
 // Forward /api/paystack/sponsor-initialize → sponsorshipRoutes POST /sponsor-initialize
 // The fixed handler (test mode amount, callback_url) lives in routes/sponsorship.cjs
 app.post("/api/paystack/sponsor-initialize", (req, res, next) => {
