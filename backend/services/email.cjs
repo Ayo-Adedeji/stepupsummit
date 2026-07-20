@@ -29,7 +29,7 @@ function wrapEmail({ title, body, footer = "Step-Up Summit 3.0 · Powered by Pre
 async function sendMail({ to, subject, html, replyTo, attachments }) {
   try {
     const payload = {
-      from: "Step-Up Summit <onboarding@resend.dev>",
+      from: "Step-Up Summit <noreply@stepupsummit.org>",
       to: [to],
       subject,
       html,

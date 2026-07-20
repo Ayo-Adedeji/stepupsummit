@@ -270,7 +270,7 @@ app.get("/api/test-email", async (req, res) => {
     const resendClient = new Resend(process.env.RESEND_API_KEY);
 
     const { data, error } = await resendClient.emails.send({
-      from: "Step-Up Summit <onboarding@resend.dev>",
+      from: "Step-Up Summit <noreply@stepupsummit.org>",
       to: [process.env.ADMIN_EMAIL || process.env.EMAIL_USER],
       subject: "Test Email — Step-Up Summit Backend",
       html: "<p>✅ Email is working via Resend! Sent at " + new Date().toISOString() + "</p>",
