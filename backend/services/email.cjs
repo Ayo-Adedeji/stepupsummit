@@ -68,11 +68,15 @@ async function sendMail({ to, subject, html, replyTo, attachments }) {
     console.log(`📧 Email sent to ${to}: ${subject} (${info.messageId})`);
     return true;
   } catch (err) {
-    console.error(`❌ Email failed to ${to}:`, err.code, err.message);
+    console.error(`❌ Email failed to ${to}: [${err.code}] ${err.message}`);
     if (err.code === 'EAUTH') {
       console.error(`   SMTP auth failed. Check EMAIL_USER (${process.env.EMAIL_USER}) and EMAIL_PASS (${process.env.EMAIL_PASS ? '***SET***' : 'MISSING'})`);
     }
-    return false;
+    if (err.code === 'ECONNECTION' || err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED') {
+      console.error(`   SMTP connection failed. Host: ${SMTP_HOST}, Port: ${SMTP_PORT}. Port may be blocked by hosting provider.`);
+    }
+    // Re-throw so callers can surface the real error when needed
+    throw err;
   }
 }
 

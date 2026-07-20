@@ -266,19 +266,45 @@ app.post("/api/admin/export-csv", adminLimiter, requireAdmin, async (req, res) =
 // Test email route — hit GET /api/test-email to confirm email is working
 app.get("/api/test-email", async (req, res) => {
   try {
-    const emailSvc = require("./services/email.cjs");
-    const result = await emailSvc.sendMail({
+    const nodemailer = require("nodemailer");
+    const testTransporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST || "smtp.gmail.com",
+      port: parseInt(process.env.SMTP_PORT || "587", 10),
+      secure: parseInt(process.env.SMTP_PORT || "587", 10) === 465,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+      tls: { rejectUnauthorized: false },
+    });
+
+    await testTransporter.sendMail({
+      from: `"Step-Up Summit" <${process.env.EMAIL_USER}>`,
       to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
       subject: "Test Email — Step-Up Summit Backend",
       html: "<p>✅ Email is working! Sent from the Step-Up Summit backend at " + new Date().toISOString() + "</p>",
     });
-    if (result) {
-      return res.json({ success: true, message: "Test email sent to " + (process.env.ADMIN_EMAIL || process.env.EMAIL_USER) });
-    } else {
-      return res.status(500).json({ success: false, message: "Email sending failed — check terminal logs for SMTP error details" });
-    }
+
+    return res.json({
+      success: true,
+      message: "Test email sent to " + (process.env.ADMIN_EMAIL || process.env.EMAIL_USER),
+      config: {
+        host: process.env.SMTP_HOST || "smtp.gmail.com",
+        port: parseInt(process.env.SMTP_PORT || "587", 10),
+        user: process.env.EMAIL_USER,
+      },
+    });
   } catch (error) {
-    return res.status(500).json({ success: false, error: error.message });
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+      code: error.code,
+      config: {
+        host: process.env.SMTP_HOST || "smtp.gmail.com",
+        port: parseInt(process.env.SMTP_PORT || "587", 10),
+        user: process.env.EMAIL_USER,
+      },
+    });
   }
 });
 
