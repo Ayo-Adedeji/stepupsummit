@@ -65,10 +65,7 @@ async function sendFreeRegistrationEmail({ firstName, email, qrId, qrDataUrl }) 
     <p>Hi <b>${firstName}</b>,</p>
     <p>You're in! Your free spot at <b>Step-Up Summit 3.0</b> is confirmed.</p>
     <p><b>Event Details:</b><br/>Date TBC · ICC Hall, University of Ibadan</p>
-    <p>Present this QR code at the entrance on event day:</p>
-    <div style="text-align:center; margin:16px 0;">
-      <img src="cid:qrcode" alt="QR Code" style="width:200px; height:200px; border:2px solid ${BRAND.gold}; border-radius:8px;" />
-    </div>
+    <p>Present the QR attachment below at the entrance on event day.</p>
     <p><b>Reference Number:</b> ${qrId}</p>
     <p>Share with your network:
       <a href="https://wa.me/?text=I'm+attending+Step-Up+Summit+3.0!+Join+me:+${qrId}" style="color:${BRAND.blue};">WhatsApp</a>
@@ -116,10 +113,7 @@ async function sendPaidTicketEmail({ name, email, ticketType, amount, reference,
   const body = `
     <p>Hi <b>${name}</b>, your <b>${ticketType}</b> ticket is confirmed!</p>
     <p><b>Payment Reference:</b> ${reference}<br/><b>Amount Paid:</b> ₦${amount.toLocaleString()}</p>
-    <p>Present this QR code at the entrance on event day:</p>
-    <div style="text-align:center; margin:16px 0;">
-      <img src="cid:qrcode" alt="QR Code" style="width:200px; height:200px; border:2px solid ${BRAND.gold}; border-radius:8px;" />
-    </div>
+    <p>Present the QR attachment below at the entrance on event day.</p>
     <p><b>Event Details:</b><br/>Date TBC · ICC Hall, University of Ibadan</p>
     <p>Verify here: <a href="${verifyURL}" style="color:${BRAND.blue};">${verifyURL}</a></p>
   `;
