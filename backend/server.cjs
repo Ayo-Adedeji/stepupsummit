@@ -266,45 +266,23 @@ app.post("/api/admin/export-csv", adminLimiter, requireAdmin, async (req, res) =
 // Test email route — hit GET /api/test-email to confirm email is working
 app.get("/api/test-email", async (req, res) => {
   try {
-    const nodemailer = require("nodemailer");
-    const testTransporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || "smtp.gmail.com",
-      port: parseInt(process.env.SMTP_PORT || "587", 10),
-      secure: parseInt(process.env.SMTP_PORT || "587", 10) === 465,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-      tls: { rejectUnauthorized: false },
-    });
+    const { Resend } = require("resend");
+    const resendClient = new Resend(process.env.RESEND_API_KEY);
 
-    await testTransporter.sendMail({
-      from: `"Step-Up Summit" <${process.env.EMAIL_USER}>`,
-      to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+    const { data, error } = await resendClient.emails.send({
+      from: "Step-Up Summit <onboarding@resend.dev>",
+      to: [process.env.ADMIN_EMAIL || process.env.EMAIL_USER],
       subject: "Test Email — Step-Up Summit Backend",
-      html: "<p>✅ Email is working! Sent from the Step-Up Summit backend at " + new Date().toISOString() + "</p>",
+      html: "<p>✅ Email is working via Resend! Sent at " + new Date().toISOString() + "</p>",
     });
 
-    return res.json({
-      success: true,
-      message: "Test email sent to " + (process.env.ADMIN_EMAIL || process.env.EMAIL_USER),
-      config: {
-        host: process.env.SMTP_HOST || "smtp.gmail.com",
-        port: parseInt(process.env.SMTP_PORT || "587", 10),
-        user: process.env.EMAIL_USER,
-      },
-    });
+    if (error) {
+      return res.status(500).json({ success: false, error: error.message || JSON.stringify(error) });
+    }
+
+    return res.json({ success: true, message: "Test email sent to " + (process.env.ADMIN_EMAIL || process.env.EMAIL_USER), id: data?.id });
   } catch (error) {
-    return res.status(500).json({
-      success: false,
-      error: error.message,
-      code: error.code,
-      config: {
-        host: process.env.SMTP_HOST || "smtp.gmail.com",
-        port: parseInt(process.env.SMTP_PORT || "587", 10),
-        user: process.env.EMAIL_USER,
-      },
-    });
+    return res.status(500).json({ success: false, error: error.message });
   }
 });
 

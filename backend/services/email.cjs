@@ -1,33 +1,6 @@
-const nodemailer = require("nodemailer");
-const sheets = require("./googleSheets.cjs");
+const { Resend } = require("resend");
 
-// Confirm email host with domain provider
-// If Google Workspace:
-//   host: 'smtp.gmail.com', port: 465
-// If Zoho:
-//   host: 'smtp.zoho.com', port: 465
-// If cPanel:
-//   host: 'mail.stepupsummit.org', port: 465
-// All use: secure: true, auth: { user, pass }
-const SMTP_HOST = process.env.SMTP_HOST || "smtp.gmail.com";
-// Port 465 is blocked on Render free tier — use 587 with STARTTLS instead.
-// secure:false + port 587 = STARTTLS (upgrades to TLS automatically).
-// secure:true + port 465 = SSL from the start (blocked on Render).
-const SMTP_PORT = parseInt(process.env.SMTP_PORT || "587", 10);
-const SMTP_SECURE = SMTP_PORT === 465;
-
-const transporter = nodemailer.createTransport({
-  host: SMTP_HOST,
-  port: SMTP_PORT,
-  secure: SMTP_SECURE,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const BRAND = {
   blue: "#0B1F5C",
@@ -54,28 +27,34 @@ function wrapEmail({ title, body, footer = "Step-Up Summit 3.0 · Powered by Pre
 }
 
 async function sendMail({ to, subject, html, replyTo, attachments }) {
-  const mailOptions = {
-    from: `"Step-Up Summit" <${process.env.EMAIL_FROM || process.env.EMAIL_USER}>`,
-    to,
-    subject,
-    html,
-    replyTo: replyTo || process.env.EMAIL_USER,
-    attachments: attachments || [],
-  };
-
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log(`📧 Email sent to ${to}: ${subject} (${info.messageId})`);
+    const payload = {
+      from: "Step-Up Summit <onboarding@resend.dev>",
+      to: [to],
+      subject,
+      html,
+      reply_to: replyTo || process.env.EMAIL_USER,
+    };
+
+    // Resend supports attachments as { filename, content (base64 string) }
+    if (attachments && attachments.length > 0) {
+      payload.attachments = attachments.map((a) => ({
+        filename: a.filename,
+        content: a.content, // already base64 string
+      }));
+    }
+
+    const { data, error } = await resend.emails.send(payload);
+
+    if (error) {
+      console.error(`❌ Resend email failed to ${to}:`, error);
+      throw new Error(error.message || JSON.stringify(error));
+    }
+
+    console.log(`📧 Email sent to ${to}: ${subject} (${data?.id})`);
     return true;
   } catch (err) {
-    console.error(`❌ Email failed to ${to}: [${err.code}] ${err.message}`);
-    if (err.code === 'EAUTH') {
-      console.error(`   SMTP auth failed. Check EMAIL_USER (${process.env.EMAIL_USER}) and EMAIL_PASS (${process.env.EMAIL_PASS ? '***SET***' : 'MISSING'})`);
-    }
-    if (err.code === 'ECONNECTION' || err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED') {
-      console.error(`   SMTP connection failed. Host: ${SMTP_HOST}, Port: ${SMTP_PORT}. Port may be blocked by hosting provider.`);
-    }
-    // Re-throw so callers can surface the real error when needed
+    console.error(`❌ Email error to ${to}: ${err.message}`);
     throw err;
   }
 }
@@ -96,23 +75,14 @@ async function sendFreeRegistrationEmail({ firstName, email, qrId, qrDataUrl }) 
     </p>
   `;
 
-  // Extract base64 data from the data URL (strip the "data:image/png;base64," prefix)
   const base64Data = qrDataUrl.replace(/^data:image\/png;base64,/, "");
-
   const html = wrapEmail({ title: "You're registered for Step-Up Summit 3.0", body });
   return sendMail({
     to: email,
     subject: "You're registered for Step-Up Summit 3.0 🎯",
     html,
     replyTo: email,
-    attachments: [
-      {
-        filename: "ticket-qr.png",
-        content: base64Data,
-        encoding: "base64",
-        cid: "qrcode",
-      },
-    ],
+    attachments: [{ filename: "ticket-qr.png", content: base64Data }],
   });
 }
 
@@ -134,7 +104,11 @@ async function sendFreeRegistrationAdminEmail({ firstName, lastName, email, phon
   `;
 
   const html = wrapEmail({ title: "New Free Registration — Step-Up Summit 3.0", body });
-  return sendMail({ to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER, subject: "New Free Registration — Step-Up Summit 3.0", html });
+  return sendMail({
+    to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+    subject: "New Free Registration — Step-Up Summit 3.0",
+    html,
+  });
 }
 
 // 3. Paid ticket confirmation (to buyer)
@@ -150,28 +124,19 @@ async function sendPaidTicketEmail({ name, email, ticketType, amount, reference,
     <p>Verify here: <a href="${verifyURL}" style="color:${BRAND.blue};">${verifyURL}</a></p>
   `;
 
-  // Extract base64 data from the data URL (strip the "data:image/png;base64," prefix)
   const base64Data = qrDataUrl.replace(/^data:image\/png;base64,/, "");
-
   const html = wrapEmail({ title: "Ticket confirmed — Step-Up Summit 3.0", body });
   return sendMail({
     to: email,
     subject: "Ticket confirmed — Step-Up Summit 3.0 🎟",
     html,
     replyTo: email,
-    attachments: [
-      {
-        filename: "ticket-qr.png",
-        content: base64Data,
-        encoding: "base64",
-        cid: "qrcode",
-      },
-    ],
+    attachments: [{ filename: "ticket-qr.png", content: base64Data }],
   });
 }
 
 // 4. Paid ticket admin notification
-async function sendPaidTicketAdminEmail({ name, email, phone, ticketType, amount, reference, qrId }) {
+async function sendPaidTicketAdminEmail({ name, email, phone, ticketType, amount, reference, qrId, iAm, school, pitchCompetition }) {
   const body = `
     <p>A new ticket purchase has been made:</p>
     <table style="width:100%; border-collapse:collapse; margin-top:12px;">
@@ -179,15 +144,22 @@ async function sendPaidTicketAdminEmail({ name, email, phone, ticketType, amount
       <tr style="background:#f9f9f9;"><td style="padding:8px;">Name</td><td style="padding:8px;">${name}</td></tr>
       <tr><td style="padding:8px;">Email</td><td style="padding:8px;">${email}</td></tr>
       <tr style="background:#f9f9f9;"><td style="padding:8px;">Phone</td><td style="padding:8px;">${phone}</td></tr>
-      <tr><td style="padding:8px;">Ticket Type</td><td style="padding:8px;">${ticketType}</td></tr>
-      <tr style="background:#f9f9f9;"><td style="padding:8px;">Amount Paid</td><td style="padding:8px;">₦${amount.toLocaleString()}</td></tr>
-      <tr><td style="padding:8px;">Reference</td><td style="padding:8px;">${reference}</td></tr>
-      <tr style="background:#f9f9f9;"><td style="padding:8px;">QR ID</td><td style="padding:8px;">${qrId}</td></tr>
+      <tr><td style="padding:8px;">I Am A</td><td style="padding:8px;">${iAm || "—"}</td></tr>
+      <tr style="background:#f9f9f9;"><td style="padding:8px;">School/Org</td><td style="padding:8px;">${school || "—"}</td></tr>
+      <tr><td style="padding:8px;">Pitch Competition</td><td style="padding:8px;">${pitchCompetition || "—"}</td></tr>
+      <tr style="background:#f9f9f9;"><td style="padding:8px;">Ticket Type</td><td style="padding:8px;">${ticketType}</td></tr>
+      <tr><td style="padding:8px;">Amount Paid</td><td style="padding:8px;">₦${amount.toLocaleString()}</td></tr>
+      <tr style="background:#f9f9f9;"><td style="padding:8px;">Reference</td><td style="padding:8px;">${reference}</td></tr>
+      <tr><td style="padding:8px;">QR ID</td><td style="padding:8px;">${qrId}</td></tr>
     </table>
   `;
 
   const html = wrapEmail({ title: `New Ticket Purchase — ${ticketType} — Step-Up Summit 3.0`, body });
-  return sendMail({ to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER, subject: `New Ticket Purchase — ${ticketType} — Step-Up Summit 3.0`, html });
+  return sendMail({
+    to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+    subject: `New Ticket Purchase — ${ticketType} — Step-Up Summit 3.0`,
+    html,
+  });
 }
 
 // 5. Sponsor inquiry confirmation (to sponsor)
@@ -206,7 +178,6 @@ async function sendSponsorInquiryEmail({ contactName, email, packageSelected, br
 
 // 6. Sponsor payment confirmation (to sponsor)
 async function sendSponsorPaymentEmail({ contactName, fullName, email, packageSelected, sponsorshipInterest, amount, reference, brandName }) {
-  // Normalize parameter names — webhook sends fullName/sponsorshipInterest, inquiry sends contactName/packageSelected
   const name = contactName || fullName || "Sponsor";
   const pkg = packageSelected || sponsorshipInterest || "Sponsorship";
   const body = `
@@ -238,7 +209,11 @@ async function sendSponsorAdminEmail({ contactName, email, phone, packageSelecte
   `;
 
   const html = wrapEmail({ title: `New Sponsor — ${packageSelected} — ${brandName}`, body });
-  return sendMail({ to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER, subject: `New Sponsor — ${packageSelected} — ${brandName}`, html });
+  return sendMail({
+    to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+    subject: `New Sponsor — ${packageSelected} — ${brandName}`,
+    html,
+  });
 }
 
 // 8. Pitch application confirmation (to applicant)
@@ -272,13 +247,11 @@ async function sendPitchAdminEmail({ fullName, email, phone, businessName, descr
     ${cacFile ? '<p style="margin-top:12px;"><b>CAC document is attached to this email.</b></p>' : ''}
   `;
 
-  // Build attachments array if a file was uploaded
   const attachments = [];
   if (cacFile && cacFile.path) {
-    attachments.push({
-      filename: cacFile.originalname || cacFile.filename,
-      path: cacFile.path,
-    });
+    const fs = require("fs");
+    const fileContent = fs.readFileSync(cacFile.path).toString("base64");
+    attachments.push({ filename: cacFile.originalname || cacFile.filename, content: fileContent });
   }
 
   const html = wrapEmail({ title: `New Pitch Application — ${businessName}`, body });
@@ -291,18 +264,12 @@ async function sendPitchAdminEmail({ fullName, email, phone, businessName, descr
 }
 
 function verifyTransporter() {
-  transporter.verify((error, success) => {
-    if (error) {
-      console.error("❌ Email transporter error:", error.message);
-      if (error.code === "EAUTH") {
-        console.error("   → Check EMAIL_USER and EMAIL_PASS in .env");
-        console.error("   → Gmail App Password must have no spaces");
-        console.error("   → 2FA must be enabled on the Gmail account");
-      }
-    } else {
-      console.log("✅ Email server ready — SMTP connected to", SMTP_HOST + ":" + SMTP_PORT);
-    }
-  });
+  // Resend doesn't need a persistent connection — API key is validated per-send
+  if (process.env.RESEND_API_KEY) {
+    console.log("✅ Resend email configured");
+  } else {
+    console.error("❌ RESEND_API_KEY is missing — emails will not send");
+  }
 }
 
 module.exports = {
