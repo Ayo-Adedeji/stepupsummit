@@ -118,7 +118,7 @@ const Home = () => {
             >
               Step-Up Summit 3.0 is taking off, one day of world-class speakers,
               hands-on workshops, pitch battles, and the room that turns students
-              into founders. Your seat is free. Your future isn’t waiting.
+              into founders. Your seat is ready.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -250,7 +250,7 @@ const Home = () => {
             <Spark />
             <Eyebrow className="mt-4">Theme , 3.0</Eyebrow>
             <h2 className="mt-3 font-heading text-3xl font-bold sm:text-4xl">The Entrepreneur Rising</h2>
-            <p className="mt-4 text-brand-muted">
+            <p className="mt-4 text-blue-white">
               Edition 3.0 is a call to every student who has ever had an idea and
               sat on it , this is the year you rise.
             </p>
@@ -261,7 +261,7 @@ const Home = () => {
                 "The Pitch Deck competition , stand on stage, sell your idea, win support",
                 "Giveaways, networking sessions, and connections that outlive the day",
               ].map((pt) => (
-                <li key={pt} className="flex items-start gap-3 text-brand-muted">
+                <li key={pt} className="flex items-start gap-3 text-blue-white">
                   <span className="mt-2 h-[5px] w-4 flex-shrink-0 rounded-full bg-brand-gold" />
                   <span>{pt}</span>
                 </li>

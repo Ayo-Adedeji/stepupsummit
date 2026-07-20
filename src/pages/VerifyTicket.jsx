@@ -1,39 +1,34 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const VerifyTicket = () => {
-  const [params] = useSearchParams();
-  const [status, setStatus] = useState("loading"); // loading | success | used | error
+  const { qrId } = useParams();
+  const [status, setStatus] = useState("loading");
   const [ticket, setTicket] = useState(null);
-  const reference = params.get("ref");
 
   useEffect(() => {
-    if (!reference) {
+    if (!qrId) {
       setStatus("error");
       return;
     }
 
     const fetchTicket = async () => {
       try {
-        const res = await axios.get(
-          `https://api.stepupsummit.org/api/tickets/verify?ref=${reference}`
-        );
+        const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+        const res = await axios.post(`${baseUrl}/api/verify-ticket`, { qrId });
 
-        console.log("API response:", res.data);
+        const data = res.data;
+        setTicket(data);
 
-        if (!res.data) {
-          setStatus("error");
-          return;
-        }
-
-        setTicket(res.data.ticket);
-
-        // ✅ Use backend status instead of ticket.used
-        if (res.data.status === "verified") {
+        if (data.status === "VERIFIED") {
           setStatus("success");
-        } else if (res.data.status === "already_used") {
+        } else if (data.status === "ALREADY_USED") {
           setStatus("used");
+        } else if (data.status === "TOO_EARLY") {
+          setStatus("too_early");
+        } else if (data.status === "EXPIRED") {
+          setStatus("expired");
         } else {
           setStatus("error");
         }
@@ -44,7 +39,7 @@ const VerifyTicket = () => {
     };
 
     fetchTicket();
-  }, [reference]);
+  }, [qrId]);
 
   if (status === "loading")
     return (
@@ -58,7 +53,7 @@ const VerifyTicket = () => {
     return (
       <div className="flex flex-col items-center justify-center h-screen text-center">
         <p className="text-red-500 text-xl font-semibold mb-2">
-          ❌ Invalid or expired ticket reference
+          ❌ Invalid ticket
         </p>
         <p className="text-gray-500">
           Please confirm your ticket reference or contact support.
@@ -71,7 +66,7 @@ const VerifyTicket = () => {
       <div className="flex flex-col items-center justify-center h-screen text-center">
         <div className="bg-yellow-50 border border-yellow-300 shadow-md rounded-2xl p-8 w-[90%] max-w-md">
           <h2 className="text-3xl font-bold mb-4 text-yellow-600">
-            ⚠️ Ticket Already Verified
+            ⚠️ Ticket Already Used
           </h2>
           <p className="text-gray-700 mb-4">
             This ticket has already been checked in. Please confirm with the
@@ -80,15 +75,46 @@ const VerifyTicket = () => {
           {ticket && (
             <div className="text-left space-y-2">
               <p><span className="font-semibold">Name:</span> {ticket.name}</p>
-              <p><span className="font-semibold">Email:</span> {ticket.email}</p>
-              <p><span className="font-semibold">Phone:</span> {ticket.phone}</p>
-              <p><span className="font-semibold">Package:</span> {ticket.ticketType}</p>
-              <p><span className="font-semibold">Amount:</span> ₦{ticket.amount}</p>
-              <p><span className="font-semibold">Note:</span> {ticket.note || "None"}</p>
-              <p><span className="font-semibold">Reference:</span> {ticket.reference}</p>
-              <p><span className="font-semibold">Used At:</span> {ticket.usedAt}</p>
+              <p><span className="font-semibold">Ticket Type:</span> {ticket.ticketType}</p>
             </div>
           )}
+        </div>
+      </div>
+    );
+
+  if (status === "too_early")
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen text-center p-4">
+        <div className="bg-white border border-blue-300 shadow-md rounded-2xl p-8 w-[90%] max-w-md">
+          <div className="mb-4 inline-block rounded-full bg-amber-100 px-4 py-1 text-xs font-bold uppercase tracking-wide text-amber-700 border border-amber-300">
+            🧪 Test Mode — Event Not Started Yet
+          </div>
+          <h2 className="text-2xl font-bold mb-2 text-blue-600">⏰ Pre-Event Scan</h2>
+          <p className="text-gray-500 text-sm mb-6">
+            {ticket?.message || "The event hasn't started yet, but this QR code is valid."}
+          </p>
+          {ticket && (
+            <div className="text-left space-y-2 bg-gray-50 rounded-xl p-4">
+              <p><span className="font-semibold">Name:</span> {ticket.name}</p>
+              <p><span className="font-semibold">Ticket Type:</span> {ticket.ticketType}</p>
+              <p><span className="font-semibold">QR ID:</span> <span className="font-mono text-xs">{ticket.qrId || qrId}</span></p>
+            </div>
+          )}
+          <p className="mt-4 text-xs text-gray-400">This screen will show ✅ Verified on event day when scanning begins.</p>
+        </div>
+      </div>
+    );
+
+  if (status === "expired")
+    return (
+      <div className="flex flex-col items-center justify-center h-screen text-center">
+        <div className="bg-red-50 border border-red-300 shadow-md rounded-2xl p-8 w-[90%] max-w-md">
+          <h2 className="text-3xl font-bold mb-4 text-red-600">
+            ❌ Ticket Expired
+          </h2>
+          <p className="text-gray-700">
+            This ticket has expired. Please contact support.
+          </p>
         </div>
       </div>
     );
@@ -102,17 +128,11 @@ const VerifyTicket = () => {
         {ticket && (
           <div className="text-left space-y-2">
             <p><span className="font-semibold">Name:</span> {ticket.name}</p>
-            <p><span className="font-semibold">Email:</span> {ticket.email}</p>
-            <p><span className="font-semibold">Phone:</span> {ticket.phone}</p>
-            <p><span className="font-semibold">Package:</span> {ticket.ticketType}</p>
-            <p><span className="font-semibold">Amount:</span> ₦{ticket.amount}</p>
-            <p><span className="font-semibold">Note:</span> {ticket.note || "None"}</p>
-            <p><span className="font-semibold">Reference:</span> {ticket.reference}</p>
-          
+            <p><span className="font-semibold">Ticket Type:</span> {ticket.ticketType}</p>
           </div>
         )}
         <p className="mt-6 text-green-700 font-medium">
-          Welcome to StepUp Summit 🎉
+          Welcome to Step-Up Summit 3.0 🎉
         </p>
       </div>
     </div>

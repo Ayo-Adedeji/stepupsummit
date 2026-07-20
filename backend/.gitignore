@@ -1,2 +1,7 @@
 .env
-
+node_modules/
+uploads/
+qrcodes/
+dist/
+*.log
+.DS_Store

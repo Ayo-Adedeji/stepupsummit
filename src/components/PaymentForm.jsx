@@ -1,212 +1,272 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-const PaymentForm = ({
-  defaultTicket = "General Admission",
-  defaultAmount = 2000,
-  selectedTier = "",
-  selectedAmount = null,
-}) => {
-  const [name, setName] = useState("");
+const generateReference = () => {
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substring(2, 9).toUpperCase();
+  return `SUS3-${timestamp}-${random}`;
+};
+
+const loadPaystack = () =>
+  new Promise((resolve, reject) => {
+    if (window.PaystackPop) return resolve();
+    const existing = document.querySelector('script[src="https://js.paystack.co/v1/inline.js"]');
+    if (!existing) {
+      const script = document.createElement("script");
+      script.src = "https://js.paystack.co/v1/inline.js";
+      script.async = true;
+      document.head.appendChild(script);
+    }
+    const deadline = Date.now() + 8000;
+    const poll = setInterval(() => {
+      if (window.PaystackPop) { clearInterval(poll); resolve(); }
+      else if (Date.now() > deadline) { clearInterval(poll); reject(new Error("Paystack script failed to load.")); }
+    }, 100);
+  });
+
+const INPUT = "mt-1 rounded-xl border border-gray-300 bg-[#FBFCFF] p-3 text-brand-dark outline-none transition focus:border-brand-blue-light focus:ring-2 focus:ring-brand-blue-light/20";
+
+const PaymentForm = ({ selectedTier = "", selectedAmount = null }) => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [ticketType, setTicketType] = useState(
-    selectedTier || defaultTicket
-  );
-  const [amount, setAmount] = useState(
-    selectedAmount != null ? selectedAmount : defaultAmount
-  );
   const [phone, setPhone] = useState("");
-  const [note, setNote] = useState("");
+  const [iAm, setIAm] = useState("");
+  const [school, setSchool] = useState("");
+  const [pitchCompetition, setPitchCompetition] = useState("");
+  const [whatToGain, setWhatToGain] = useState("");
+  const [ticketType, setTicketType] = useState(selectedTier || "Regular");
   const [processing, setProcessing] = useState(false);
+  const [error, setError] = useState("");
   const [highlightTier, setHighlightTier] = useState(false);
+
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [confirmedRef, setConfirmedRef] = useState("");
+  const [confirmedName, setConfirmedName] = useState("");
+  const [confirmedTicketType, setConfirmedTicketType] = useState("");
+
+  const [displayPrice, setDisplayPrice] = useState(selectedTier === "VIP" ? "₦10,000" : "₦5,000");
 
   useEffect(() => {
     if (selectedTier) {
       setTicketType(selectedTier);
       setHighlightTier(true);
+      setDisplayPrice(selectedTier === "VIP" ? "₦10,000" : "₦5,000");
       const t = setTimeout(() => setHighlightTier(false), 2500);
       return () => clearTimeout(t);
     }
   }, [selectedTier]);
 
-  // ✅ Base URL for both local and live use
-  const BASE_URL =
-    window.location.hostname === "localhost"
-      ? "http://localhost:5000"
-      : "https://stepupsummit.org";
+  const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-  // ✅ Load Paystack script automatically
-  useEffect(() => {
-    if (!window.PaystackPop) {
-      const script = document.createElement("script");
-      script.src = "https://js.paystack.co/v1/inline.js";
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
-
-  const handlePaystackPayment = () => {
-    if (!name || !email) {
-      alert("Please enter your name and email before payment.");
+  const handlePayment = async () => {
+    if (!firstName || !lastName || !email) {
+      setError("Please fill in your name and email before payment.");
       return;
     }
+    if (processing) return;
 
-    if (!window.PaystackPop) {
-      alert("⚠️ Paystack script not loaded yet. Please reload and try again.");
-      return;
-    }
-
-    console.log("✅ Proceeding to Paystack setup...");
+    setError("");
     setProcessing(true);
 
-    const handler = window.PaystackPop.setup({
-      key: "pk_live_11842fe9890a9652ad6002d27db273967377853e", // ✅ your live public key
-      email,
-      amount: amount * 100, // Paystack uses kobo
-      currency: "NGN",
-      metadata: {
-        name,
-        phone,
-        ticketType,
-        note,
-      },
-      callback: (response) => {
+    const reference = generateReference();
+    const fullName = `${firstName} ${lastName}`.trim();
 
-        // META PURCHASE EVENT HERE
-        if (window.fbq) {
-          try {
-            window.fbq("track", "Purchase", {
-              value: amount,
-              currency: "NGN",
-            });
-          } catch (err) {
-            console.warn("fbq error:", err);
-          }
-        }
+    try {
+      await loadPaystack();
 
-        alert(
-          `✅ Payment successful!\n\nReference: ${response.reference}\n\nA confirmation email with your QR ticket will be sent shortly.`
-        );
-        console.log("💰 Paystack response:", response);
-        // No further calls needed , webhook handles everything server-side
-        setProcessing(false);
-      },
-      onClose: () => {
-        alert("Payment window closed.");
-        setProcessing(false);
-      },
-    });
+      const handler = window.PaystackPop.setup({
+        key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
+        email,
+        amount: 10000, // TEST MODE: ₦100. Go-live: Regular=500000, VIP=1000000
+        ref: reference,
+        metadata: {
+          name: fullName,
+          firstName,
+          lastName,
+          phone,
+          iAm,
+          school,
+          pitchCompetition,
+          whatToGain,
+          ticketType,
+          custom_fields: [
+            { display_name: "Ticket Type", variable_name: "ticket_type", value: ticketType },
+            { display_name: "I Am A", variable_name: "i_am_a", value: iAm },
+            { display_name: "School/Org", variable_name: "school", value: school },
+          ],
+        },
+        onClose: () => {
+          setProcessing(false);
+          setError("Payment cancelled. Try again when ready.");
+        },
+        // Paystack v1 inline SDK rejects async functions — sync wrapper with async IIFE
+        callback: (response) => {
+          (async () => {
+            try {
+              const verify = await fetch(`${baseUrl}/api/tickets/paystack/verify/${response.reference}`);
+              const data = await verify.json();
+              if (data.success) {
+                setConfirmedRef(response.reference);
+                setConfirmedName(data.name || fullName);
+                setConfirmedTicketType(data.ticketType || ticketType);
+                setPaymentSuccess(true);
+              } else {
+                setError("Payment received but confirmation failed. Check your email or contact stepupsummit@gmail.com");
+              }
+            } catch {
+              setError("Could not confirm payment. Contact stepupsummit@gmail.com");
+            } finally {
+              setProcessing(false);
+            }
+          })();
+        },
+      });
 
-    handler.openIframe();
+      handler.openIframe();
+    } catch (err) {
+      console.error("Payment error:", err);
+      setError(
+        err.message?.includes("Paystack script failed to load")
+          ? "Payment service could not load. Check your internet connection or disable any ad blocker."
+          : "Could not start payment. Please try again."
+      );
+      setProcessing(false);
+    }
   };
 
-  return (
-    <section id="payment-instructions" className="bg-brand-off-white py-16">
-      <div className="mx-auto max-w-3xl px-5 lg:px-8">
-        <div className="rounded-2xl bg-white p-7 shadow-lg sm:p-10">
-          <h2 className="mb-6 text-center font-heading text-2xl font-bold text-brand-dark">
-            Register for Step-Up Summit 3.0
-          </h2>
-          <p className="mb-8 text-center text-sm text-gray-500">
-            December 2026 · ICC Hall, University of Ibadan · Free to attend
-          </p>
-
-          <form className="space-y-4">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <label className="flex flex-col">
-                <span className="text-sm font-semibold text-brand-dark">Full name</span>
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your full name"
-                  className="mt-1 rounded-xl border border-gray-300 bg-[#FBFCFF] p-3 text-brand-dark outline-none transition focus:border-brand-blue-light focus:ring-2 focus:ring-brand-blue-light/20"
-                  required
-                />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-sm font-semibold text-brand-dark">Email</span>
-                <input
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  type="email"
-                  className="mt-1 rounded-xl border border-gray-300 bg-[#FBFCFF] p-3 text-brand-dark outline-none transition focus:border-brand-blue-light focus:ring-2 focus:ring-brand-blue-light/20"
-                  required
-                />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-sm font-semibold text-brand-dark">Phone (optional)</span>
-                <input
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+2348012345678"
-                  className="mt-1 rounded-xl border border-gray-300 bg-[#FBFCFF] p-3 text-brand-dark outline-none transition focus:border-brand-blue-light focus:ring-2 focus:ring-brand-blue-light/20"
-                />
-              </label>
-
-              <label className="flex flex-col">
-                <span className="text-sm font-semibold text-brand-dark">Ticket Type</span>
-                <select
-                  value={ticketType}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    setTicketType(val);
-                    if (val === "General Admission (Student)") setAmount(2000);
-                    else if (val === "General Admission (Regular)") setAmount(5000);
-                    else if (val === "General Admission (Premium)") setAmount(10000);
-                    else if (val === "VIP") setAmount(20000);
-                    else if (val === "VVIP") setAmount(50000);
-                  }}
-                  className={`mt-1 rounded-xl border bg-[#FBFCFF] p-3 text-brand-dark outline-none transition focus:border-brand-blue-light focus:ring-2 focus:ring-brand-blue-light/20 ${
-                    highlightTier ? "border-2 border-brand-gold ring-2 ring-brand-gold/30" : "border border-gray-300"
-                  }`}
-                >
-                  {!["General Admission (Student)","General Admission (Regular)","General Admission (Premium)","VIP","VVIP"].includes(ticketType) && (
-                    <option>{ticketType}</option>
-                  )}
-                  <option>General Admission (Student)</option>
-                  <option>General Admission (Regular)</option>
-                  <option>General Admission (Premium)</option>
-                  <option>VIP</option>
-                  <option>VVIP</option>
-                </select>
-              </label>
-            </div>
-
-            <label className="flex flex-col">
-              <span className="text-sm font-semibold text-brand-dark">Note (optional)</span>
-              <textarea
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                placeholder="Any special request or note"
-                className="mt-1 rounded-xl border border-gray-300 bg-[#FBFCFF] p-3 text-brand-dark outline-none transition focus:border-brand-blue-light focus:ring-2 focus:ring-brand-blue-light/20"
-              />
-            </label>
-
-            <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-              <div>
-                <p className="text-gray-700">
-                  Amount: <span className="font-bold text-brand-dark">₦{amount.toLocaleString()}</span>
-                </p>
-                <p className="text-xs text-gray-500">
-                  A confirmation email and ticket QR code will be sent after payment.
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={handlePaystackPayment}
-                className="min-h-[44px] rounded-full bg-brand-gold px-8 py-3 font-semibold text-brand-dark transition hover:bg-brand-gold-light disabled:cursor-not-allowed disabled:bg-gray-400"
-                disabled={processing}
-              >
-                {processing ? "Processing..." : "Pay"}
-              </button>
-            </div>
-          </form>
+  if (paymentSuccess) {
+    const shareText = encodeURIComponent(
+      `I just got my ${confirmedTicketType} ticket to Step-Up Summit 3.0! 🎟️ Join me — register at https://stepupsummit.org`
+    );
+    return (
+      <div className="rounded-2xl bg-white p-8 text-center shadow-lg sm:p-10">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-gold text-3xl">✓</div>
+        <h3 className="font-heading text-2xl font-bold text-brand-dark">Payment Confirmed! 🎉</h3>
+        <p className="mt-3 text-gray-600">Hi <b>{confirmedName}</b>, your <b>{confirmedTicketType}</b> ticket is confirmed.</p>
+        <p className="mt-2 text-gray-600">Your QR code and ticket details have been sent to your email.</p>
+        {confirmedRef && (
+          <p className="mt-3 text-sm text-gray-500">Reference: <span className="font-mono font-semibold">{confirmedRef}</span></p>
+        )}
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <a href={`https://wa.me/?text=${shareText}`} target="_blank" rel="noopener noreferrer"
+            className="rounded-full bg-green-600 px-6 py-3 font-heading font-semibold text-white transition hover:bg-green-700">
+            Share on WhatsApp
+          </a>
+          <Link to="/" className="rounded-full bg-brand-blue px-6 py-3 font-heading font-semibold text-white transition hover:bg-brand-blue-mid">
+            Go to Homepage
+          </Link>
         </div>
       </div>
-    </section>
+    );
+  }
+
+  return (
+    <div className="rounded-2xl bg-white p-7 shadow-lg sm:p-10">
+      <h2 className="mb-6 text-center font-heading text-2xl font-bold text-brand-dark">Register for Step-Up Summit 3.0</h2>
+      <p className="mb-6 text-center text-sm text-gray-500">December 2026 · ICC Hall, University of Ibadan</p>
+
+      {error && (
+        <p className="mb-4 rounded-xl bg-red-50 px-4 py-3 text-center text-sm text-red-600">{error}</p>
+      )}
+
+      <div className="space-y-4">
+        {/* Name row */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <label className="flex flex-col">
+            <span className="text-sm font-semibold text-brand-dark">First Name</span>
+            <input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="First name" className={INPUT} required />
+          </label>
+          <label className="flex flex-col">
+            <span className="text-sm font-semibold text-brand-dark">Last Name</span>
+            <input value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Last name" className={INPUT} required />
+          </label>
+        </div>
+
+        {/* Email + Phone */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <label className="flex flex-col">
+            <span className="text-sm font-semibold text-brand-dark">Email Address</span>
+            <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" type="email" className={INPUT} required />
+          </label>
+          <label className="flex flex-col">
+            <span className="text-sm font-semibold text-brand-dark">Phone Number (WhatsApp)</span>
+            <input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+2348012345678" type="tel" className={INPUT} required />
+          </label>
+        </div>
+
+        {/* I am a + School */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <label className="flex flex-col">
+            <span className="text-sm font-semibold text-brand-dark">I am a…</span>
+            <select value={iAm} onChange={(e) => setIAm(e.target.value)} className={INPUT} required>
+              <option value="">Select one</option>
+              <option>Student</option>
+              <option>Founder / Entrepreneur</option>
+              <option>Young Professional</option>
+              <option>Corper (NYSC)</option>
+              <option>Other</option>
+            </select>
+          </label>
+          <label className="flex flex-col">
+            <span className="text-sm font-semibold text-brand-dark">School / Organisation</span>
+            <input value={school} onChange={(e) => setSchool(e.target.value)} placeholder="Your school or org" className={INPUT} required />
+          </label>
+        </div>
+
+        {/* Pitch Competition */}
+        <label className="flex flex-col">
+          <span className="text-sm font-semibold text-brand-dark">Do you want to enter the pitch competition?</span>
+          <select value={pitchCompetition} onChange={(e) => setPitchCompetition(e.target.value)} className={INPUT} required>
+            <option value="">Select one</option>
+            <option>No — attending only</option>
+            <option>Yes — I have a business idea to pitch</option>
+          </select>
+        </label>
+
+        {/* What to gain */}
+        <label className="flex flex-col">
+          <span className="text-sm font-semibold text-brand-dark">What do you hope to gain from 3.0? (optional)</span>
+          <textarea value={whatToGain} onChange={(e) => setWhatToGain(e.target.value)} rows={3} className={INPUT} />
+        </label>
+
+        {/* Ticket type + Pay */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <label className="flex flex-col">
+            <span className="text-sm font-semibold text-brand-dark">Ticket Type</span>
+            <select
+              value={ticketType}
+              onChange={(e) => { setTicketType(e.target.value); setDisplayPrice(e.target.value === "VIP" ? "₦10,000" : "₦5,000"); }}
+              className={`${INPUT} ${highlightTier ? "border-2 border-brand-gold ring-2 ring-brand-gold/30" : ""}`}
+            >
+              <option value="Regular">Regular</option>
+              <option value="VIP">VIP</option>
+            </select>
+          </label>
+          <div className="flex flex-col justify-end">
+            <p className="text-gray-700">Amount: <span className="font-bold text-brand-dark">{displayPrice}</span></p>
+            <p className="text-xs text-gray-500">Confirmation email and QR code sent after payment.</p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={handlePayment}
+          disabled={processing}
+          className="w-full min-h-[44px] rounded-full bg-brand-gold px-8 py-3 font-semibold text-brand-dark transition hover:bg-brand-gold-light disabled:cursor-not-allowed disabled:bg-gray-400"
+        >
+          {processing ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+              </svg>
+              Processing...
+            </span>
+          ) : "Pay Now"}
+        </button>
+      </div>
+    </div>
   );
 };
 

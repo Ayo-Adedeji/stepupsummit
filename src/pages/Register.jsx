@@ -7,7 +7,12 @@ import PaymentForm from "../components/PaymentForm";
 import Accordion from "../components/Accordion";
 import { Spark } from "../components/ui";
 
-// Update prices to final amounts before launch
+// ─── TICKET TIERS ──────────────────────────────────────────────────────────
+// Display prices shown on cards: Regular ₦5,000 · VIP ₦10,000
+// amount = naira value sent to PaymentForm → backend multiplies by 100 for kobo
+//
+// TEST MODE: amount is 100 (₦100 = 10,000 kobo sent to Paystack)
+// Go-live: set Regular amount to 5000 and VIP amount to 10000
 const TIERS = [
   {
     id: "free",
@@ -24,7 +29,8 @@ const TIERS = [
   {
     id: "regular",
     name: "Regular",
-    price: "₦100",
+    price: "₦5,000",
+    // TEST MODE: ₦100 sent to Paystack (10,000 kobo). Go-live: change to 5000
     amount: 100,
     featured: false,
     perks: [
@@ -38,7 +44,8 @@ const TIERS = [
   {
     id: "vip",
     name: "VIP",
-    price: "₦100",
+    price: "₦10,000",
+    // TEST MODE: ₦100 sent to Paystack (10,000 kobo). Go-live: change to 10000
     amount: 100,
     featured: true,
     perks: [
@@ -92,6 +99,54 @@ const faqs = [
 
 const FreeRegisterForm = () => {
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    const form = e.target;
+    const formData = new FormData(form);
+    const data = {
+      firstName: formData.get("First Name"),
+      lastName: formData.get("Last Name"),
+      email: formData.get("Email Address"),
+      phone: formData.get("Phone Number"),
+      iAm: formData.get("Attendee Type"),
+      school: formData.get("School / Organisation"),
+      pitchCompetition: formData.get("Pitch Competition"),
+      whatToGain: formData.get("Goals"),
+    };
+
+    try {
+      const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+      const res = await fetch(`${baseUrl}/api/register/free`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      const result = await res.json().catch(() => ({}));
+      if (res.ok && result.success) {
+        setSent(true);
+      } else {
+        setError(result.message || `Server error (${res.status}). Please try again.`);
+      }
+    } catch (err) {
+      console.error("Free registration fetch error:", err);
+      setError("Network error. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (sent) {
     return (
@@ -107,11 +162,8 @@ const FreeRegisterForm = () => {
   }
 
   return (
-    <form
-      action={FORMSPREE_FREE_REGISTER_ENDPOINT}
-      method="POST"
-      className="rounded-2xl bg-white p-7 shadow-lg sm:p-10"
-    >
+    <form onSubmit={handleSubmit} className="rounded-2xl bg-white p-7 shadow-lg sm:p-10">
+      {error && <p className="mb-4 text-center text-red-500">{error}</p>}
       <input
         type="hidden"
         name="_subject"
@@ -214,9 +266,20 @@ const FreeRegisterForm = () => {
 
         <button
           type="submit"
-          className="w-full rounded-full bg-brand-gold px-8 py-4 font-heading text-base font-semibold text-brand-dark transition hover:bg-brand-gold-light"
+          disabled={loading}
+          className="w-full rounded-full bg-brand-gold px-8 py-4 font-heading text-base font-semibold text-brand-dark transition hover:bg-brand-gold-light disabled:cursor-not-allowed disabled:bg-gray-400"
         >
-          Register , Save My Seat
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+              </svg>
+              Registering...
+            </span>
+          ) : (
+            "Register , Save My Seat"
+          )}
         </button>
         <p className="text-center text-xs text-gray-500">
           You&apos;ll get a confirmation email with your attendee details.
@@ -228,7 +291,23 @@ const FreeRegisterForm = () => {
 
 const Register = () => {
   const formRef = useRef(null);
-  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [selectedTicket, setSelectedTicket] = useState(() => {
+    // Restore ticket selection if user navigated back from Paystack
+    try {
+      const saved = sessionStorage.getItem("sus3_selectedTicket");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        // Find the matching tier by amount so we restore the full tier object
+        return TIERS.find((t) => t.amount === parsed.amount) || null;
+      }
+    } catch (_) {}
+    return null;
+  });
+
+  // Clear sessionStorage once restored (PaymentVerify will also clear it on success)
+  React.useEffect(() => {
+    sessionStorage.removeItem("sus3_selectedTicket");
+  }, []);
 
   const handleSelect = (tier) => {
     setSelectedTicket(tier);

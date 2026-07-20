@@ -43,7 +43,7 @@ const AnimatedRoutes = () => {
         <Route path="/incubation" element={<PageWrapper><Incubation /></PageWrapper>} />
         <Route path="/team" element={<PageWrapper><Team /></PageWrapper>} />
         <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
-        <Route path="/verify-ticket" element={<VerifyTicket />} />
+        <Route path="/verify/:qrId" element={<VerifyTicket />} />
         <Route path="*" element={<PageWrapper><Home /></PageWrapper>} />
       </Routes>
     </AnimatePresence>

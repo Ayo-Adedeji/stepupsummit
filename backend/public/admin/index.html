@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Step-Up Summit Admin Dashboard</title>
+  <style>
+    :root {
+      --blue: #0B1F5C;
+      --gold: #FFC107;
+      --white: #FFFFFF;
+      --dark: #111111;
+      --gray: #F5F5F5;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; background: var(--gray); color: var(--dark); }
+    header { background: var(--blue); color: var(--white); padding: 24px; text-align: center; }
+    header h1 { margin: 0; font-size: 24px; }
+    header p { margin: 8px 0 0; color: var(--gold); }
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    .login-card { max-width: 400px; margin: 60px auto; background: var(--white); padding: 32px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
+    .login-card input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+    .login-card button { width: 100%; padding: 12px; background: var(--gold); color: var(--dark); border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 8px; }
+    .login-card button:hover { background: #e0a800; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: var(--white); padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; }
+    .stat-card h3 { margin: 0 0 8px; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 0.05em; }
+    .stat-card p { margin: 0; font-size: 32px; font-weight: bold; color: var(--blue); }
+    .controls { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .controls input { flex: 1; min-width: 200px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+    .controls button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    .btn-primary { background: var(--gold); color: var(--dark); }
+    .btn-primary:hover { background: #e0a800; }
+    table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+    th { background: var(--blue); color: var(--white); font-weight: 600; }
+    tr:hover { background: #fafafa; }
+    .status { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+    .status-checked { background: #d4edda; color: #155724; }
+    .status-not { background: #f8d7da; color: #721c24; }
+    .status-inquiry { background: #fff3cd; color: #856404; }
+    .status-paid { background: #d1ecf1; color: #0c5460; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Step-Up Summit 3.0 Admin Dashboard</h1>
+    <p>Live Check-In & Registration Management</p>
+  </header>
+
+  <div class="container">
+    <!-- Login -->
+    <div id="loginSection" class="login-card">
+      <h2>Admin Login</h2>
+      <p style="color:#666;">Enter your staff PIN to continue</p>
+      <input type="password" id="adminPin" placeholder="Enter PIN" />
+      <button onclick="login()">Login</button>
+      <p id="loginError" style="color:red; margin-top:12px;"></p>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="hidden">
+      <div class="stats">
+        <div class="stat-card"><h3>Total Registered</h3><p id="totalRegistered">0</p></div>
+        <div class="stat-card"><h3>Checked In</h3><p id="totalCheckedIn">0</p></div>
+        <div class="stat-card"><h3>Not Checked In</h3><p id="totalNotCheckedIn">0</p></div>
+        <div class="stat-card"><h3>Sponsor Inquiries</h3><p id="totalSponsors">0</p></div>
+      </div>
+
+      <div class="controls">
+        <input type="text" id="searchInput" placeholder="Search by name or email..." oninput="filterTable()" />
+        <button class="btn-primary" onclick="setFilter('all')">All</button>
+        <button class="btn-primary" onclick="setFilter('ticket')">Tickets</button>
+        <button class="btn-primary" onclick="setFilter('sponsor')">Sponsors</button>
+        <button class="btn-primary" onclick="exportCSV()">Export CSV</button>
+        <button class="btn-primary" onclick="refreshData()">Refresh</button>
+      </div>
+
+      <div style="overflow-x:auto;">
+        <table>
+          <thead id="tableHead">
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Ticket Type</th>
+              <th>Status</th>
+              <th>Check-in Time</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="attendeeTable"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin;
+    let authToken = localStorage.getItem("adminToken") || "";
+    let allAttendees = [];
+    let currentFilter = "all";
+
+    function getHeaders() {
+      return { "Content-Type": "application/json", Authorization: `Bearer ${authToken}` };
+    }
+
+    function setFilter(type) {
+      currentFilter = type;
+      refreshData();
+    }
+
+    async function login() {
+      const pin = document.getElementById("adminPin").value;
+      const res = await fetch(`${API_BASE}/api/admin/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pin }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        authToken = data.token;
+        localStorage.setItem("adminToken", authToken);
+        document.getElementById("loginSection").classList.add("hidden");
+        document.getElementById("dashboard").classList.remove("hidden");
+        refreshData();
+      } else {
+        document.getElementById("loginError").textContent = data.message || "Invalid PIN";
+      }
+    }
+
+    async function refreshData() {
+      const res = await fetch(`${API_BASE}/api/admin/attendees?type=${currentFilter}`, { headers: getHeaders() });
+      const data = await res.json();
+      if (data.success) {
+        allAttendees = data.attendees;
+        updateStats(data.attendees);
+        updateTableHeaders();
+        filterTable();
+      }
+    }
+
+    function updateStats(attendees) {
+      const tickets = attendees.filter((a) => a.type !== "sponsor");
+      const sponsors = attendees.filter((a) => a.type === "sponsor");
+      document.getElementById("totalRegistered").textContent = tickets.length;
+      document.getElementById("totalCheckedIn").textContent = tickets.filter((a) => a.status === "CHECKED_IN").length;
+      document.getElementById("totalNotCheckedIn").textContent = tickets.filter((a) => a.status === "NOT_CHECKED_IN").length;
+      document.getElementById("totalSponsors").textContent = sponsors.length;
+    }
+
+    function updateTableHeaders() {
+      const thead = document.getElementById("tableHead");
+      if (currentFilter === "sponsor") {
+        thead.innerHTML = `
+          <tr>
+            <th>Contact Name</th>
+            <th>Brand/Organisation</th>
+            <th>Email</th>
+            <th>Package</th>
+            <th>Amount Paid</th>
+            <th>Reference</th>
+            <th>Status</th>
+          </tr>
+        `;
+      } else {
+        thead.innerHTML = `
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Ticket Type</th>
+            <th>Status</th>
+            <th>Check-in Time</th>
+            <th>Action</th>
+          </tr>
+        `;
+      }
+    }
+
+    function filterTable() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const tbody = document.getElementById("attendeeTable");
+      tbody.innerHTML = "";
+
+      let filtered = allAttendees;
+
+      if (currentFilter !== "all") {
+        filtered = filtered.filter((a) => a.type === currentFilter);
+      }
+
+      if (query) {
+        filtered = filtered.filter(
+          (a) => a.name.toLowerCase().includes(query) || a.email.toLowerCase().includes(query)
+        );
+      }
+
+      filtered.forEach((a) => {
+        const statusClass = a.status === "CHECKED_IN" ? "status-checked" : a.status === "INQUIRY" ? "status-inquiry" : a.status === "PAID" ? "status-paid" : "status-not";
+        const tr = document.createElement("tr");
+
+        if (a.type === "sponsor") {
+          tr.style.background = "#FFF9E8";
+          tr.innerHTML = `
+            <td>${a.name}</td>
+            <td>${a.brand || "-"}</td>
+            <td>${a.email}</td>
+            <td>${a.package || a.ticketType}</td>
+            <td>${a.amount ? "₦" + Number(a.amount).toLocaleString() : "-"}</td>
+            <td>${a.reference || "-"}</td>
+            <td><span class="status ${statusClass}">${a.status}</span></td>
+          `;
+        } else {
+          tr.innerHTML = `
+            <td>${a.name}</td>
+            <td>${a.email}</td>
+            <td>${a.ticketType}</td>
+            <td><span class="status ${statusClass}">${a.status}</span></td>
+            <td>${a.checkinTime || "-"}</td>
+            <td>${a.qrId ? `<button class="btn-primary" onclick="manualVerify('${a.qrId}')">Verify</button>` : "-"}</td>
+          `;
+        }
+        tbody.appendChild(tr);
+      });
+    }
+
+    async function manualVerify(qrId) {
+      const pin = prompt("Enter staff PIN for manual override:");
+      if (!pin) return;
+      const res = await fetch(`${API_BASE}/api/verify-manual`, {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify({ identifier: qrId, staffPin: pin }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(data.message);
+        refreshData();
+      } else {
+        alert(data.message);
+      }
+    }
+
+    function exportCSV() {
+      if (currentFilter === "sponsor") {
+        let csv = "Contact Name,Brand/Organisation,Email,Package,Amount Paid,Reference,Status\n";
+        allAttendees.forEach((a) => {
+          csv += `"${a.name}","${a.brand || ""}","${a.email}","${a.package || a.ticketType}","${a.amount || ""}","${a.reference || ""}","${a.status}"\n`;
+        });
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "sponsors.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+      } else {
+        let csv = "Name,Email,Ticket Type,Status,Check-in Time\n";
+        allAttendees.forEach((a) => {
+          csv += `"${a.name}","${a.email}","${a.ticketType}","${a.status}","${a.checkinTime || ""}"\n`;
+        });
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "attendees.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    }
+
+    if (authToken) {
+      document.getElementById("loginSection").classList.add("hidden");
+      document.getElementById("dashboard").classList.remove("hidden");
+      refreshData();
+    }
+
+    setInterval(refreshData, 30000);
+  </script>
+</body>
+</html>

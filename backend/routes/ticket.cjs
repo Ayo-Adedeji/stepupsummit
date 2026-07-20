@@ -1,68 +1,341 @@
 const express = require("express");
+const crypto = require("crypto");
 const QRCode = require("qrcode");
 const nodemailer = require("nodemailer");
+const axios = require("axios");
 const dotenv = require("dotenv");
 const path = require("path");
 const fs = require("fs");
-const axios = require("axios");
-const sendSponsorshipEmails = require("../utils/sendSponsorshipEmails.cjs");
+const { v4: uuidv4 } = require("uuid");
+const sheets = require("../services/googleSheets.cjs");
+const qrService = require("../services/qr.cjs");
+const emailService = require("../services/email.cjs");
 
 dotenv.config();
 const router = express.Router();
-
-// Append a successful registration to a Google Sheet via the Sheets API.
-// Replaces EmailJS as the durable record-keeping system for attendees.
-// Add Google Sheets API credentials and Sheet ID when ready (set in .env):
-//   GOOGLE_SHEET_ID, GOOGLE_SHEETS_API_KEY  (or a service-account access token)
-async function recordToSheet(record) {
-  const sheetId = process.env.GOOGLE_SHEET_ID;
-  const apiKey = process.env.GOOGLE_SHEETS_API_KEY;
-  if (!sheetId || !apiKey) {
-    // Not configured yet — keep existing flows untouched.
-    return;
-  }
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Registrants:append?valueInputOption=USER_ENTERED&key=${apiKey}`;
-  const values = [[
-    record.createdAt,
-    record.name,
-    record.email,
-    record.phone,
-    record.ticketType,
-    record.amount,
-    record.reference,
-    record.ticketId,
-  ]];
-  await axios.post(url, { values }, { headers: { "Content-Type": "application/json" } });
-}
-
-// ✅ Folder to store QR codes locally
-const QR_FOLDER = path.join(process.cwd(), "qrcodes");
-if (!fs.existsSync(QR_FOLDER)) fs.mkdirSync(QR_FOLDER, { recursive: true });
 
 // Health check
 router.get("/", (req, res) => {
   res.send("🎟️ Tickets API running ✅");
 });
 
-// =================== Webhook (tickets + sponsorship detection) ===================
-router.post("/webhook", async (req, res) => {
-  console.log("⚡ /api/tickets/webhook payload:", req.body);
-
+// =================== QR Verification (frontend) ===================
+router.post("/verify-ticket", async (req, res) => {
   try {
+    const { qrId } = req.body;
+    if (!qrId) {
+      return res.status(400).json({ status: "INVALID", message: "QR ID is required" });
+    }
+
+    const eventDateTime = qrService.getEventDateTime();
+    const verificationStatus = qrService.getVerificationStatus(eventDateTime);
+
+    if (verificationStatus === "TOO_EARLY") {
+      return res.status(200).json({
+        status: "TOO_EARLY",
+        message: `Event has not started yet. Come back on ${process.env.EVENT_DATE} at ${process.env.EVENT_START_TIME}!`,
+      });
+    }
+
+    if (verificationStatus === "EXPIRED") {
+      return res.status(200).json({
+        status: "EXPIRED",
+        message: "This ticket has expired.",
+      });
+    }
+
+    // Search in paid tickets sheet
+    const paidSheetId = process.env.GOOGLE_SHEET_ID_TICKETS;
+    const freeSheetId = process.env.GOOGLE_SHEET_ID_FREE;
+    let ticket = null;
+    let sheetType = null;
+
+    if (paidSheetId) {
+      const paidRows = await sheets.getRows(paidSheetId);
+      const header = paidRows[0] || [];
+      const qrIdCol = header.findIndex((h) => h.toLowerCase().includes("qr code id"));
+      const statusCol = header.findIndex((h) => h.toLowerCase().includes("check-in status"));
+      const nameCol = header.findIndex((h) => h.toLowerCase().includes("full name") || h.toLowerCase().includes("name"));
+      const typeCol = header.findIndex((h) => h.toLowerCase().includes("ticket type"));
+
+      for (let i = 1; i < paidRows.length; i++) {
+        if (paidRows[i][qrIdCol] === qrId) {
+          ticket = {
+            rowIndex: i + 1,
+            qrId: paidRows[i][qrIdCol],
+            status: paidRows[i][statusCol],
+            name: paidRows[i][nameCol],
+            ticketType: paidRows[i][typeCol],
+          };
+          sheetType = "paid";
+          break;
+        }
+      }
+    }
+
+    // Search in free registrations sheet
+    if (!ticket && freeSheetId) {
+      const freeRows = await sheets.getRows(freeSheetId);
+      const header = freeRows[0] || [];
+      const qrIdCol = header.findIndex((h) => h.toLowerCase().includes("qr code id"));
+      const statusCol = header.findIndex((h) => h.toLowerCase().includes("check-in status"));
+      const nameCol = header.findIndex((h) => h.toLowerCase().includes("full name") || h.toLowerCase().includes("name"));
+      const typeCol = header.findIndex((h) => h.toLowerCase().includes("i am a") || h.toLowerCase().includes("ticket type"));
+
+      for (let i = 1; i < freeRows.length; i++) {
+        if (freeRows[i][qrIdCol] === qrId) {
+          ticket = {
+            rowIndex: i + 1,
+            qrId: freeRows[i][qrIdCol],
+            status: freeRows[i][statusCol],
+            name: freeRows[i][nameCol],
+            ticketType: freeRows[i][typeCol] || "Free",
+          };
+          sheetType = "free";
+          break;
+        }
+      }
+    }
+
+    if (!ticket) {
+      return res.status(200).json({ status: "INVALID", message: "Ticket not found" });
+    }
+
+    if (ticket.status === "CHECKED_IN") {
+      return res.status(200).json({
+        status: "ALREADY_USED",
+        message: "This ticket has already been scanned. Entry denied.",
+        name: ticket.name,
+        ticketType: ticket.ticketType,
+      });
+    }
+
+    // Mark as checked in
+    const now = new Date().toISOString();
+    const statusColIndex = sheetType === "paid"
+      ? (await sheets.getRows(paidSheetId))[0].findIndex((h) => h.toLowerCase().includes("check-in status"))
+      : (await sheets.getRows(freeSheetId))[0].findIndex((h) => h.toLowerCase().includes("check-in status"));
+    const checkinTimeColIndex = sheetType === "paid"
+      ? (await sheets.getRows(paidSheetId))[0].findIndex((h) => h.toLowerCase().includes("check-in time"))
+      : (await sheets.getRows(freeSheetId))[0].findIndex((h) => h.toLowerCase().includes("check-in time"));
+
+    const targetSheetId = sheetType === "paid" ? paidSheetId : freeSheetId;
+    const updateValues = new Array((await sheets.getRows(targetSheetId))[0].length).fill("");
+    updateValues[statusColIndex] = "CHECKED_IN";
+    updateValues[checkinTimeColIndex] = now;
+
+    await sheets.updateRow(targetSheetId, ticket.rowIndex, updateValues);
+
+    return res.status(200).json({
+      status: "VERIFIED",
+      message: "Welcome to Step-Up Summit 3.0!",
+      name: ticket.name,
+      ticketType: ticket.ticketType,
+    });
+  } catch (error) {
+    console.error("❌ Error verifying ticket:", error);
+    return res.status(500).json({ status: "ERROR", message: "Server error verifying ticket" });
+  }
+});
+
+// =================== Manual Override ===================
+router.post("/verify-manual", async (req, res) => {
+  try {
+    const { identifier, staffPin } = req.body;
+    if (!identifier || !staffPin) {
+      return res.status(400).json({ success: false, message: "Identifier and staff PIN are required" });
+    }
+
+    if (staffPin !== process.env.ADMIN_OVERRIDE_PIN) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const paidSheetId = process.env.GOOGLE_SHEET_ID_TICKETS;
+    const freeSheetId = process.env.GOOGLE_SHEET_ID_FREE;
+    let ticket = null;
+    let sheetType = null;
+
+    if (paidSheetId) {
+      const paidRows = await sheets.getRows(paidSheetId);
+      const header = paidRows[0] || [];
+      const qrIdCol = header.findIndex((h) => h.toLowerCase().includes("qr code id"));
+      const refCol = header.findIndex((h) => h.toLowerCase().includes("paystack reference"));
+
+      for (let i = 1; i < paidRows.length; i++) {
+        if (paidRows[i][qrIdCol] === identifier || paidRows[i][refCol] === identifier) {
+          ticket = { rowIndex: i + 1, name: paidRows[i][header.findIndex((h) => h.toLowerCase().includes("full name"))], sheetId: paidSheetId };
+          sheetType = "paid";
+          break;
+        }
+      }
+    }
+
+    if (!ticket && freeSheetId) {
+      const freeRows = await sheets.getRows(freeSheetId);
+      const header = freeRows[0] || [];
+      const qrIdCol = header.findIndex((h) => h.toLowerCase().includes("qr code id"));
+
+      for (let i = 1; i < freeRows.length; i++) {
+        if (freeRows[i][qrIdCol] === identifier) {
+          ticket = { rowIndex: i + 1, name: freeRows[i][header.findIndex((h) => h.toLowerCase().includes("full name"))], sheetId: freeSheetId };
+          sheetType = "free";
+          break;
+        }
+      }
+    }
+
+    if (!ticket) {
+      return res.status(404).json({ success: false, message: "Ticket not found" });
+    }
+
+    const now = new Date().toISOString();
+    const rows = await sheets.getRows(ticket.sheetId);
+    const header = rows[0];
+    const statusCol = header.findIndex((h) => h.toLowerCase().includes("check-in status"));
+    const checkinTimeCol = header.findIndex((h) => h.toLowerCase().includes("check-in time"));
+
+    const updateValues = new Array(header.length).fill("");
+    updateValues[statusCol] = "CHECKED_IN";
+    updateValues[checkinTimeCol] = `MANUAL_OVERRIDE - ${now}`;
+
+    await sheets.updateRow(ticket.sheetId, ticket.rowIndex, updateValues);
+
+    return res.json({ success: true, message: "Manual override successful", name: ticket.name });
+  } catch (error) {
+    console.error("❌ Manual override error:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+});
+
+// =================== Free Registration ===================
+router.post("/register/free", async (req, res) => {
+  try {
+    const { firstName, lastName, email, phone, iAm, school, pitchCompetition, whatToGain } = req.body;
+
+    if (!firstName || !lastName || !email || !phone) {
+      return res.status(400).json({ success: false, message: "Missing required fields" });
+    }
+
+    const freeSheetId = process.env.GOOGLE_SHEET_ID_FREE;
+    if (!freeSheetId) {
+      return res.status(500).json({ success: false, message: "Google Sheets not configured" });
+    }
+
+    // Check duplicate (guard against empty sheet / auth failure)
+    const existingRows = await sheets.getRows(freeSheetId);
+    if (existingRows && existingRows.length > 0) {
+      const emailCol = existingRows[0].findIndex((h) => h.toLowerCase().includes("email"));
+      if (emailCol >= 0) {
+        const isDuplicate = existingRows.slice(1).some((row) => row[emailCol] === email);
+        if (isDuplicate) {
+          return res.status(409).json({ success: false, message: "This email is already registered" });
+        }
+      }
+    }
+
+    const qrId = qrService.generateQRId(email, "FREE");
+    const verifyURL = `${process.env.FRONTEND_URL || "https://stepupsummit.org"}/verify/${qrId}`;
+    const qrDataUrl = await qrService.generateQRCode(verifyURL);
+
+    const timestamp = new Date().toISOString();
+    const row = [
+      timestamp,
+      firstName,
+      lastName,
+      email,
+      phone,
+      iAm,
+      school,
+      pitchCompetition,
+      whatToGain,
+      qrId,
+      "NOT_CHECKED_IN",
+      "",
+    ];
+
+    await sheets.appendRow(freeSheetId, row);
+
+    // Send emails (don't block registration on email failure)
+    emailService.sendFreeRegistrationEmail({ firstName, email, qrId, qrDataUrl }).catch((err) =>
+      console.error("❌ Free registration email error:", err)
+    );
+    emailService.sendFreeRegistrationAdminEmail({ firstName, lastName, email, phone, iAm, school, pitchCompetition, whatToGain, qrId }).catch((err) =>
+      console.error("❌ Free registration admin email error:", err)
+    );
+
+    return res.json({ success: true, qrId, message: "Free registration successful" });
+  } catch (error) {
+    console.error("❌ Free registration error:", error);
+    return res.status(500).json({ success: false, message: "Server error during registration" });
+  }
+});
+
+// =================== Initialize Paystack Payment ===================
+router.post("/paystack/initialize", async (req, res) => {
+  try {
+    const { email, amount, name, phone, ticketType } = req.body;
+
+    if (!email || !amount || !name) {
+      return res.status(400).json({ success: false, message: "Missing required fields" });
+    }
+
+    const paystackSecret = process.env.PAYSTACK_SECRET_KEY;
+    if (!paystackSecret) {
+      return res.status(500).json({ success: false, message: "Paystack not configured" });
+    }
+
+    // TEST MODE: frontend sends amount=100 (₦100) → 10,000 kobo sent to Paystack
+    // Go-live: frontend will send amount=5000 (Regular) or amount=10000 (VIP)
+    //   Regular → 500,000 kobo (₦5,000)
+    //   VIP     → 1,000,000 kobo (₦10,000)
+    console.log(`💳 Paystack init: ${email} | ${ticketType} | ₦${amount} (${Math.round(amount * 100)} kobo)`);
+    const frontendUrl = process.env.FRONTEND_URL || "https://stepupsummit.org";
+    const response = await axios.post(
+      "https://api.paystack.co/transaction/initialize",
+      {
+        email,
+        amount: Math.round(amount * 100), // amount is in naira, Paystack needs kobo
+        callback_url: `${frontendUrl}/payment/verify`,
+        metadata: { name, phone, ticketType, ticketTypeSlug: ticketType },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${paystackSecret}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const { authorization_url, reference } = response.data.data;
+    return res.json({ success: true, authorizationUrl: authorization_url, reference });
+  } catch (error) {
+    console.error("❌ Paystack initialize error:", error.response?.data || error.message);
+    return res.status(500).json({ success: false, message: "Error initializing payment" });
+  }
+});
+
+// =================== Webhook (tickets + sponsorship) ===================
+router.post("/paystack/webhook", async (req, res) => {
+  try {
+    const paystackSecret = process.env.PAYSTACK_SECRET_KEY;
+    const hash = crypto
+      .createHmac("sha256", paystackSecret)
+      .update(JSON.stringify(req.body))
+      .digest("hex");
+
+    if (hash !== req.headers["x-paystack-signature"]) {
+      return res.status(401).send("Unauthorized");
+    }
+
     const event = req.body.event;
     if (event !== "charge.success") return res.sendStatus(200);
 
     const data = req.body.data;
     const metadata = data.metadata || {};
     const reference = data.reference;
-    const isSponsorship =
-      Boolean(metadata.sponsorshipPackage) ||
-      (typeof reference === "string" && reference.startsWith("SPONSOR-"));
+    const isSponsorship = Boolean(metadata.sponsorshipPackage) || (typeof reference === "string" && reference.startsWith("SPONSOR-"));
 
     if (isSponsorship) {
-      console.log("🔁 Webhook detected sponsorship payment — sending sponsorship emails instead of ticket creation.");
-
-      // Prepare payload expected by sponsor email
       const sponsorPayload = {
         reference,
         fullName: metadata.fullName || metadata.name || "Sponsor",
@@ -73,185 +346,176 @@ router.post("/webhook", async (req, res) => {
         companyWebsite: metadata.companyWebsite,
         sponsorshipInterest: metadata.sponsorshipPackage || "Sponsorship",
         message: metadata.message || "",
+        amount: data.amount / 100,
       };
 
-      const ok = await sendSponsorshipEmails(sponsorPayload);
-      return res.json({ success: ok, message: ok ? "Sponsorship emails sent (via webhook)" : "Failed to send sponsorship emails" });
+      const sponsorSheetId = process.env.GOOGLE_SHEET_ID_SPONSORS;
+      if (sponsorSheetId) {
+        const row = [
+          new Date().toISOString(),
+          sponsorPayload.fullName,
+          sponsorPayload.companyName || "",
+          sponsorPayload.email,
+          sponsorPayload.phone,
+          sponsorPayload.sponsorshipInterest,
+          sponsorPayload.message,
+          reference,
+          sponsorPayload.amount,
+          "PAID",
+        ];
+        await sheets.appendRow(sponsorSheetId, row);
+      }
+
+      emailService.sendSponsorPaymentEmail(sponsorPayload).catch((err) =>
+        console.error("❌ Sponsor payment email error:", err)
+      );
+      emailService.sendSponsorAdminEmail({ ...sponsorPayload, status: "PAID" }).catch((err) =>
+        console.error("❌ Sponsor admin email error:", err)
+      );
+
+      return res.json({ success: true, message: "Sponsorship payment processed" });
     }
 
-    // ----- Ticket flow (unchanged) -----
+    // Ticket flow
     const name = metadata.name || "Unknown Buyer";
     const email = data.customer?.email;
     const phone = metadata.phone || "Not provided";
     const ticketType = metadata.ticketType || "General";
-    const note = metadata.note || "";
     const amount = data.amount / 100;
-
     const ticketId = `EVT-${Date.now()}`;
-    const verifyURL = `https://stepupsummit.org/verify-ticket?ref=${reference}`;
+    const qrId = qrService.generateQRId(email, ticketType);
+    const verifyURL = `${process.env.FRONTEND_URL || "https://stepupsummit.org"}/verify/${qrId}`;
 
-    // Record registrant in Google Sheet (best-effort — never blocks the flow)
-    // Add Google Sheets API credentials and Sheet ID when ready
-    try {
-      await recordToSheet({
-        name, email, phone, ticketType, amount, reference, ticketId,
-        createdAt: new Date().toISOString(),
-      });
-    } catch (sheetErr) {
-      console.error("⚠️ Google Sheets record skipped:", sheetErr.message);
+    const qrPath = await qrService.saveQRCode(qrId, verifyURL);
+    const qrDataUrl = await qrService.generateQRCode(verifyURL);
+
+    const ticketSheetId = process.env.GOOGLE_SHEET_ID_TICKETS;
+    if (ticketSheetId) {
+      const row = [
+        new Date().toISOString(),
+        name,
+        email,
+        phone,
+        ticketType,
+        amount,
+        reference,
+        qrId,
+        "NOT_CHECKED_IN",
+        "",
+      ];
+      await sheets.appendRow(ticketSheetId, row);
     }
 
-    // QR CODE
-    const qrPath = path.join(QR_FOLDER, `${ticketId}.png`);
-    await QRCode.toFile(qrPath, verifyURL, { color: { dark: "#000", light: "#FFF" }, margin: 2, width: 250 });
-    console.log("✅ QR generated:", qrPath);
+    emailService.sendPaidTicketEmail({ name, email, ticketType, amount, reference, qrDataUrl, verifyURL }).catch((err) =>
+      console.error("❌ Paid ticket email error:", err)
+    );
+    emailService.sendPaidTicketAdminEmail({ name, email, phone, ticketType, amount, reference, qrId }).catch((err) =>
+      console.error("❌ Paid ticket admin email error:", err)
+    );
 
-    // Save ticket to tickets.json
-    const TICKETS_FILE = path.join(process.cwd(), "tickets.json");
-    const newTicket = { ticketId, reference, name, email, phone, ticketType, amount, note, used: false, createdAt: new Date().toISOString() };
-
-    let tickets = [];
-    if (fs.existsSync(TICKETS_FILE)) {
-      const fileData = fs.readFileSync(TICKETS_FILE, "utf8");
-      if (fileData.trim()) tickets = JSON.parse(fileData);
-    }
-    tickets.push(newTicket);
-    fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
-    console.log("💾 Ticket saved:", reference);
-
-    // Email setup (ticket emails use EMAIL_USER / EMAIL_PASS as before)
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-    });
-
-    const mailOptionsBuyer = {
-  from: process.env.EMAIL_USER,
-  to: email || "dummybuyer@email.com",
-  subject: "Step Up Summit Ticket Confirmation",
-  html: `
-    <div style="font-family:Arial, sans-serif; color:#333;">
-      <h2>Your StepUp Summit Ticket</h2>
-      <p>Dear ${name},</p>
-      <p>Thank you for purchasing a ticket to <b>StepUp Summit</b>.</p>
-      <p><b>Ticket Details:</b></p>
-      <ul>
-        <li><b>Name:</b> ${name}</li>
-        <li><b>Email:</b> ${email}</li>
-        <li><b>Phone:</b> ${phone}</li>
-        <li><b>Package:</b> ${ticketType}</li>
-        <li><b>Amount Paid:</b> ₦${amount}</li>
-        <li><b>Reference:</b> ${reference}</li>
-      </ul>
-      <p>Please present this QR code at the event check-in:</p>
-      <img src="cid:qrcode" alt="Ticket QR Code" style="width:200px;"/>
-      <p>Or click here to verify: <a href="${verifyURL}">${verifyURL}</a></p>
-      <p>We look forward to seeing you!</p>
-    </div>
-  `,
-  attachments: [
-    { filename: "qrcode.png", path: qrPath, cid: "qrcode" }
-  ],
-};
-
-
-    const mailOptionsAdmin = {
-  from: process.env.EMAIL_USER,
-  to: process.env.EMAIL_USER, // admin = same Gmail
-  subject: `New Ticket Purchase - ${ticketId}`,
-  html: `
-    <div style="font-family:Arial, sans-serif; color:#333;">
-      <h2>New Ticket Purchase</h2>
-      <p>A new ticket has been purchased for <b>StepUp Summit</b>.</p>
-      <p><b>Buyer Details:</b></p>
-      <ul>
-        <li><b>Name:</b> ${name}</li>
-        <li><b>Email:</b> ${email}</li>
-        <li><b>Phone:</b> ${phone}</li>
-        <li><b>Package:</b> ${ticketType}</li>
-        <li><b>Amount Paid:</b> ₦${amount}</li>
-        <li><b>Reference:</b> ${reference}</li>
-      </ul>
-      <p>QR Code for verification:</p>
-      <img src="cid:qrcode" alt="Ticket QR Code" style="width:200px;"/>
-      <p>Verify here: <a href="${verifyURL}">${verifyURL}</a></p>
-    </div>
-  `,
-  attachments: [
-    { filename: "qrcode.png", path: qrPath, cid: "qrcode" }
-  ],
-};
-
-
-    try { await transporter.sendMail(mailOptionsBuyer); console.log("📧 Buyer email sent"); } catch (err) { console.error("❌ Buyer email failed", err); }
-    try { await transporter.sendMail(mailOptionsAdmin); console.log("📧 Admin email sent"); } catch (err) { console.error("❌ Admin email failed", err); }
-
-    return res.json({ success: true, message: "Ticket created and emails attempted", ticketId, verifyURL });
-  } catch (err) {
-    console.error("❌ Error in /api/tickets/webhook:", err);
+    return res.json({ success: true, message: "Ticket created and emails sent", qrId, verifyURL });
+  } catch (error) {
+    console.error("❌ Webhook error:", error);
     return res.status(500).json({ message: "Internal server error" });
   }
 });
 
-// =================== Verify endpoint (for frontend) ===================
-router.get("/verify", async (req, res) => {
+// =================== Verify Payment (called from /payment/verify page) ===================
+router.get("/paystack/verify/:reference", async (req, res) => {
   try {
-    const { ref } = req.query;
-    if (!ref) return res.status(400).json({ message: "Ticket reference is required" });
-
-    const TICKETS_FILE = path.join(process.cwd(), "tickets.json");
-    if (!fs.existsSync(TICKETS_FILE)) return res.status(404).json({ message: "No tickets database found" });
-
-    const tickets = JSON.parse(fs.readFileSync(TICKETS_FILE, "utf8"));
-    const ticket = tickets.find(t => t.reference === ref);
-    if (!ticket) return res.status(404).json({ message: "Invalid or expired ticket reference" });
-
-    if (ticket.used) {
-      return res.status(200).json({
-        status: "already_used",
-        message: "⚠️ Ticket Already Verified",
-        ticket: {
-          ticketId: ticket.ticketId,
-          reference: ticket.reference,
-          name: ticket.name,
-          email: ticket.email,
-          phone: ticket.phone,
-          ticketType: ticket.ticketType,
-          note: ticket.note,
-          amount: ticket.amount,
-          used: true,
-          usedAt: ticket.usedAt,
-        },
-      });
+    const { reference } = req.params;
+    if (!reference) {
+      return res.status(400).json({ success: false, message: "Reference is required" });
     }
 
-    // First-time scan → mark as used
-    ticket.used = true;
-    ticket.usedAt = new Date().toISOString();
-    fs.writeFileSync(TICKETS_FILE, JSON.stringify(tickets, null, 2));
+    const paystackSecret = process.env.PAYSTACK_SECRET_KEY;
+    const verifyResponse = await axios.get(
+      `https://api.paystack.co/transaction/verify/${reference}`,
+      {
+        headers: {
+          Authorization: `Bearer ${paystackSecret}`,
+        },
+      }
+    );
 
-    return res.status(200).json({
-      status: "verified",
-      message: "✅ Ticket Verified Successfully",
-      ticket: {
-        ticketId: ticket.ticketId,
-        reference: ticket.reference,
-        name: ticket.name,
-        email: ticket.email,
-        phone: ticket.phone,
-        ticketType: ticket.ticketType,
-        note: ticket.note,
-        amount: ticket.amount,
-        used: true,
-        usedAt: ticket.usedAt,
-      },
+    const data = verifyResponse.data.data;
+    if (!data || data.status !== "success") {
+      return res.status(400).json({ success: false, message: "Payment not confirmed by Paystack" });
+    }
+
+    const ticketSheetId = process.env.GOOGLE_SHEET_ID_TICKETS;
+    const metadata = data.metadata || {};
+    const firstName = metadata.firstName || "";
+    const lastName = metadata.lastName || "";
+    const name = (firstName && lastName) ? `${firstName} ${lastName}`.trim() : (metadata.name || "Guest");
+    const email = data.customer?.email || "";
+    const phone = metadata.phone || "";
+    const iAm = metadata.iAm || "";
+    const school = metadata.school || "";
+    const pitchCompetition = metadata.pitchCompetition || "";
+    const whatToGain = metadata.whatToGain || "";
+    const ticketType = metadata.ticketType || "General";
+    const amount = data.amount / 100;
+
+    // Check for duplicate reference to prevent double-processing on refresh
+    let alreadyProcessed = false;
+    if (ticketSheetId) {
+      const rows = await sheets.getRows(ticketSheetId);
+      if (rows && rows.length > 0) {
+        const refCol = rows[0].findIndex((h) => h.toLowerCase().includes("paystack reference"));
+        if (refCol >= 0) {
+          alreadyProcessed = rows.slice(1).some((row) => row[refCol] === reference);
+        }
+      }
+    }
+
+    if (!alreadyProcessed) {
+      const qrId = qrService.generateQRId(email, ticketType);
+      const verifyURL = `${process.env.FRONTEND_URL || "https://stepupsummit.org"}/verify/${qrId}`;
+      const qrDataUrl = await qrService.generateQRCode(verifyURL);
+      await qrService.saveQRCode(qrId, verifyURL);
+
+      if (ticketSheetId) {
+        const row = [
+          new Date().toISOString(),
+          name,
+          email,
+          phone,
+          ticketType,
+          amount,
+          reference,
+          qrId,
+          "NOT_CHECKED_IN",
+          "",
+        ];
+        await sheets.appendRow(ticketSheetId, row);
+      }
+
+      emailService.sendPaidTicketEmail({ name, email, ticketType, amount, reference, qrDataUrl, verifyURL, iAm, school }).catch((err) =>
+        console.error("❌ Paid ticket email error:", err)
+      );
+      emailService.sendPaidTicketAdminEmail({ name, email, phone, ticketType, amount, reference, qrId, iAm, school, pitchCompetition }).catch((err) =>
+        console.error("❌ Paid ticket admin email error:", err)
+      );
+
+      console.log(`✅ Ticket processed for ${name} (${reference})`);
+    } else {
+      console.log(`ℹ️ Reference ${reference} already processed — skipping duplicate`);
+    }
+
+    return res.json({
+      success: true,
+      name,
+      email,
+      ticketType,
+      amount,
+      reference,
+      alreadyProcessed,
     });
   } catch (error) {
-    console.error("❌ Error verifying ticket:", error);
-    return res.status(500).json({ message: "Server error verifying ticket" });
+    console.error("❌ Payment verify error:", error.response?.data || error.message);
+    return res.status(500).json({ success: false, message: "Error verifying payment" });
   }
 });
-
-
 
 module.exports = router;

@@ -17,6 +17,8 @@ const FORMSPREE_PITCH_ENDPOINT = "https://formspree.io/f/REPLACE_WITH_PITCH_FORM
 
 const PitchApplicationForm = () => {
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [idea, setIdea] = useState("");
   const [cacRegistered, setCacRegistered] = useState("");
 
@@ -34,13 +36,64 @@ const PitchApplicationForm = () => {
     );
   }
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    const form = e.target;
+    const formData = new FormData();
+    formData.append("fullName", form.elements["Full Name"].value);
+    formData.append("email", form.elements["Email Address"].value);
+    formData.append("phone", form.elements["Phone Number"].value);
+    formData.append("businessName", form.elements["Business/Idea Name"].value);
+    formData.append("description", form.elements["Business Idea"].value);
+    formData.append("stage", form.elements["Idea Stage"].value);
+    formData.append("cacRegistered", form.elements["CAC Registered"].value);
+
+    const fileInput = form.elements["CAC Document"];
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+      formData.append("cacDocument", fileInput.files[0]);
+    }
+
+    try {
+      const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+      const res = await fetch(`${baseUrl}/api/pitch/apply`, {
+        method: "POST",
+        body: formData,
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      const result = await res.json().catch(() => ({}));
+      if (res.ok && result.success) {
+        setSent(true);
+      } else {
+        setError(result.message || `Server error (${res.status}). Please try again.`);
+      }
+    } catch (err) {
+      console.error("Pitch application fetch error:", err);
+      if (err.name === "AbortError") {
+        setError("Request timed out. Please try again.");
+      } else {
+        setError("Network error. Please check your connection and try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <form
-      action={FORMSPREE_PITCH_ENDPOINT}
-      method="POST"
+      onSubmit={handleSubmit}
       encType="multipart/form-data"
       className="rounded-2xl bg-white p-7 shadow-lg sm:p-10"
     >
+      {error && <p className="mb-4 text-center text-red-500">{error}</p>}
       <input
         type="hidden"
         name="_subject"
@@ -153,9 +206,20 @@ const PitchApplicationForm = () => {
 
         <button
           type="submit"
-          className="w-full rounded-full bg-brand-gold px-8 py-4 font-heading text-base font-semibold text-brand-dark transition hover:bg-brand-gold-light"
+          disabled={loading}
+          className="w-full rounded-full bg-brand-gold px-8 py-4 font-heading text-base font-semibold text-brand-dark transition hover:bg-brand-gold-light disabled:cursor-not-allowed disabled:bg-gray-400"
         >
-          Apply to Pitch
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+              </svg>
+              Submitting...
+            </span>
+          ) : (
+            "Apply to Pitch"
+          )}
         </button>
       </div>
     </form>
