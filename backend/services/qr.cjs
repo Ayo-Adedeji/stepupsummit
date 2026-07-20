@@ -50,11 +50,19 @@ function getVerificationStatus(eventDateTime) {
   const diffHours = diffMs / (1000 * 60 * 60);
 
   if (diffHours < 0) {
+    // Event hasn't started yet
     return "TOO_EARLY";
   }
-  if (diffHours > 24) {
+
+  // EVENT_WINDOW_HOURS controls how long after event start tickets remain valid.
+  // Default is 12 hours — covers late arrivals and long events.
+  // After this window, tickets show EXPIRED (event is fully over).
+  const windowHours = parseFloat(process.env.EVENT_WINDOW_HOURS || "12");
+
+  if (diffHours > windowHours) {
     return "EXPIRED";
   }
+
   return "VALID";
 }
 

@@ -38,9 +38,44 @@ router.post("/verify-ticket", async (req, res) => {
     }
 
     if (verificationStatus === "EXPIRED") {
+      // Still look up the ticket so frontend can show details during testing
+      // Fall through to ticket lookup below, but flag as expired after finding it
+      const paidSheetId = process.env.GOOGLE_SHEET_ID_TICKETS;
+      const freeSheetId = process.env.GOOGLE_SHEET_ID_FREE;
+      let expiredTicket = null;
+
+      if (paidSheetId) {
+        const paidRows = await sheets.getRows(paidSheetId);
+        const header = paidRows[0] || [];
+        const qrIdCol = header.findIndex((h) => h.toLowerCase().includes("qr code id"));
+        const nameCol = header.findIndex((h) => h.toLowerCase().includes("full name") || h.toLowerCase().includes("name"));
+        const typeCol = header.findIndex((h) => h.toLowerCase().includes("ticket type"));
+        for (let i = 1; i < paidRows.length; i++) {
+          if (paidRows[i][qrIdCol] === qrId) {
+            expiredTicket = { name: paidRows[i][nameCol], ticketType: paidRows[i][typeCol], qrId };
+            break;
+          }
+        }
+      }
+
+      if (!expiredTicket && freeSheetId) {
+        const freeRows = await sheets.getRows(freeSheetId);
+        const header = freeRows[0] || [];
+        const qrIdCol = header.findIndex((h) => h.toLowerCase().includes("qr code id"));
+        const nameCol = header.findIndex((h) => h.toLowerCase().includes("first name") || h.toLowerCase().includes("name"));
+        const typeCol = header.findIndex((h) => h.toLowerCase().includes("i am a") || h.toLowerCase().includes("ticket type"));
+        for (let i = 1; i < freeRows.length; i++) {
+          if (freeRows[i][qrIdCol] === qrId) {
+            expiredTicket = { name: freeRows[i][nameCol], ticketType: freeRows[i][typeCol] || "Free", qrId };
+            break;
+          }
+        }
+      }
+
       return res.status(200).json({
         status: "EXPIRED",
         message: "This ticket has expired.",
+        ...(expiredTicket || {}),
       });
     }
 

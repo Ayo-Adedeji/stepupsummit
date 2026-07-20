@@ -107,14 +107,23 @@ const VerifyTicket = () => {
 
   if (status === "expired")
     return (
-      <div className="flex flex-col items-center justify-center h-screen text-center">
-        <div className="bg-red-50 border border-red-300 shadow-md rounded-2xl p-8 w-[90%] max-w-md">
-          <h2 className="text-3xl font-bold mb-4 text-red-600">
-            ❌ Ticket Expired
-          </h2>
-          <p className="text-gray-700">
-            This ticket has expired. Please contact support.
+      <div className="flex flex-col items-center justify-center min-h-screen text-center p-4">
+        <div className="bg-white border border-red-300 shadow-md rounded-2xl p-8 w-[90%] max-w-md">
+          <div className="mb-4 inline-block rounded-full bg-amber-100 px-4 py-1 text-xs font-bold uppercase tracking-wide text-amber-700 border border-amber-300">
+            🧪 Test Mode — Event Date Passed
+          </div>
+          <h2 className="text-2xl font-bold mb-2 text-red-600">⏰ Post-Event Scan</h2>
+          <p className="text-gray-500 text-sm mb-6">
+            The event window has passed but this QR code is valid.
           </p>
+          {ticket && (
+            <div className="text-left space-y-2 bg-gray-50 rounded-xl p-4">
+              <p><span className="font-semibold">Name:</span> {ticket.name}</p>
+              <p><span className="font-semibold">Ticket Type:</span> {ticket.ticketType}</p>
+              <p><span className="font-semibold">QR ID:</span> <span className="font-mono text-xs">{ticket.qrId || qrId}</span></p>
+            </div>
+          )}
+          <p className="mt-4 text-xs text-gray-400">Update EVENT_DATE in backend env to fix this during testing.</p>
         </div>
       </div>
     );
