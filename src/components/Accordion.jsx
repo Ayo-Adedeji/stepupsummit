@@ -5,7 +5,7 @@ const Accordion = ({ items }) => {
   const [open, setOpen] = useState(0);
 
   return (
-    <div className="mx-auto max-w-3xl divide-y divide-white/20 rounded-2xl border border-white/10 bg-white/5">
+    <div className="mx-auto max-w-3xl divide-y divide-white/10 rounded-2xl border border-white/10 bg-white/5">
       {items.map((item, i) => {
         const isOpen = open === i;
         return (
