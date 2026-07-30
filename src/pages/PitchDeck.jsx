@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -7,7 +7,11 @@ import ScrollReveal from "../components/ScrollReveal";
 import { Spark, Eyebrow } from "../components/ui";
 
 import pitchHeroImg from "../assets/pitch1.jpg";
-import pitchBottomImg from "../assets/pitch1.jpg";
+import pitchCarousel1 from "../assets/Pitch3.jpeg";
+import pitchCarousel2 from "../assets/Pitch4.jpeg";
+import pitchCarousel3 from "../assets/Pitch5.jpeg";
+import pitchCarousel4 from "../assets/Pitch6.jpeg";
+import pitchCarousel5 from "../assets/Pitch7.jpeg";
 
 // Use same Formspree account, different
 // form endpoint for pitch applications
@@ -233,6 +237,13 @@ const steps = [
 ];
 
 const PitchDeck = () => {
+  const pitchFormRef = useRef(null);
+  const carouselImages = [pitchCarousel1, pitchCarousel2, pitchCarousel3, pitchCarousel4, pitchCarousel5];
+
+  const scrollToForm = () => {
+    pitchFormRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div className="bg-white">
       <Navbar />
@@ -262,6 +273,12 @@ const PitchDeck = () => {
               selling their idea to a real audience. That muscle changes everything
               after.
             </p>
+            <button
+              onClick={scrollToForm}
+              className="mt-6 inline-block rounded-full bg-brand-gold px-8 py-3 font-heading text-base font-semibold text-brand-dark transition hover:bg-brand-gold-light"
+            >
+              Pitch Now
+            </button>
           </ScrollReveal>
           <ScrollReveal delay={0.15}>
             <img src={pitchHeroImg} alt="Pitch session" className="aspect-[4/3] max-w-lg w-full rounded-2xl object-cover shadow-lg" />
@@ -293,15 +310,23 @@ const PitchDeck = () => {
         </div>
       </section>
 
-      {/* BEST PITCH PHOTO */}
-      <section className="px-5 pb-20 lg:px-8">
-        <ScrollReveal>
-          <img
-            src={pitchBottomImg}
-            alt="Pitch competition moment"
-            className="mx-auto aspect-[16/9] w-full max-w-6xl rounded-2xl object-cover shadow-lg"
-          />
-        </ScrollReveal>
+      {/* BEST PITCH PHOTO CAROUSEL */}
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-6xl px-5 lg:px-8">
+          <div className="relative overflow-hidden rounded-2xl h-[220px] md:h-[320px]">
+            <div className="flex h-full w-max marquee-track gap-4">
+              {[...carouselImages, ...carouselImages].map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  alt={`Pitch competition moment ${i + 1}`}
+                  className="h-full w-auto object-cover"
+                  style={{ minHeight: "220px" }}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* PRIZES */}
@@ -382,12 +407,12 @@ const PitchDeck = () => {
             Register for 3.0 and tick ‘Yes’ to the pitch competition. December is
             your deadline now.
           </p>
-          <Link
-            to="/register"
+          <button
+            onClick={scrollToForm}
             className="mt-8 inline-block rounded-full bg-brand-gold px-10 py-4 font-heading text-lg font-semibold text-brand-dark transition hover:bg-brand-gold-light"
           >
-            Register & Apply to Pitch
-          </Link>
+            Apply to Pitch
+          </button>
         </div>
       </section>
 
@@ -421,7 +446,12 @@ const PitchDeck = () => {
           </ScrollReveal>
 
           <ScrollReveal delay={0.15}>
-            <PitchApplicationForm />
+            <div ref={pitchFormRef}>
+              <PitchApplicationForm />
+            </div>
+            <p className="mt-4 text-center text-sm italic text-gray-500">
+              Note: Applying to pitch does not register you for the event. Please ensure you also register your free spot at Step-Up Summit 3.0. <Link to="/register" className="text-brand-gold-dark underline">Register here →</Link>
+            </p>
           </ScrollReveal>
         </div>
       </section>

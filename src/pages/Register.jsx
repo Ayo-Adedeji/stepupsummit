@@ -324,9 +324,6 @@ const Register = () => {
       <section className="bg-gradient-to-br from-brand-blue-mid to-brand-blue py-16 text-white">
         <div className="mx-auto max-w-3xl px-5 text-center lg:px-8">
           <Spark center />
-          <span className="mt-4 inline-block rounded-full bg-brand-gold/20 px-4 py-1 text-sm font-semibold text-brand-gold-light ring-1 ring-brand-gold/40">
-            Free
-          </span>
           <p className="mt-4 text-brand-muted">
             December 2026 · ICC Hall, University of Ibadan
           </p>

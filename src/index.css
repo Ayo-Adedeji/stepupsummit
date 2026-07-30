@@ -34,6 +34,15 @@
   animation: scroll-right 30s linear infinite;
 }
 
+@keyframes sponsor-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.sponsor-scroll {
+  animation: sponsor-scroll 25s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -41,7 +50,8 @@
   .animate-slide,
   .animate-float,
   .marquee-track,
-  .marquee-track-reverse {
+  .marquee-track-reverse,
+  .sponsor-scroll {
     animation: none !important;
   }
 }

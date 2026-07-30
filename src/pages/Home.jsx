@@ -29,6 +29,13 @@ import heroCard8 from "../assets/9.jpg";
 import sponsor1 from "../assets/sponsor1.png";
 import sponsor2 from "../assets/sponsor2.png";
 import sponsor3 from "../assets/sponsor3.png";
+import sponsor4 from "../assets/sponsor4.png";
+import sponsor6 from "../assets/sponsor6.png";
+import sponsor10 from "../assets/Sponsor10.png";
+import sponsor11 from "../assets/sponsor11.png";
+import sponsor12 from "../assets/sponsor12.png";
+import sponsor13 from "../assets/sponsor13.png";
+import sponsor14 from "../assets/sponsor14.jpeg";
 import cirveeLogo from "../assets/cirvee logo.jpeg";
 import goodyLogo from "../assets/Goody.PNG";
 import oluboriImg from "../assets/Adobe Ex.png";
@@ -72,7 +79,7 @@ const Home = () => {
     { n: "03", title: "Pitch live at 3.0", text: "Take the stage at ICC Hall in December. Win prizes, mentorship, and the attention of people who can move your idea forward." },
   ];
 
-  const sponsorLogos = [cirveeLogo, goodyLogo, sponsor1, sponsor2, sponsor3];
+  const sponsorLogos = [cirveeLogo, goodyLogo, sponsor1, sponsor2, sponsor3, sponsor4, sponsor6, sponsor10, sponsor11, sponsor12, sponsor13, sponsor14];
 
   return (
     <div className="bg-white">
@@ -376,10 +383,10 @@ const Home = () => {
               ))}
             </div>
             <Link
-              to="/register"
+              to="/pitch-deck"
               className="mt-8 inline-block rounded-full bg-brand-gold px-8 py-3 font-semibold text-brand-dark transition hover:bg-brand-gold-light"
             >
-              Register & apply to pitch
+              Apply to Pitch
             </Link>
           </ScrollReveal>
           <ScrollReveal delay={0.15}>
@@ -397,10 +404,14 @@ const Home = () => {
             Brands that back the builders
           </h2>
           {/* // Replace with actual partner logos when available */}
-          <div className="mt-10 grid grid-cols-2 items-center gap-6 sm:grid-cols-3 md:grid-cols-5">
-            {sponsorLogos.map((logo, i) => (
-              <img key={i} src={logo} alt="Partner logo" className="mx-auto h-12 w-auto object-contain opacity-90 transition hover:opacity-100" />
-            ))}
+          <div className="mt-10 overflow-hidden">
+            <div className="flex w-max sponsor-scroll">
+              {[...sponsorLogos, ...sponsorLogos].map((logo, i) => (
+                <div key={i} className="mx-3 flex-shrink-0 rounded-lg bg-white p-2 shadow-sm">
+                  <img src={logo} alt="Partner logo" className="h-20 w-auto object-contain" style={{ minHeight: "80px" }} />
+                </div>
+              ))}
+            </div>
           </div>
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Link to="/sponsors" className="rounded-full bg-brand-gold px-7 py-3 font-semibold text-brand-dark transition hover:bg-brand-gold-light">

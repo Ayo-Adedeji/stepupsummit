@@ -11,6 +11,11 @@ import sponsor2 from "../assets/sponsor2.png";
 import sponsor3 from "../assets/sponsor3.png";
 import sponsor4 from "../assets/sponsor4.png";
 import sponsor6 from "../assets/sponsor6.png";
+import sponsor10 from "../assets/Sponsor10.png";
+import sponsor11 from "../assets/sponsor11.png";
+import sponsor12 from "../assets/sponsor12.png";
+import sponsor13 from "../assets/sponsor13.png";
+import sponsor14 from "../assets/sponsor14.jpeg";
 import cirveeLogo from "../assets/cirvee logo.jpeg";
 import goodyLogo from "../assets/Goody.PNG";
 
@@ -263,6 +268,8 @@ const loadPaystack = () =>
       }
     }, 100);
   });
+
+const sponsorLogos = [cirveeLogo, goodyLogo, sponsor1, sponsor2, sponsor3, sponsor4, sponsor6, sponsor10, sponsor11, sponsor12, sponsor13, sponsor14];
 
 const SponsorPaymentForm = ({ selectedTier }) => {
   const [email, setEmail] = useState("");
@@ -577,10 +584,14 @@ const Sponsors = () => {
           <h2 className="mt-3 text-center font-heading text-3xl font-bold text-brand-dark sm:text-4xl">
             Brands that back the builders
           </h2>
-          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
-            {[cirveeLogo, goodyLogo, sponsor1, sponsor2, sponsor3, sponsor4, sponsor6].map((logo, i) => (
-              <img key={i} src={logo} alt="Partner logo" className="mx-auto h-12 w-auto object-contain" />
-            ))}
+          <div className="mt-10 overflow-hidden">
+            <div className="flex w-max sponsor-scroll">
+              {[...sponsorLogos, ...sponsorLogos].map((logo, i) => (
+                <div key={i} className="mx-3 flex-shrink-0 rounded-lg bg-white p-2 shadow-sm">
+                  <img src={logo} alt="Partner logo" className="h-20 w-auto object-contain" style={{ minHeight: "80px" }} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
