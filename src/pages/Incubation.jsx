@@ -105,7 +105,7 @@ const Incubation = () => {
                 <div className="h-full rounded-2xl border-l-4 border-brand-blue bg-white p-7 shadow-md transition hover:-translate-y-1 hover:shadow-xl">
                   <span className="font-heading text-3xl font-extrabold text-brand-gold">{c.n}</span>
                   <h3 className="mt-2 mb-2 font-heading text-lg font-semibold text-brand-dark">{c.title}</h3>
-                  <p className="text-sm leading-relaxed text-gray-400">{c.text}</p>
+                  <p className="text-sm leading-relaxed text-black">{c.text}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -126,27 +126,9 @@ const Incubation = () => {
         </div>
       </section>
 
-      {/* BOTTOM CTA */}
-      <section className="bg-gradient-to-br from-brand-blue-mid to-brand-blue py-20 text-center text-white">
-        <div className="mx-auto max-w-3xl px-5">
-          <h2 className="font-heading text-3xl font-bold sm:text-4xl">Ready to go from inspired to incubated?</h2>
-          <p className="mt-4 text-white/80">
-            Start at the summit in December, then continue the climb inside the
-            Academy.
-          </p>
-          <a
-            href="https://academy.stepupsummit.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-8 inline-block rounded-full bg-brand-gold px-10 py-4 font-heading text-lg font-semibold text-brand-dark transition hover:bg-brand-gold-light"
-          >
-            Join the Academy
-          </a>
-        </div>
-      </section>
-
+      
       {/* SECTION A — TRACKS */}
-      <section className="bg-white py-20">
+      {/* <section className="bg-white py-20">
         <div className="mx-auto max-w-6xl px-5 lg:px-8">
           <div className="text-center">
             <Eyebrow>What You Learn</Eyebrow>
@@ -167,25 +149,25 @@ const Incubation = () => {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* SECTION B — COURSES */}
-      <section className="bg-brand-blue py-20 text-white">
+      <section className="bg-white py-20">
         <div className="mx-auto max-w-6xl px-5 lg:px-8">
           <div className="text-center">
-            <Eyebrow className="text-brand-gold-light">Our Courses</Eyebrow>
-            <h2 className="mt-3 font-heading text-3xl font-bold text-white sm:text-4xl">What you'll learn to build</h2>
-              <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-white/80">
-                Practical, portfolio-ready skills taught by people who've done it.
-              </p>
+            <Eyebrow>Our Courses</Eyebrow>
+            <h2 className="mt-3 font-heading text-3xl font-bold text-brand-dark sm:text-4xl">What you'll learn to build</h2>
+            <p className="mx-auto mt-4 max-w-2xl leading-relaxed text-gray-500">
+              Practical, portfolio-ready skills taught by people who've done it.
+            </p>
           </div>
           <div className="mt-12 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
             {courses.map((c, i) => (
               <ScrollReveal key={i} delay={i * 0.05}>
-                <div className="h-full rounded-xl border border-white/10 bg-brand-blue-mid p-5 text-center transition hover:-translate-y-1 hover:border-brand-gold hover:shadow-lg">
+                <div className="flex h-full flex-col rounded-xl border border-gray-200 bg-white p-5 text-center shadow-sm transition hover:-translate-y-1 hover:border-brand-gold hover:shadow-md">
                   <c.Icon className="mx-auto mb-3 text-brand-gold" size={28} />
-                  <h4 className="font-heading text-sm font-semibold text-white">{c.name}</h4>
-                  <p className="mt-1 text-xs leading-relaxed text-white/80">{c.desc}</p>
+                  <h4 className="font-heading text-sm font-semibold text-brand-dark">{c.name}</h4>
+                  <p className="mt-1 text-xs leading-relaxed text-gray-500">{c.desc}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -241,6 +223,29 @@ const Incubation = () => {
           </div>
         </div>
       </section>
+
+
+{/* BOTTOM CTA */}
+      <section className="bg-gradient-to-br from-brand-blue-mid to-brand-blue py-20 text-center text-white">
+        <div className="mx-auto max-w-3xl px-5">
+          <h2 className="font-heading text-3xl font-bold sm:text-4xl">Ready to go from inspired to incubated?</h2>
+          <p className="mt-4 text-white/80">
+            Start at the summit in December, then continue the climb inside the
+            Academy.
+          </p>
+          <a
+            href="https://academy.stepupsummit.org"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-8 inline-block rounded-full bg-brand-gold px-10 py-4 font-heading text-lg font-semibold text-brand-dark transition hover:bg-brand-gold-light"
+          >
+            Join the Academy
+          </a>
+        </div>
+      </section>
+
+
+
 
       {/* SECTION D — FAQ */}
       <section className="bg-white py-20">

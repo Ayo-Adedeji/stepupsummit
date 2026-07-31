@@ -27,16 +27,13 @@ import heroCard6 from "../assets/2.jpg";
 import heroCard7 from "../assets/6.jpg";
 import heroCard8 from "../assets/9.jpg";
 import sponsor1 from "../assets/sponsor1.png";
-import sponsor2 from "../assets/sponsor2.png";
 import sponsor3 from "../assets/sponsor3.png";
-import sponsor4 from "../assets/sponsor4.png";
-import sponsor6 from "../assets/sponsor6.png";
 import sponsor10 from "../assets/Sponsor10.png";
 import sponsor11 from "../assets/sponsor11.png";
 import sponsor12 from "../assets/sponsor12.png";
 import sponsor13 from "../assets/sponsor13.png";
 import sponsor14 from "../assets/sponsor14.jpeg";
-import cirveeLogo from "../assets/cirvee logo.jpeg";
+import cirveeLogo from "../assets/cirvee logo.png";
 import goodyLogo from "../assets/Goody.PNG";
 import oluboriImg from "../assets/Adobe Ex.png";
 import adeifeImg from "../assets/Adeife.png";
@@ -79,7 +76,7 @@ const Home = () => {
     { n: "03", title: "Pitch live at 3.0", text: "Take the stage at ICC Hall in December. Win prizes, mentorship, and the attention of people who can move your idea forward." },
   ];
 
-  const sponsorLogos = [cirveeLogo, goodyLogo, sponsor1, sponsor2, sponsor3, sponsor4, sponsor6, sponsor10, sponsor11, sponsor12, sponsor13, sponsor14];
+  const sponsorLogos = [cirveeLogo, goodyLogo, sponsor1, sponsor3, sponsor10, sponsor11, sponsor12, sponsor13, sponsor14];
 
   return (
     <div className="bg-white">
