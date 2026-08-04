@@ -65,8 +65,11 @@ async function sendFreeRegistrationEmail({ firstName, email, qrId, qrDataUrl }) 
     <p>Hi <b>${firstName}</b>,</p>
     <p>You're in! Your free spot at <b>Step-Up Summit 3.0</b> is confirmed.</p>
     <p><b>Event Details:</b><br/>Date TBC · ICC Hall, University of Ibadan</p>
-    <p>Present the QR attachment below at the entrance on event day.</p>
     <p><b>Reference Number:</b> ${qrId}</p>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:14px 16px; margin:20px 0; border-radius:4px;">
+      <p style="margin:0; font-weight:bold; color:#0B1F5C;">📵 Please do not scan this QR code yourself.</p>
+      <p style="margin:8px 0 0; color:#444;">Your QR code is attached below. It will be scanned by our staff at the entrance on event day. Keep it safe and present it when you arrive.</p>
+    </div>
     <p>Share with your network:
       <a href="https://wa.me/?text=I'm+attending+Step-Up+Summit+3.0!+Join+me:+${qrId}" style="color:${BRAND.blue};">WhatsApp</a>
     </p>
@@ -113,9 +116,11 @@ async function sendPaidTicketEmail({ name, email, ticketType, amount, reference,
   const body = `
     <p>Hi <b>${name}</b>, your <b>${ticketType}</b> ticket is confirmed!</p>
     <p><b>Payment Reference:</b> ${reference}<br/><b>Amount Paid:</b> ₦${amount.toLocaleString()}</p>
-    <p>Present the QR attachment below at the entrance on event day.</p>
     <p><b>Event Details:</b><br/>Date TBC · ICC Hall, University of Ibadan</p>
-    <p>Verify here: <a href="${verifyURL}" style="color:${BRAND.blue};">${verifyURL}</a></p>
+    <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:14px 16px; margin:20px 0; border-radius:4px;">
+      <p style="margin:0; font-weight:bold; color:#0B1F5C;">📵 Please do not scan this QR code yourself.</p>
+      <p style="margin:8px 0 0; color:#444;">Your QR code is attached below. It will be scanned by our staff at the entrance on event day. Simply show it at the door and our team will check you in.</p>
+    </div>
   `;
 
   const base64Data = qrDataUrl.replace(/^data:image\/png;base64,/, "");

@@ -17,7 +17,14 @@ const pitchRoutes = require("./routes/pitch.cjs");
 const sheets = require("./services/googleSheets.cjs");
 const app = express();
 
-// Security
+// Security — disable CSP for admin static files (inline scripts need it off)
+app.use("/admin", (req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self'"
+  );
+  next();
+});
 app.use(helmet());
 const ALLOWED_ORIGINS = [
   "http://localhost:5173",

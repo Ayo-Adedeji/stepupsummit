@@ -44,25 +44,9 @@ function getEventDateTime() {
   return new Date(year, month - 1, day, hours, minutes);
 }
 
-function getVerificationStatus(eventDateTime) {
-  const now = new Date();
-  const diffMs = now - eventDateTime;
-  const diffHours = diffMs / (1000 * 60 * 60);
-
-  if (diffHours < 0) {
-    // Event hasn't started yet
-    return "TOO_EARLY";
-  }
-
-  // EVENT_WINDOW_HOURS controls how long after event start tickets remain valid.
-  // Default is 12 hours — covers late arrivals and long events.
-  // After this window, tickets show EXPIRED (event is fully over).
-  const windowHours = parseFloat(process.env.EVENT_WINDOW_HOURS || "12");
-
-  if (diffHours > windowHours) {
-    return "EXPIRED";
-  }
-
+// Time-window enforcement removed — QR verification is always open.
+// Scanning is controlled by staff at the entrance on event day.
+function getVerificationStatus() {
   return "VALID";
 }
 
