@@ -132,7 +132,7 @@
     .login-right {
       flex: 1;
       position: relative;
-      overflow: hidden;
+      overflow: hidden;  /* clips the rotated strip ends */
       background: var(--blue);
     }
     /* Slideshow */
@@ -157,26 +157,26 @@
       z-index: 2;
     }
 
-    /* Scrolling strip */
+    /* Scrolling strip — slanted, entering bottom-right, exiting bottom-left */
     .ticker-strip {
       position: absolute;
       bottom: 30vh;
-      left: 0; right: 0;
-      overflow: hidden;
-      padding: 14px 0;
-      background: rgba(255, 193, 7, 0.13);
+      left: -80px; right: -80px;
+      padding: 13px 0;
+      background: rgba(255, 193, 7, 0.15);
       backdrop-filter: blur(6px);
-      border-top: 1px solid rgba(255,193,7,0.35);
-      border-bottom: 1px solid rgba(255,193,7,0.35);
+      border-top: 1px solid rgba(255,193,7,0.4);
+      border-bottom: 1px solid rgba(255,193,7,0.4);
       z-index: 3;
+      transform: rotate(-6deg);
+      transform-origin: center center;
+      /* NO overflow:hidden here — that kills the animation */
     }
     .ticker-track {
       display: flex;
       white-space: nowrap;
-      /* animation duration set by JS so it's proportional to content width */
-      animation: ticker-scroll 38s linear infinite;
-      width: max-content;
-      will-change: transform;
+      animation: ticker-scroll 30s linear infinite;
+      /* width must be auto so the flex content sets it */
     }
     .ticker-track span {
       font-family: 'Syne', sans-serif;
@@ -184,11 +184,12 @@
       font-size: 13px;
       letter-spacing: 0.08em;
       color: var(--gold);
-      padding-right: 48px;
+      padding-right: 52px;
       text-transform: uppercase;
       flex-shrink: 0;
+      display: inline-block;
     }
-    .ticker-track span .dot { color: rgba(255,193,7,0.45); margin: 0 6px; }
+    .ticker-track span .dot { color: rgba(255,193,7,0.5); margin: 0 6px; }
 
     @keyframes ticker-scroll {
       0%   { transform: translateX(0); }
@@ -594,9 +595,9 @@
     ];
     (function buildTicker() {
       const track = document.getElementById("tickerTrack");
-      // Double the words so seamless loop works
-      const doubled = [...tickerWords, ...tickerWords];
-      track.innerHTML = doubled.map(w =>
+      // Repeat 4x so the seamless -50% translateX loop always has content
+      const quad = [...tickerWords, ...tickerWords, ...tickerWords, ...tickerWords];
+      track.innerHTML = quad.map(w =>
         `<span>${w}<span class="dot">·</span></span>`
       ).join("");
     })();
