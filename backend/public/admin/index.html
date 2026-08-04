@@ -3,278 +3,870 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Step-Up Summit Admin Dashboard</title>
+  <title>Step-Up Summit 3.0 — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
       --blue: #0B1F5C;
+      --blue-mid: #1a3a8f;
+      --blue-light: #2f5ed4;
       --gold: #FFC107;
+      --gold-light: #FFD54F;
       --white: #FFFFFF;
-      --dark: #111111;
-      --gray: #F5F5F5;
+      --dark: #0d0d0d;
+      --gray-bg: #F4F6FB;
+      --gray-border: #E2E8F0;
+      --text-muted: #64748b;
+      --green: #10b981;
+      --red: #ef4444;
+      --amber: #f59e0b;
+      --cyan: #06b6d4;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
     }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: Arial, sans-serif; background: var(--gray); color: var(--dark); }
-    header { background: var(--blue); color: var(--white); padding: 24px; text-align: center; }
-    header h1 { margin: 0; font-size: 24px; }
-    header p { margin: 8px 0 0; color: var(--gold); }
-    .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
-    .login-card { max-width: 400px; margin: 60px auto; background: var(--white); padding: 32px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-align: center; }
-    .login-card input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
-    .login-card button { width: 100%; padding: 12px; background: var(--gold); color: var(--dark); border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 8px; }
-    .login-card button:hover { background: #e0a800; }
-    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-    .stat-card { background: var(--white); padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: center; }
-    .stat-card h3 { margin: 0 0 8px; font-size: 14px; color: #666; text-transform: uppercase; letter-spacing: 0.05em; }
-    .stat-card p { margin: 0; font-size: 32px; font-weight: bold; color: var(--blue); }
-    .controls { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
-    .controls input { flex: 1; min-width: 200px; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
-    .controls button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-    .btn-primary { background: var(--gold); color: var(--dark); }
-    .btn-primary:hover { background: #e0a800; }
-    table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-    th { background: var(--blue); color: var(--white); font-weight: 600; }
-    tr:hover { background: #fafafa; }
-    .status { padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-    .status-checked { background: #d4edda; color: #155724; }
-    .status-not { background: #f8d7da; color: #721c24; }
-    .status-inquiry { background: #fff3cd; color: #856404; }
-    .status-paid { background: #d1ecf1; color: #0c5460; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--gray-bg); color: var(--dark); min-height: 100vh; }
     .hidden { display: none !important; }
+
+    /* ── LOGIN PAGE ── */
+    #loginPage {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Left panel */
+    .login-left {
+      flex: 0 0 480px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px 56px;
+      background: var(--white);
+      position: relative;
+      z-index: 2;
+    }
+    .login-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 48px;
+    }
+    .login-logo-mark {
+      width: 36px; height: 36px;
+      background: var(--blue);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .login-logo-mark span { color: var(--gold); font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; }
+    .login-logo-text { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 15px; color: var(--blue); line-height: 1.2; }
+    .login-logo-text small { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); font-family: 'Inter', sans-serif; }
+
+    .login-heading { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: var(--blue); line-height: 1.15; }
+    .login-sub { margin-top: 10px; font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+
+    .login-form { margin-top: 40px; }
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--blue); margin-bottom: 8px; }
+    .form-input {
+      width: 100%; padding: 14px 16px;
+      border: 1.5px solid var(--gray-border);
+      border-radius: 10px;
+      font-size: 15px; font-family: 'Inter', sans-serif;
+      background: #FAFBFF;
+      color: var(--dark);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-input:focus { border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(47,94,212,0.12); }
+
+    .btn-login {
+      width: 100%; padding: 15px;
+      background: transparent;
+      color: var(--blue);
+      border: 2px solid var(--blue);
+      border-radius: 10px;
+      font-size: 15px; font-weight: 700; font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: color 0.4s ease;
+      z-index: 0;
+    }
+    /* The fill layer — always present, width driven by CSS var */
+    .btn-login::before {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0; left: 0;
+      width: var(--fill, 0%);
+      background: var(--blue);
+      transition: width 0.4s ease;
+      z-index: -1;
+    }
+    .btn-login:hover {
+      color: var(--white);
+      --fill: 100%;
+    }
+    /* On unhover, shrink back from left (width → 0) */
+    .btn-login:not(:hover) {
+      color: var(--blue);
+      --fill: 0%;
+    }
+    .btn-login svg { width: 18px; height: 18px; position: relative; z-index: 1; }
+    .btn-login > * { position: relative; z-index: 1; }
+
+    .login-error {
+      margin-top: 14px;
+      padding: 12px 16px;
+      background: #fef2f2; border: 1px solid #fecaca;
+      border-radius: 8px;
+      color: #dc2626; font-size: 13px; font-weight: 500;
+      display: none;
+    }
+    .login-error.show { display: block; }
+
+    .login-footer { margin-top: 40px; font-size: 12px; color: #aab; }
+
+    /* Right panel */
+    .login-right {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: var(--blue);
+    }
+    /* Slideshow */
+    .slideshow {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+    }
+    .slide {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1.2s ease-in-out;
+    }
+    .slide.active { opacity: 1; }
+    .login-right-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(11,31,92,0.25) 0%,
+        rgba(11,31,92,0.45) 55%,
+        rgba(11,31,92,0.88) 100%);
+      z-index: 2;
+    }
+
+    /* Scrolling strip */
+    .ticker-strip {
+      position: absolute;
+      bottom: 30vh;
+      left: 0; right: 0;
+      overflow: hidden;
+      padding: 14px 0;
+      background: rgba(255, 193, 7, 0.13);
+      backdrop-filter: blur(6px);
+      border-top: 1px solid rgba(255,193,7,0.35);
+      border-bottom: 1px solid rgba(255,193,7,0.35);
+      z-index: 3;
+    }
+    .ticker-track {
+      display: flex;
+      white-space: nowrap;
+      /* animation duration set by JS so it's proportional to content width */
+      animation: ticker-scroll 38s linear infinite;
+      width: max-content;
+      will-change: transform;
+    }
+    .ticker-track span {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      padding-right: 48px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+    .ticker-track span .dot { color: rgba(255,193,7,0.45); margin: 0 6px; }
+
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* Bottom caption inside right panel */
+    .login-right-caption {
+      position: absolute;
+      bottom: 40px; left: 40px; right: 40px;
+      z-index: 3;
+    }
+    .login-right-caption h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px; font-weight: 800;
+      color: var(--white); line-height: 1.2;
+    }
+    .login-right-caption p {
+      margin-top: 8px; font-size: 14px;
+      color: rgba(255,255,255,0.65); line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      #loginPage { flex-direction: column; }
+      .login-left { flex: none; padding: 40px 28px; }
+      .login-right { min-height: 260px; flex: none; }
+    }
+
+    /* ── DASHBOARD ── */
+    #dashboardPage { min-height: 100vh; display: flex; flex-direction: column; }
+
+    .dash-header {
+      background: var(--blue);
+      padding: 0 32px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+      box-shadow: var(--shadow-md);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .dash-header-left { display: flex; align-items: center; gap: 12px; }
+    .dash-header-mark {
+      width: 34px; height: 34px;
+      background: var(--gold);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .dash-header-mark span { color: var(--blue); font-family: 'Syne', sans-serif; font-weight: 800; font-size: 15px; }
+    .dash-header-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; color: var(--white); }
+    .dash-header-sub { font-size: 11px; color: rgba(255,255,255,0.5); }
+    .dash-header-right { display: flex; align-items: center; gap: 12px; }
+    .live-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(16,185,129,0.15);
+      border: 1px solid rgba(16,185,129,0.35);
+      border-radius: 20px; padding: 4px 12px;
+      font-size: 12px; font-weight: 600; color: #10b981;
+    }
+    .live-dot { width: 7px; height: 7px; background: #10b981; border-radius: 50%; animation: pulse 1.5s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+    .btn-logout {
+      padding: 8px 16px; background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px; color: rgba(255,255,255,0.8);
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.2s;
+    }
+    .btn-logout:hover { background: rgba(255,255,255,0.15); }
+
+    .dash-body { flex: 1; padding: 32px; max-width: 1400px; width: 100%; margin: 0 auto; }
+
+    /* Stat cards */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .stat-card {
+      background: var(--white); border-radius: 16px;
+      padding: 22px 24px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-border);
+      position: relative; overflow: hidden;
+    }
+    .stat-card::before {
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+    }
+    .stat-card.blue::before { background: var(--blue); }
+    .stat-card.gold::before { background: var(--gold); }
+    .stat-card.green::before { background: var(--green); }
+    .stat-card.red::before { background: var(--red); }
+    .stat-card.cyan::before { background: var(--cyan); }
+    .stat-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+    .stat-value { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: var(--blue); margin-top: 6px; line-height: 1; }
+    .stat-card.gold .stat-value { color: #b45309; }
+    .stat-card.green .stat-value { color: var(--green); }
+    .stat-card.red .stat-value { color: var(--red); }
+    .stat-card.cyan .stat-value { color: var(--cyan); }
+
+    /* Toolbar */
+    .toolbar {
+      display: flex; gap: 10px; margin-bottom: 20px;
+      flex-wrap: wrap; align-items: center;
+    }
+    .search-wrap { position: relative; flex: 1; min-width: 220px; }
+    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; }
+    .search-icon svg { width: 16px; height: 16px; }
+    .search-input {
+      width: 100%; padding: 10px 14px 10px 40px;
+      border: 1.5px solid var(--gray-border); border-radius: 10px;
+      font-size: 14px; font-family: 'Inter', sans-serif; background: var(--white);
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .search-input:focus { border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(47,94,212,0.1); }
+
+    .tab-group { display: flex; background: var(--white); border: 1.5px solid var(--gray-border); border-radius: 10px; overflow: hidden; }
+    .tab-btn {
+      padding: 9px 18px; font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif;
+      border: none; background: transparent; cursor: pointer; color: var(--text-muted);
+      transition: background 0.15s, color 0.15s;
+      border-right: 1px solid var(--gray-border);
+    }
+    .tab-btn:last-child { border-right: none; }
+    .tab-btn.active { background: var(--blue); color: var(--white); }
+    .tab-btn:hover:not(.active) { background: var(--gray-bg); }
+
+    .action-btn {
+      padding: 9px 16px; border: 1.5px solid var(--gray-border);
+      border-radius: 10px; background: var(--white);
+      font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif;
+      cursor: pointer; color: var(--blue);
+      display: flex; align-items: center; gap: 6px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .action-btn:hover { background: var(--gray-bg); border-color: var(--blue-light); }
+    .action-btn svg { width: 15px; height: 15px; }
+    .action-btn.gold-btn { background: var(--gold); border-color: var(--gold); color: var(--dark); }
+    .action-btn.gold-btn:hover { background: var(--gold-light); }
+
+    /* Table */
+    .table-wrap {
+      background: var(--white); border-radius: 16px;
+      box-shadow: var(--shadow-sm); border: 1px solid var(--gray-border);
+      overflow: hidden;
+    }
+    .table-header-bar {
+      padding: 16px 24px; border-bottom: 1px solid var(--gray-border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .table-title { font-size: 14px; font-weight: 700; color: var(--blue); }
+    .table-count { font-size: 12px; color: var(--text-muted); }
+    .table-scroll { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      background: #F8FAFF; padding: 12px 16px;
+      text-align: left; font-size: 11px; font-weight: 700;
+      color: var(--text-muted); text-transform: uppercase;
+      letter-spacing: 0.07em; border-bottom: 1px solid var(--gray-border);
+      white-space: nowrap;
+    }
+    tbody td { padding: 14px 16px; font-size: 13px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: #F8FAFF; }
+
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: var(--blue); color: var(--white);
+      font-weight: 700; font-size: 13px;
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-right: 10px;
+    }
+    .cell-name { display: flex; align-items: center; }
+    .cell-name-text { font-weight: 600; color: var(--dark); }
+    .cell-name-email { font-size: 12px; color: var(--text-muted); }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
+      text-transform: uppercase; white-space: nowrap;
+    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .badge-checked { background: #d1fae5; color: #065f46; }
+    .badge-checked .badge-dot { background: #10b981; }
+    .badge-not { background: #fee2e2; color: #991b1b; }
+    .badge-not .badge-dot { background: #ef4444; }
+    .badge-inquiry { background: #fef3c7; color: #92400e; }
+    .badge-inquiry .badge-dot { background: #f59e0b; }
+    .badge-paid { background: #dbeafe; color: #1e40af; }
+    .badge-paid .badge-dot { background: #3b82f6; }
+    .badge-vip { background: var(--gold); color: var(--dark); }
+    .badge-free { background: #e0e7ff; color: #3730a3; }
+    .badge-regular { background: #f0fdf4; color: #166534; }
+
+    .verify-btn {
+      padding: 6px 14px; background: var(--blue);
+      color: var(--white); border: none; border-radius: 7px;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.15s;
+    }
+    .verify-btn:hover { background: var(--blue-mid); }
+
+    .empty-state { padding: 60px 24px; text-align: center; color: var(--text-muted); }
+    .empty-state svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.3; }
+    .empty-state p { font-size: 14px; }
+
+    .toast {
+      position: fixed; bottom: 28px; right: 28px;
+      background: var(--dark); color: var(--white);
+      padding: 14px 20px; border-radius: 12px;
+      font-size: 13px; font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(80px); opacity: 0;
+      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      z-index: 9999; max-width: 320px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { border-left: 4px solid var(--green); }
+    .toast.error { border-left: 4px solid var(--red); }
+
+    @media (max-width: 768px) {
+      .dash-body { padding: 16px; }
+      .dash-header { padding: 0 16px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Step-Up Summit 3.0 Admin Dashboard</h1>
-    <p>Live Check-In & Registration Management</p>
-  </header>
 
-  <div class="container">
-    <!-- Login -->
-    <div id="loginSection" class="login-card">
-      <h2>Admin Login</h2>
-      <p style="color:#666;">Enter your staff PIN to continue</p>
-      <input type="password" id="adminPin" placeholder="Enter PIN" />
-      <button onclick="login()">Login</button>
-      <p id="loginError" style="color:red; margin-top:12px;"></p>
+  <!-- ══ LOGIN PAGE ══ -->
+  <div id="loginPage">
+    <!-- Left: form -->
+    <div class="login-left">
+      <div class="login-logo">
+        <div class="login-logo-mark"><span>S</span></div>
+        <div class="login-logo-text">
+          Step-Up Summit
+          <small>3.0 Admin Portal</small>
+        </div>
+      </div>
+
+      <h1 class="login-heading">Welcome<br/>back, staff.</h1>
+      <p class="login-sub">Enter your admin PIN to access the live dashboard, registrations, and check-in management.</p>
+
+      <div class="login-form">
+        <div class="form-group">
+          <label class="form-label" for="adminPin">Admin PIN</label>
+          <input
+            class="form-input"
+            type="password"
+            id="adminPin"
+            placeholder="••••"
+            autocomplete="current-password"
+            onkeydown="if(event.key==='Enter') login()"
+          />
+        </div>
+        <button class="btn-login" onclick="login()" id="loginBtn">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+          Sign In
+        </button>
+        <div id="loginError" class="login-error"></div>
+      </div>
+
+      <p class="login-footer">Step-Up Summit 3.0 &mdash; Admin Access Only</p>
     </div>
 
-    <!-- Dashboard -->
-    <div id="dashboard" class="hidden">
-      <div class="stats">
-        <div class="stat-card"><h3>Total Registered</h3><p id="totalRegistered">0</p></div>
-        <div class="stat-card"><h3>Checked In</h3><p id="totalCheckedIn">0</p></div>
-        <div class="stat-card"><h3>Not Checked In</h3><p id="totalNotCheckedIn">0</p></div>
-        <div class="stat-card"><h3>Sponsor Inquiries</h3><p id="totalSponsors">0</p></div>
+    <!-- Right: visual -->
+    <div class="login-right">
+      <!-- Slideshow of event photos -->
+      <div class="slideshow" id="slideshow">
+        <img class="slide active" src="photos/260A6458.jpg"  alt="Step-Up Summit" />
+        <img class="slide"        src="photos/1.jpg"         alt="Step-Up Summit" />
+        <img class="slide"        src="photos/img1.JPG"      alt="Step-Up Summit" />
+        <img class="slide"        src="photos/pitch1.jpg"    alt="Step-Up Summit" />
+        <img class="slide"        src="photos/2.jpg"         alt="Step-Up Summit" />
+        <img class="slide"        src="photos/Pitch3.jpeg"   alt="Step-Up Summit" />
+        <img class="slide"        src="photos/3.jpg"         alt="Step-Up Summit" />
+        <img class="slide"        src="photos/img2.JPG"      alt="Step-Up Summit" />
+        <img class="slide"        src="photos/4.jpg"         alt="Step-Up Summit" />
+        <img class="slide"        src="photos/Pitch4.jpeg"   alt="Step-Up Summit" />
+        <img class="slide"        src="photos/imag2.jpg"     alt="Step-Up Summit" />
+      </div>
+      <div class="login-right-overlay"></div>
+
+      <!-- Scrolling ticker strip at bottom 30vh -->
+      <div class="ticker-strip">
+        <div class="ticker-track" id="tickerTrack">
+          <!-- filled by JS -->
+        </div>
       </div>
 
-      <div class="controls">
-        <input type="text" id="searchInput" placeholder="Search by name or email..." oninput="filterTable()" />
-        <button class="btn-primary" onclick="setFilter('all')">All</button>
-        <button class="btn-primary" onclick="setFilter('ticket')">Tickets</button>
-        <button class="btn-primary" onclick="setFilter('sponsor')">Sponsors</button>
-        <button class="btn-primary" onclick="exportCSV()">Export CSV</button>
-        <button class="btn-primary" onclick="refreshData()">Refresh</button>
-      </div>
-
-      <div style="overflow-x:auto;">
-        <table>
-          <thead id="tableHead">
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Ticket Type</th>
-              <th>Status</th>
-              <th>Check-in Time</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="attendeeTable"></tbody>
-        </table>
+      <div class="login-right-caption">
+        <h2>Built for builders.<br/>Powered by ambition.</h2>
+        <p>Live check-in, real-time registrations, sponsor management — all in one place.</p>
       </div>
     </div>
   </div>
 
+  <!-- ══ DASHBOARD PAGE ══ -->
+  <div id="dashboardPage" class="hidden">
+    <header class="dash-header">
+      <div class="dash-header-left">
+        <div class="dash-header-mark"><span>S</span></div>
+        <div>
+          <div class="dash-header-title">Step-Up Summit 3.0</div>
+          <div class="dash-header-sub">Admin Dashboard</div>
+        </div>
+      </div>
+      <div class="dash-header-right">
+        <div class="live-badge"><span class="live-dot"></span> Live</div>
+        <button class="btn-logout" onclick="logout()">Sign Out</button>
+      </div>
+    </header>
+
+    <div class="dash-body">
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card blue">
+          <div class="stat-label">Total Registered</div>
+          <div class="stat-value" id="statTotal">—</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-label">Paid Tickets</div>
+          <div class="stat-value" id="statPaid">—</div>
+        </div>
+        <div class="stat-card cyan">
+          <div class="stat-label">Free Registrations</div>
+          <div class="stat-value" id="statFree">—</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Checked In</div>
+          <div class="stat-value" id="statChecked">—</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-label">Not Checked In</div>
+          <div class="stat-value" id="statNot">—</div>
+        </div>
+        <div class="stat-card gold">
+          <div class="stat-label">Sponsors</div>
+          <div class="stat-value" id="statSponsors">—</div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span class="search-icon">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg>
+          </span>
+          <input class="search-input" type="text" id="searchInput" placeholder="Search by name or email…" oninput="filterTable()" />
+        </div>
+        <div class="tab-group">
+          <button class="tab-btn active" id="tabAll"     onclick="setFilter('all')">All</button>
+          <button class="tab-btn"        id="tabTicket"  onclick="setFilter('ticket')">Tickets</button>
+          <button class="tab-btn"        id="tabSponsor" onclick="setFilter('sponsor')">Sponsors</button>
+        </div>
+        <button class="action-btn" onclick="refreshData()">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 4v5h5M20 20v-5h-5M4.09 9A8 8 0 1120 15"/></svg>
+          Refresh
+        </button>
+        <button class="action-btn gold-btn" onclick="exportCSV()">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+          Export CSV
+        </button>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <div class="table-header-bar">
+          <span class="table-title" id="tableTitle">All Registrations</span>
+          <span class="table-count" id="tableCount"></span>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead id="tableHead"></thead>
+            <tbody id="attendeeTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+
   <script>
+    // ── Config ──────────────────────────────────────────────────────────────
+    // API_BASE: always use the same origin so admin dashboard works whether
+    // served from Render (stepupsummit-backend.onrender.com) or a custom domain.
     const API_BASE = window.location.origin;
+
     let authToken = localStorage.getItem("adminToken") || "";
     let allAttendees = [];
     let currentFilter = "all";
 
+    // ── Ticker words (from hero section) ────────────────────────────────────
+    const tickerWords = [
+      "Step Up", "Summit 3.0", "Build Your Future",
+      "1000+ Ambitious Young People", "ICC Hall December 2026",
+      "Pitch. Network. Grow.", "Young Founders Welcome",
+      "Live on Stage", "Speakers. Workshops. Energy.",
+      "Your Idea. Our Stage.", "Real Stakes. Real Prizes.",
+      "Nigeria's Next Generation", "Brands That Back Builders",
+    ];
+    (function buildTicker() {
+      const track = document.getElementById("tickerTrack");
+      // Double the words so seamless loop works
+      const doubled = [...tickerWords, ...tickerWords];
+      track.innerHTML = doubled.map(w =>
+        `<span>${w}<span class="dot">·</span></span>`
+      ).join("");
+    })();
+
+    // ── Slideshow ────────────────────────────────────────────────────────────
+    (function initSlideshow() {
+      const slides = document.querySelectorAll(".slide");
+      if (!slides.length) return;
+      let idx = 0;
+      setInterval(() => {
+        slides[idx].classList.remove("active");
+        idx = (idx + 1) % slides.length;
+        slides[idx].classList.add("active");
+      }, 4500);
+    })();
+
+    // ── Helpers ──────────────────────────────────────────────────────────────
     function getHeaders() {
       return { "Content-Type": "application/json", Authorization: `Bearer ${authToken}` };
     }
 
-    function setFilter(type) {
-      currentFilter = type;
+    function showToast(msg, type = "success") {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.className = `toast ${type} show`;
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => { t.className = "toast"; }, 3500);
+    }
+
+    function initials(name) {
+      if (!name) return "?";
+      const parts = name.trim().split(" ");
+      return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
+    }
+
+    function avatarColor(name) {
+      const colors = ["#0B1F5C","#1a3a8f","#2f5ed4","#065f46","#92400e","#7c3aed","#be123c"];
+      let h = 0;
+      for (const c of (name || "?")) h = c.charCodeAt(0) + ((h << 5) - h);
+      return colors[Math.abs(h) % colors.length];
+    }
+
+    // ── Login ────────────────────────────────────────────────────────────────
+    async function login() {
+      const pinEl = document.getElementById("adminPin");
+      const errEl = document.getElementById("loginError");
+      const btn   = document.getElementById("loginBtn");
+      const pin   = pinEl.value.trim();
+
+      if (!pin) { errEl.textContent = "Please enter your PIN."; errEl.classList.add("show"); return; }
+
+      btn.disabled = true;
+      btn.innerHTML = `<svg class="spin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;animation:spin 0.8s linear infinite"><path stroke-linecap="round" d="M4 4v5h5M20 20v-5h-5M4.09 9A8 8 0 1120 15"/></svg> Signing in…`;
+
+      try {
+        const res  = await fetch(`${API_BASE}/api/admin/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pin }),
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          authToken = data.token;
+          localStorage.setItem("adminToken", authToken);
+          showDashboard();
+        } else {
+          errEl.textContent = data.message || "Invalid PIN. Please try again.";
+          errEl.classList.add("show");
+          btn.disabled = false;
+          btn.innerHTML = `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg> Sign In`;
+        }
+      } catch {
+        errEl.textContent = "Network error. Please check your connection.";
+        errEl.classList.add("show");
+        btn.disabled = false;
+        btn.innerHTML = `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg> Sign In`;
+      }
+    }
+
+    function showDashboard() {
+      document.getElementById("loginPage").classList.add("hidden");
+      document.getElementById("dashboardPage").classList.remove("hidden");
       refreshData();
     }
 
-    async function login() {
-      const pin = document.getElementById("adminPin").value;
-      const res = await fetch(`${API_BASE}/api/admin/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pin }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        authToken = data.token;
-        localStorage.setItem("adminToken", authToken);
-        document.getElementById("loginSection").classList.add("hidden");
-        document.getElementById("dashboard").classList.remove("hidden");
-        refreshData();
-      } else {
-        document.getElementById("loginError").textContent = data.message || "Invalid PIN";
-      }
+    function logout() {
+      localStorage.removeItem("adminToken");
+      authToken = "";
+      document.getElementById("dashboardPage").classList.add("hidden");
+      document.getElementById("loginPage").classList.remove("hidden");
+      document.getElementById("adminPin").value = "";
     }
 
+    // ── Data ─────────────────────────────────────────────────────────────────
     async function refreshData() {
-      const res = await fetch(`${API_BASE}/api/admin/attendees?type=${currentFilter}`, { headers: getHeaders() });
-      const data = await res.json();
-      if (data.success) {
-        allAttendees = data.attendees;
-        updateStats(data.attendees);
-        updateTableHeaders();
-        filterTable();
+      try {
+        const [statsRes, attendeesRes] = await Promise.all([
+          fetch(`${API_BASE}/api/admin/stats`, { headers: getHeaders() }),
+          fetch(`${API_BASE}/api/admin/attendees?type=${currentFilter}`, { headers: getHeaders() }),
+        ]);
+
+        if (statsRes.status === 401 || attendeesRes.status === 401) {
+          logout(); return;
+        }
+
+        const statsData     = await statsRes.json();
+        const attendeesData = await attendeesRes.json();
+
+        if (statsData.success) {
+          const s = statsData.stats;
+          document.getElementById("statTotal").textContent   = s.totalRegistered ?? 0;
+          document.getElementById("statPaid").textContent    = s.totalPaid ?? 0;
+          document.getElementById("statFree").textContent    = s.totalFree ?? 0;
+          document.getElementById("statChecked").textContent = s.totalCheckedIn ?? 0;
+          document.getElementById("statNot").textContent     = s.totalNotCheckedIn ?? 0;
+          document.getElementById("statSponsors").textContent = s.totalSponsors ?? 0;
+        }
+
+        if (attendeesData.success) {
+          allAttendees = attendeesData.attendees;
+          filterTable();
+        }
+      } catch {
+        showToast("Failed to load data. Retrying…", "error");
       }
     }
 
-    function updateStats(attendees) {
-      const tickets = attendees.filter((a) => a.type !== "sponsor");
-      const sponsors = attendees.filter((a) => a.type === "sponsor");
-      document.getElementById("totalRegistered").textContent = tickets.length;
-      document.getElementById("totalCheckedIn").textContent = tickets.filter((a) => a.status === "CHECKED_IN").length;
-      document.getElementById("totalNotCheckedIn").textContent = tickets.filter((a) => a.status === "NOT_CHECKED_IN").length;
-      document.getElementById("totalSponsors").textContent = sponsors.length;
+    function setFilter(type) {
+      currentFilter = type;
+      ["All","Ticket","Sponsor"].forEach(t => {
+        document.getElementById("tab" + t).classList.toggle("active", t.toLowerCase() === type || (type === "all" && t === "All"));
+      });
+      const titles = { all: "All Registrations", ticket: "Ticket Holders", sponsor: "Sponsors" };
+      document.getElementById("tableTitle").textContent = titles[type] || "Registrations";
+      refreshData();
     }
 
+    // ── Table ─────────────────────────────────────────────────────────────────
     function updateTableHeaders() {
       const thead = document.getElementById("tableHead");
       if (currentFilter === "sponsor") {
-        thead.innerHTML = `
-          <tr>
-            <th>Contact Name</th>
-            <th>Brand/Organisation</th>
-            <th>Email</th>
-            <th>Package</th>
-            <th>Amount Paid</th>
-            <th>Reference</th>
-            <th>Status</th>
-          </tr>
-        `;
+        thead.innerHTML = `<tr>
+          <th>Contact</th><th>Brand / Organisation</th>
+          <th>Package</th><th>Amount Paid</th>
+          <th>Reference</th><th>Status</th>
+        </tr>`;
       } else {
-        thead.innerHTML = `
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Ticket Type</th>
-            <th>Status</th>
-            <th>Check-in Time</th>
-            <th>Action</th>
-          </tr>
-        `;
+        thead.innerHTML = `<tr>
+          <th>Attendee</th><th>Ticket Type</th>
+          <th>Status</th><th>Check-in Time</th><th>Action</th>
+        </tr>`;
       }
     }
 
     function filterTable() {
       const query = document.getElementById("searchInput").value.toLowerCase();
       const tbody = document.getElementById("attendeeTable");
+      updateTableHeaders();
       tbody.innerHTML = "";
 
       let filtered = allAttendees;
+      if (currentFilter !== "all") filtered = filtered.filter(a => a.type === currentFilter);
+      if (query) filtered = filtered.filter(a =>
+        (a.name || "").toLowerCase().includes(query) ||
+        (a.email || "").toLowerCase().includes(query) ||
+        (a.brand || "").toLowerCase().includes(query)
+      );
 
-      if (currentFilter !== "all") {
-        filtered = filtered.filter((a) => a.type === currentFilter);
+      document.getElementById("tableCount").textContent = `${filtered.length} record${filtered.length !== 1 ? "s" : ""}`;
+
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">
+          <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <p>No records found.</p></div></td></tr>`;
+        return;
       }
 
-      if (query) {
-        filtered = filtered.filter(
-          (a) => a.name.toLowerCase().includes(query) || a.email.toLowerCase().includes(query)
-        );
-      }
-
-      filtered.forEach((a) => {
-        const statusClass = a.status === "CHECKED_IN" ? "status-checked" : a.status === "INQUIRY" ? "status-inquiry" : a.status === "PAID" ? "status-paid" : "status-not";
+      filtered.forEach(a => {
         const tr = document.createElement("tr");
+        const color = avatarColor(a.name);
 
         if (a.type === "sponsor") {
-          tr.style.background = "#FFF9E8";
+          const statusClass = a.status === "PAID" ? "badge-paid" : "badge-inquiry";
           tr.innerHTML = `
-            <td>${a.name}</td>
-            <td>${a.brand || "-"}</td>
-            <td>${a.email}</td>
-            <td>${a.package || a.ticketType}</td>
-            <td>${a.amount ? "₦" + Number(a.amount).toLocaleString() : "-"}</td>
-            <td>${a.reference || "-"}</td>
-            <td><span class="status ${statusClass}">${a.status}</span></td>
+            <td>
+              <div class="cell-name">
+                <div class="avatar" style="background:${color}">${initials(a.name)}</div>
+                <div><div class="cell-name-text">${a.name || "—"}</div><div class="cell-name-email">${a.email || ""}</div></div>
+              </div>
+            </td>
+            <td>${a.brand || "—"}</td>
+            <td><span class="badge badge-paid">${a.package || a.ticketType || "—"}</span></td>
+            <td>${a.amount ? "₦" + Number(a.amount).toLocaleString() : "—"}</td>
+            <td style="font-family:monospace;font-size:11px;">${a.reference || "—"}</td>
+            <td><span class="badge ${statusClass}"><span class="badge-dot"></span>${a.status || "—"}</span></td>
           `;
         } else {
+          const typeLC = (a.ticketType || "").toLowerCase();
+          const typeClass = typeLC.includes("vip") ? "badge-vip" : typeLC.includes("free") ? "badge-free" : "badge-regular";
+          const statusClass = a.status === "CHECKED_IN" ? "badge-checked" : "badge-not";
+          const actionCell = a.qrId
+            ? `<button class="verify-btn" onclick="manualVerify('${a.qrId}')">Verify</button>`
+            : "—";
           tr.innerHTML = `
-            <td>${a.name}</td>
-            <td>${a.email}</td>
-            <td>${a.ticketType}</td>
-            <td><span class="status ${statusClass}">${a.status}</span></td>
-            <td>${a.checkinTime || "-"}</td>
-            <td>${a.qrId ? `<button class="btn-primary" onclick="manualVerify('${a.qrId}')">Verify</button>` : "-"}</td>
+            <td>
+              <div class="cell-name">
+                <div class="avatar" style="background:${color}">${initials(a.name)}</div>
+                <div><div class="cell-name-text">${a.name || "—"}</div><div class="cell-name-email">${a.email || ""}</div></div>
+              </div>
+            </td>
+            <td><span class="badge ${typeClass}">${a.ticketType || "—"}</span></td>
+            <td><span class="badge ${statusClass}"><span class="badge-dot"></span>${a.status || "—"}</span></td>
+            <td style="font-size:12px;color:var(--text-muted)">${a.checkinTime || "—"}</td>
+            <td>${actionCell}</td>
           `;
         }
         tbody.appendChild(tr);
       });
     }
 
+    // ── Manual verify ─────────────────────────────────────────────────────────
     async function manualVerify(qrId) {
-      const pin = prompt("Enter staff PIN for manual override:");
+      const pin = prompt("Enter staff PIN for manual check-in override:");
       if (!pin) return;
-      const res = await fetch(`${API_BASE}/api/verify-manual`, {
-        method: "POST",
-        headers: getHeaders(),
-        body: JSON.stringify({ identifier: qrId, staffPin: pin }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        alert(data.message);
-        refreshData();
-      } else {
-        alert(data.message);
+      try {
+        const res  = await fetch(`${API_BASE}/api/verify-manual`, {
+          method: "POST", headers: getHeaders(),
+          body: JSON.stringify({ identifier: qrId, staffPin: pin }),
+        });
+        const data = await res.json();
+        showToast(data.message, data.success ? "success" : "error");
+        if (data.success) refreshData();
+      } catch {
+        showToast("Network error during verification.", "error");
       }
     }
 
+    // ── Export CSV ───────────────────────────────────────────────────────────
     function exportCSV() {
+      let csv, filename;
       if (currentFilter === "sponsor") {
-        let csv = "Contact Name,Brand/Organisation,Email,Package,Amount Paid,Reference,Status\n";
-        allAttendees.forEach((a) => {
-          csv += `"${a.name}","${a.brand || ""}","${a.email}","${a.package || a.ticketType}","${a.amount || ""}","${a.reference || ""}","${a.status}"\n`;
+        csv = "Contact Name,Brand/Organisation,Email,Package,Amount Paid,Reference,Status\n";
+        allAttendees.filter(a => a.type === "sponsor").forEach(a => {
+          csv += `"${a.name}","${a.brand||""}","${a.email}","${a.package||a.ticketType}","${a.amount||""}","${a.reference||""}","${a.status}"\n`;
         });
-        const blob = new Blob([csv], { type: "text/csv" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "sponsors.csv";
-        a.click();
-        URL.revokeObjectURL(url);
+        filename = "sus3-sponsors.csv";
       } else {
-        let csv = "Name,Email,Ticket Type,Status,Check-in Time\n";
-        allAttendees.forEach((a) => {
-          csv += `"${a.name}","${a.email}","${a.ticketType}","${a.status}","${a.checkinTime || ""}"\n`;
+        csv = "Name,Email,Ticket Type,Status,Check-in Time\n";
+        allAttendees.filter(a => a.type !== "sponsor").forEach(a => {
+          csv += `"${a.name}","${a.email}","${a.ticketType}","${a.status}","${a.checkinTime||""}"\n`;
         });
-        const blob = new Blob([csv], { type: "text/csv" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "attendees.csv";
-        a.click();
-        URL.revokeObjectURL(url);
+        filename = "sus3-attendees.csv";
       }
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url  = URL.createObjectURL(blob);
+      const el   = document.createElement("a");
+      el.href = url; el.download = filename; el.click();
+      URL.revokeObjectURL(url);
+      showToast("CSV downloaded.");
     }
 
-    if (authToken) {
-      document.getElementById("loginSection").classList.add("hidden");
-      document.getElementById("dashboard").classList.remove("hidden");
-      refreshData();
-    }
-
+    // ── Auto-refresh & init ───────────────────────────────────────────────────
+    if (authToken) { showDashboard(); }
     setInterval(refreshData, 30000);
+
+    // Spin keyframe for login button loader
+    const style = document.createElement("style");
+    style.textContent = "@keyframes spin { to { transform: rotate(360deg); } }";
+    document.head.appendChild(style);
   </script>
 </body>
 </html>
