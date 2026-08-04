@@ -7,867 +7,634 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --blue: #0B1F5C;
-      --blue-mid: #1a3a8f;
-      --blue-light: #2f5ed4;
-      --gold: #FFC107;
-      --gold-light: #FFD54F;
-      --white: #FFFFFF;
-      --dark: #0d0d0d;
-      --gray-bg: #F4F6FB;
-      --gray-border: #E2E8F0;
-      --text-muted: #64748b;
-      --green: #10b981;
-      --red: #ef4444;
-      --amber: #f59e0b;
-      --cyan: #06b6d4;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04);
-      --shadow-md: 0 4px 16px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.05);
-      --shadow-lg: 0 10px 40px rgba(0,0,0,0.12);
+      --blue:#0B1F5C; --blue-mid:#1a3a8f; --blue-light:#2f5ed4;
+      --gold:#FFC107; --gold-light:#FFD54F;
+      --white:#fff; --dark:#0d0d0d;
+      --gray-bg:#F4F6FB; --gray-border:#E2E8F0; --muted:#64748b;
+      --green:#10b981; --red:#ef4444; --cyan:#06b6d4;
+      --sh-sm:0 1px 3px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.04);
+      --sh-md:0 4px 16px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.05);
+      --sh-lg:0 10px 40px rgba(0,0,0,.14);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', sans-serif; background: var(--gray-bg); color: var(--dark); min-height: 100vh; }
-    .hidden { display: none !important; }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Inter',sans-serif;background:var(--gray-bg);color:var(--dark);min-height:100vh;}
+    .hidden{display:none!important;}
 
-    /* ── LOGIN PAGE ── */
-    #loginPage {
-      display: flex;
-      min-height: 100vh;
-    }
+    /* ═══ LOGIN PAGE ═══ */
+    #loginPage{display:flex;min-height:100vh;}
 
-    /* Left panel */
-    .login-left {
-      flex: 0 0 480px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 60px 56px;
-      background: var(--white);
-      position: relative;
-      z-index: 2;
+    .login-left{
+      flex:0 0 460px;display:flex;flex-direction:column;
+      justify-content:center;padding:60px 52px;
+      background:var(--white);position:relative;z-index:2;
     }
-    .login-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 48px;
+    .logo-wrap{display:flex;align-items:center;gap:10px;margin-bottom:44px;}
+    .logo-mark{
+      width:36px;height:36px;background:var(--blue);border-radius:8px;
+      display:flex;align-items:center;justify-content:center;
     }
-    .login-logo-mark {
-      width: 36px; height: 36px;
-      background: var(--blue);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .login-logo-mark span { color: var(--gold); font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; }
-    .login-logo-text { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 15px; color: var(--blue); line-height: 1.2; }
-    .login-logo-text small { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); font-family: 'Inter', sans-serif; }
+    .logo-mark span{color:var(--gold);font-family:'Syne',sans-serif;font-weight:800;font-size:16px;}
+    .logo-text{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:var(--blue);line-height:1.2;}
+    .logo-text small{display:block;font-size:11px;font-weight:600;color:var(--muted);font-family:'Inter',sans-serif;}
 
-    .login-heading { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: var(--blue); line-height: 1.15; }
-    .login-sub { margin-top: 10px; font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+    .login-heading{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:var(--blue);line-height:1.15;}
+    .login-sub{margin-top:10px;font-size:14px;color:var(--muted);line-height:1.6;}
+    .login-form{margin-top:38px;}
+    .form-group{margin-bottom:20px;}
+    .form-label{display:block;font-size:13px;font-weight:600;color:var(--blue);margin-bottom:7px;}
+    .form-input{
+      width:100%;padding:13px 15px;
+      border:1.5px solid var(--gray-border);border-radius:10px;
+      font-size:15px;font-family:'Inter',sans-serif;
+      background:#FAFBFF;color:var(--dark);outline:none;
+      transition:border-color .2s,box-shadow .2s;
+    }
+    .form-input:focus{border-color:var(--blue-light);box-shadow:0 0 0 3px rgba(47,94,212,.12);}
+    .login-footer{margin-top:36px;font-size:12px;color:#aab;}
+    .err-box{
+      margin-top:13px;padding:11px 15px;
+      background:#fef2f2;border:1px solid #fecaca;border-radius:8px;
+      color:#dc2626;font-size:13px;font-weight:500;display:none;
+    }
+    .err-box.show{display:block;}
 
-    .login-form { margin-top: 40px; }
-    .form-group { margin-bottom: 20px; }
-    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--blue); margin-bottom: 8px; }
-    .form-input {
-      width: 100%; padding: 14px 16px;
-      border: 1.5px solid var(--gray-border);
-      border-radius: 10px;
-      font-size: 15px; font-family: 'Inter', sans-serif;
-      background: #FAFBFF;
-      color: var(--dark);
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
+    /* ── Sign-in button: fill left→right on hover, drain right→left on unhover ── */
+    .btn-login{
+      width:100%;padding:14px;
+      background:var(--white);color:var(--blue);
+      border:2px solid var(--blue);border-radius:10px;
+      font-size:15px;font-weight:700;font-family:'Inter',sans-serif;
+      cursor:pointer;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      position:relative;overflow:hidden;
+      /* color transitions */
+      transition:color .35s ease;
     }
-    .form-input:focus { border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(47,94,212,0.12); }
+    /* fill slab sits behind text via transform, NOT z-index tricks */
+    .btn-login::after{
+      content:'';
+      position:absolute;inset:0;
+      background:var(--blue);
+      transform:scaleX(0);
+      transform-origin:left center;
+      transition:transform .35s ease;
+    }
+    .btn-login:hover{color:var(--white);}
+    .btn-login:hover::after{transform:scaleX(1);transform-origin:left center;}
+    /* drain back from right to left on unhover */
+    .btn-login:not(:hover)::after{transform:scaleX(0);transform-origin:right center;}
+    /* text and icon must sit above the fill slab */
+    .btn-login .btn-inner{position:relative;z-index:1;display:flex;align-items:center;gap:8px;}
+    .btn-login svg{width:18px;height:18px;}
 
-    .btn-login {
-      width: 100%; padding: 15px;
-      background: transparent;
-      color: var(--blue);
-      border: 2px solid var(--blue);
-      border-radius: 10px;
-      font-size: 15px; font-weight: 700; font-family: 'Inter', sans-serif;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      transition: color 0.4s ease;
-      z-index: 0;
+    /* ═══ RIGHT PANEL ═══ */
+    .login-right{flex:1;position:relative;overflow:hidden;background:var(--blue);}
+    .slideshow{position:absolute;inset:0;width:100%;height:100%;}
+    .slide{
+      position:absolute;inset:0;width:100%;height:100%;
+      object-fit:cover;opacity:0;
+      transition:opacity 1.2s ease-in-out;
     }
-    /* The fill layer — always present, width driven by CSS var */
-    .btn-login::before {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0; left: 0;
-      width: var(--fill, 0%);
-      background: var(--blue);
-      transition: width 0.4s ease;
-      z-index: -1;
-    }
-    .btn-login:hover {
-      color: var(--white);
-      --fill: 100%;
-    }
-    /* On unhover, shrink back from left (width → 0) */
-    .btn-login:not(:hover) {
-      color: var(--blue);
-      --fill: 0%;
-    }
-    .btn-login svg { width: 18px; height: 18px; position: relative; z-index: 1; }
-    .btn-login > * { position: relative; z-index: 1; }
-
-    .login-error {
-      margin-top: 14px;
-      padding: 12px 16px;
-      background: #fef2f2; border: 1px solid #fecaca;
-      border-radius: 8px;
-      color: #dc2626; font-size: 13px; font-weight: 500;
-      display: none;
-    }
-    .login-error.show { display: block; }
-
-    .login-footer { margin-top: 40px; font-size: 12px; color: #aab; }
-
-    /* Right panel */
-    .login-right {
-      flex: 1;
-      position: relative;
-      overflow: hidden;  /* clips the rotated strip ends */
-      background: var(--blue);
-    }
-    /* Slideshow */
-    .slideshow {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-    }
-    .slide {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transition: opacity 1.2s ease-in-out;
-    }
-    .slide.active { opacity: 1; }
-    .login-right-overlay {
-      position: absolute; inset: 0;
-      background: linear-gradient(to bottom,
-        rgba(11,31,92,0.25) 0%,
-        rgba(11,31,92,0.45) 55%,
-        rgba(11,31,92,0.88) 100%);
-      z-index: 2;
+    .slide.active{opacity:1;}
+    .right-overlay{
+      position:absolute;inset:0;z-index:2;
+      background:linear-gradient(to bottom,
+        rgba(11,31,92,.2) 0%,
+        rgba(11,31,92,.45) 55%,
+        rgba(11,31,92,.88) 100%);
     }
 
-    /* Scrolling strip — slanted, entering bottom-right, exiting bottom-left */
-    .ticker-strip {
-      position: absolute;
-      bottom: 30vh;
-      left: -80px; right: -80px;
-      padding: 13px 0;
-      background: rgba(255, 193, 7, 0.15);
-      backdrop-filter: blur(6px);
-      border-top: 1px solid rgba(255,193,7,0.4);
-      border-bottom: 1px solid rgba(255,193,7,0.4);
-      z-index: 3;
-      transform: rotate(-6deg);
-      transform-origin: center center;
-      /* NO overflow:hidden here — that kills the animation */
+    /* ── Ticker strip ── */
+    /*
+      The strip itself is rotated -6deg (slanted).
+      It has NO overflow:hidden so the track can scroll freely.
+      The parent .login-right has overflow:hidden which clips the angled ends.
+    */
+    .ticker-strip{
+      position:absolute;
+      bottom:30vh;
+      left:-100px;right:-100px;   /* overhang so rotation gap fills */
+      padding:12px 0;
+      background:rgba(255,193,7,.14);
+      backdrop-filter:blur(6px);
+      border-top:1px solid rgba(255,193,7,.4);
+      border-bottom:1px solid rgba(255,193,7,.4);
+      z-index:3;
+      transform:rotate(-6deg);
     }
-    .ticker-track {
-      display: flex;
-      white-space: nowrap;
-      animation: ticker-scroll 30s linear infinite;
-      /* width must be auto so the flex content sets it */
+    .ticker-track{
+      display:flex;
+      /* inline-block children; no flex-wrap so it's one long line */
     }
-    .ticker-track span {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      color: var(--gold);
-      padding-right: 52px;
-      text-transform: uppercase;
-      flex-shrink: 0;
-      display: inline-block;
+    .ticker-track span{
+      display:inline-block;
+      white-space:nowrap;
+      font-family:'Syne',sans-serif;
+      font-weight:700;font-size:13px;
+      letter-spacing:.08em;
+      color:var(--gold);
+      text-transform:uppercase;
+      padding-right:52px;
+      flex-shrink:0;
     }
-    .ticker-track span .dot { color: rgba(255,193,7,0.5); margin: 0 6px; }
+    .ticker-track span .dot{color:rgba(255,193,7,.4);margin:0 6px;}
 
-    @keyframes ticker-scroll {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-
-    /* Bottom caption inside right panel */
-    .login-right-caption {
-      position: absolute;
-      bottom: 40px; left: 40px; right: 40px;
-      z-index: 3;
-    }
-    .login-right-caption h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: 28px; font-weight: 800;
-      color: var(--white); line-height: 1.2;
-    }
-    .login-right-caption p {
-      margin-top: 8px; font-size: 14px;
-      color: rgba(255,255,255,0.65); line-height: 1.6;
+    /* The animation is applied via JS after fonts load */
+    @keyframes ticker-scroll{
+      0%  {transform:translateX(0);}
+      100%{transform:translateX(-50%);}
     }
 
-    @media (max-width: 768px) {
-      #loginPage { flex-direction: column; }
-      .login-left { flex: none; padding: 40px 28px; }
-      .login-right { min-height: 260px; flex: none; }
+    /* Caption */
+    .right-caption{
+      position:absolute;bottom:40px;left:40px;right:40px;z-index:4;
+    }
+    .right-caption h2{
+      font-family:'Syne',sans-serif;font-size:28px;font-weight:800;
+      color:var(--white);line-height:1.2;
+    }
+    .right-caption p{margin-top:8px;font-size:14px;color:rgba(255,255,255,.6);line-height:1.6;}
+
+    @media(max-width:768px){
+      #loginPage{flex-direction:column;}
+      .login-left{flex:none;padding:40px 24px;}
+      .login-right{min-height:280px;flex:none;}
     }
 
-    /* ── DASHBOARD ── */
-    #dashboardPage { min-height: 100vh; display: flex; flex-direction: column; }
+    /* ═══ DASHBOARD ═══ */
+    #dashboardPage{min-height:100vh;display:flex;flex-direction:column;}
+    .dash-header{
+      background:var(--blue);padding:0 32px;
+      display:flex;align-items:center;justify-content:space-between;
+      height:64px;box-shadow:var(--sh-md);position:sticky;top:0;z-index:100;
+    }
+    .dh-left{display:flex;align-items:center;gap:12px;}
+    .dh-mark{width:34px;height:34px;background:var(--gold);border-radius:8px;
+      display:flex;align-items:center;justify-content:center;}
+    .dh-mark span{color:var(--blue);font-family:'Syne',sans-serif;font-weight:800;font-size:15px;}
+    .dh-title{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--white);}
+    .dh-sub{font-size:11px;color:rgba(255,255,255,.5);}
+    .dh-right{display:flex;align-items:center;gap:12px;}
+    .live-badge{display:flex;align-items:center;gap:6px;background:rgba(16,185,129,.15);
+      border:1px solid rgba(16,185,129,.35);border-radius:20px;padding:4px 12px;
+      font-size:12px;font-weight:600;color:#10b981;}
+    .live-dot{width:7px;height:7px;background:#10b981;border-radius:50%;
+      animation:pulse 1.5s ease-in-out infinite;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+    .btn-logout{padding:8px 16px;background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.15);border-radius:8px;
+      color:rgba(255,255,255,.8);font-size:13px;font-weight:600;cursor:pointer;
+      font-family:'Inter',sans-serif;transition:background .2s;}
+    .btn-logout:hover{background:rgba(255,255,255,.18);}
 
-    .dash-header {
-      background: var(--blue);
-      padding: 0 32px;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 64px;
-      box-shadow: var(--shadow-md);
-      position: sticky; top: 0; z-index: 100;
-    }
-    .dash-header-left { display: flex; align-items: center; gap: 12px; }
-    .dash-header-mark {
-      width: 34px; height: 34px;
-      background: var(--gold);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .dash-header-mark span { color: var(--blue); font-family: 'Syne', sans-serif; font-weight: 800; font-size: 15px; }
-    .dash-header-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 16px; color: var(--white); }
-    .dash-header-sub { font-size: 11px; color: rgba(255,255,255,0.5); }
-    .dash-header-right { display: flex; align-items: center; gap: 12px; }
-    .live-badge {
-      display: flex; align-items: center; gap: 6px;
-      background: rgba(16,185,129,0.15);
-      border: 1px solid rgba(16,185,129,0.35);
-      border-radius: 20px; padding: 4px 12px;
-      font-size: 12px; font-weight: 600; color: #10b981;
-    }
-    .live-dot { width: 7px; height: 7px; background: #10b981; border-radius: 50%; animation: pulse 1.5s ease-in-out infinite; }
-    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-    .btn-logout {
-      padding: 8px 16px; background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 8px; color: rgba(255,255,255,0.8);
-      font-size: 13px; font-weight: 600; cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      transition: background 0.2s;
-    }
-    .btn-logout:hover { background: rgba(255,255,255,0.15); }
+    .dash-body{flex:1;padding:32px;max-width:1400px;width:100%;margin:0 auto;}
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:16px;margin-bottom:28px;}
+    .stat-card{background:var(--white);border-radius:16px;padding:22px 24px;
+      box-shadow:var(--sh-sm);border:1px solid var(--gray-border);position:relative;overflow:hidden;}
+    .stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+    .sc-blue::before{background:var(--blue);}
+    .sc-gold::before{background:var(--gold);}
+    .sc-green::before{background:var(--green);}
+    .sc-red::before{background:var(--red);}
+    .sc-cyan::before{background:var(--cyan);}
+    .stat-label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+    .stat-value{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;color:var(--blue);margin-top:6px;line-height:1;}
+    .sc-gold .stat-value{color:#b45309;} .sc-green .stat-value{color:var(--green);}
+    .sc-red .stat-value{color:var(--red);} .sc-cyan .stat-value{color:var(--cyan);}
 
-    .dash-body { flex: 1; padding: 32px; max-width: 1400px; width: 100%; margin: 0 auto; }
+    .toolbar{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center;}
+    .srch-wrap{position:relative;flex:1;min-width:220px;}
+    .srch-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#94a3b8;pointer-events:none;}
+    .srch-icon svg{width:16px;height:16px;}
+    .srch-input{width:100%;padding:10px 14px 10px 38px;border:1.5px solid var(--gray-border);
+      border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;background:var(--white);
+      outline:none;transition:border-color .2s,box-shadow .2s;}
+    .srch-input:focus{border-color:var(--blue-light);box-shadow:0 0 0 3px rgba(47,94,212,.1);}
+    .tab-group{display:flex;background:var(--white);border:1.5px solid var(--gray-border);border-radius:10px;overflow:hidden;}
+    .tab-btn{padding:9px 17px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;
+      border:none;background:transparent;cursor:pointer;color:var(--muted);
+      transition:background .15s,color .15s;border-right:1px solid var(--gray-border);}
+    .tab-btn:last-child{border-right:none;}
+    .tab-btn.active{background:var(--blue);color:var(--white);}
+    .tab-btn:hover:not(.active){background:var(--gray-bg);}
+    .act-btn{padding:9px 15px;border:1.5px solid var(--gray-border);border-radius:10px;
+      background:var(--white);font-size:13px;font-weight:600;font-family:'Inter',sans-serif;
+      cursor:pointer;color:var(--blue);display:flex;align-items:center;gap:6px;
+      transition:background .15s,border-color .15s;}
+    .act-btn:hover{background:var(--gray-bg);border-color:var(--blue-light);}
+    .act-btn svg{width:15px;height:15px;}
+    .act-btn.gold{background:var(--gold);border-color:var(--gold);color:var(--dark);}
+    .act-btn.gold:hover{background:var(--gold-light);}
 
-    /* Stat cards */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 28px; }
-    .stat-card {
-      background: var(--white); border-radius: 16px;
-      padding: 22px 24px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--gray-border);
-      position: relative; overflow: hidden;
-    }
-    .stat-card::before {
-      content: ''; position: absolute;
-      top: 0; left: 0; right: 0; height: 3px;
-    }
-    .stat-card.blue::before { background: var(--blue); }
-    .stat-card.gold::before { background: var(--gold); }
-    .stat-card.green::before { background: var(--green); }
-    .stat-card.red::before { background: var(--red); }
-    .stat-card.cyan::before { background: var(--cyan); }
-    .stat-label { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
-    .stat-value { font-family: 'Syne', sans-serif; font-size: 36px; font-weight: 800; color: var(--blue); margin-top: 6px; line-height: 1; }
-    .stat-card.gold .stat-value { color: #b45309; }
-    .stat-card.green .stat-value { color: var(--green); }
-    .stat-card.red .stat-value { color: var(--red); }
-    .stat-card.cyan .stat-value { color: var(--cyan); }
-
-    /* Toolbar */
-    .toolbar {
-      display: flex; gap: 10px; margin-bottom: 20px;
-      flex-wrap: wrap; align-items: center;
-    }
-    .search-wrap { position: relative; flex: 1; min-width: 220px; }
-    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; pointer-events: none; }
-    .search-icon svg { width: 16px; height: 16px; }
-    .search-input {
-      width: 100%; padding: 10px 14px 10px 40px;
-      border: 1.5px solid var(--gray-border); border-radius: 10px;
-      font-size: 14px; font-family: 'Inter', sans-serif; background: var(--white);
-      outline: none; transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .search-input:focus { border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(47,94,212,0.1); }
-
-    .tab-group { display: flex; background: var(--white); border: 1.5px solid var(--gray-border); border-radius: 10px; overflow: hidden; }
-    .tab-btn {
-      padding: 9px 18px; font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif;
-      border: none; background: transparent; cursor: pointer; color: var(--text-muted);
-      transition: background 0.15s, color 0.15s;
-      border-right: 1px solid var(--gray-border);
-    }
-    .tab-btn:last-child { border-right: none; }
-    .tab-btn.active { background: var(--blue); color: var(--white); }
-    .tab-btn:hover:not(.active) { background: var(--gray-bg); }
-
-    .action-btn {
-      padding: 9px 16px; border: 1.5px solid var(--gray-border);
-      border-radius: 10px; background: var(--white);
-      font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif;
-      cursor: pointer; color: var(--blue);
-      display: flex; align-items: center; gap: 6px;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .action-btn:hover { background: var(--gray-bg); border-color: var(--blue-light); }
-    .action-btn svg { width: 15px; height: 15px; }
-    .action-btn.gold-btn { background: var(--gold); border-color: var(--gold); color: var(--dark); }
-    .action-btn.gold-btn:hover { background: var(--gold-light); }
-
-    /* Table */
-    .table-wrap {
-      background: var(--white); border-radius: 16px;
-      box-shadow: var(--shadow-sm); border: 1px solid var(--gray-border);
-      overflow: hidden;
-    }
-    .table-header-bar {
-      padding: 16px 24px; border-bottom: 1px solid var(--gray-border);
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .table-title { font-size: 14px; font-weight: 700; color: var(--blue); }
-    .table-count { font-size: 12px; color: var(--text-muted); }
-    .table-scroll { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; }
-    thead th {
-      background: #F8FAFF; padding: 12px 16px;
-      text-align: left; font-size: 11px; font-weight: 700;
-      color: var(--text-muted); text-transform: uppercase;
-      letter-spacing: 0.07em; border-bottom: 1px solid var(--gray-border);
-      white-space: nowrap;
-    }
-    tbody td { padding: 14px 16px; font-size: 13px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
-    tbody tr:last-child td { border-bottom: none; }
-    tbody tr:hover { background: #F8FAFF; }
-
-    .avatar {
-      width: 34px; height: 34px; border-radius: 50%;
-      background: var(--blue); color: var(--white);
-      font-weight: 700; font-size: 13px;
-      display: inline-flex; align-items: center; justify-content: center;
-      flex-shrink: 0; margin-right: 10px;
-    }
-    .cell-name { display: flex; align-items: center; }
-    .cell-name-text { font-weight: 600; color: var(--dark); }
-    .cell-name-email { font-size: 12px; color: var(--text-muted); }
-
-    .badge {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 4px 10px; border-radius: 20px;
-      font-size: 11px; font-weight: 700; letter-spacing: 0.04em;
-      text-transform: uppercase; white-space: nowrap;
-    }
-    .badge-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-    .badge-checked { background: #d1fae5; color: #065f46; }
-    .badge-checked .badge-dot { background: #10b981; }
-    .badge-not { background: #fee2e2; color: #991b1b; }
-    .badge-not .badge-dot { background: #ef4444; }
-    .badge-inquiry { background: #fef3c7; color: #92400e; }
-    .badge-inquiry .badge-dot { background: #f59e0b; }
-    .badge-paid { background: #dbeafe; color: #1e40af; }
-    .badge-paid .badge-dot { background: #3b82f6; }
-    .badge-vip { background: var(--gold); color: var(--dark); }
-    .badge-free { background: #e0e7ff; color: #3730a3; }
-    .badge-regular { background: #f0fdf4; color: #166534; }
-
-    .verify-btn {
-      padding: 6px 14px; background: var(--blue);
-      color: var(--white); border: none; border-radius: 7px;
-      font-size: 12px; font-weight: 600; cursor: pointer;
-      font-family: 'Inter', sans-serif;
-      transition: background 0.15s;
-    }
-    .verify-btn:hover { background: var(--blue-mid); }
-
-    .empty-state { padding: 60px 24px; text-align: center; color: var(--text-muted); }
-    .empty-state svg { width: 48px; height: 48px; margin-bottom: 12px; opacity: 0.3; }
-    .empty-state p { font-size: 14px; }
-
-    .toast {
-      position: fixed; bottom: 28px; right: 28px;
-      background: var(--dark); color: var(--white);
-      padding: 14px 20px; border-radius: 12px;
-      font-size: 13px; font-weight: 500;
-      box-shadow: var(--shadow-lg);
-      transform: translateY(80px); opacity: 0;
-      transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-      z-index: 9999; max-width: 320px;
-    }
-    .toast.show { transform: translateY(0); opacity: 1; }
-    .toast.success { border-left: 4px solid var(--green); }
-    .toast.error { border-left: 4px solid var(--red); }
-
-    @media (max-width: 768px) {
-      .dash-body { padding: 16px; }
-      .dash-header { padding: 0 16px; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    }
+    .tbl-wrap{background:var(--white);border-radius:16px;box-shadow:var(--sh-sm);
+      border:1px solid var(--gray-border);overflow:hidden;}
+    .tbl-bar{padding:16px 24px;border-bottom:1px solid var(--gray-border);
+      display:flex;align-items:center;justify-content:space-between;}
+    .tbl-title{font-size:14px;font-weight:700;color:var(--blue);}
+    .tbl-count{font-size:12px;color:var(--muted);}
+    .tbl-scroll{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;}
+    thead th{background:#F8FAFF;padding:12px 16px;text-align:left;font-size:11px;font-weight:700;
+      color:var(--muted);text-transform:uppercase;letter-spacing:.07em;
+      border-bottom:1px solid var(--gray-border);white-space:nowrap;}
+    tbody td{padding:14px 16px;font-size:13px;border-bottom:1px solid #f1f5f9;vertical-align:middle;}
+    tbody tr:last-child td{border-bottom:none;}
+    tbody tr:hover{background:#F8FAFF;}
+    .avatar{width:34px;height:34px;border-radius:50%;color:var(--white);
+      font-weight:700;font-size:13px;display:inline-flex;align-items:center;
+      justify-content:center;flex-shrink:0;margin-right:10px;}
+    .cell-name{display:flex;align-items:center;}
+    .cell-n{font-weight:600;color:var(--dark);}
+    .cell-e{font-size:12px;color:var(--muted);}
+    .badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;
+      border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.04em;
+      text-transform:uppercase;white-space:nowrap;}
+    .bd{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+    .b-chk{background:#d1fae5;color:#065f46;} .b-chk .bd{background:#10b981;}
+    .b-not{background:#fee2e2;color:#991b1b;} .b-not .bd{background:#ef4444;}
+    .b-inq{background:#fef3c7;color:#92400e;} .b-inq .bd{background:#f59e0b;}
+    .b-paid{background:#dbeafe;color:#1e40af;} .b-paid .bd{background:#3b82f6;}
+    .b-vip{background:var(--gold);color:var(--dark);}
+    .b-free{background:#e0e7ff;color:#3730a3;}
+    .b-reg{background:#f0fdf4;color:#166534;}
+    .vbtn{padding:6px 13px;background:var(--blue);color:var(--white);border:none;
+      border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;
+      font-family:'Inter',sans-serif;transition:background .15s;}
+    .vbtn:hover{background:var(--blue-mid);}
+    .empty{padding:60px 24px;text-align:center;color:var(--muted);}
+    .empty svg{width:48px;height:48px;margin-bottom:12px;opacity:.3;display:block;margin-left:auto;margin-right:auto;}
+    .toast{position:fixed;bottom:28px;right:28px;background:var(--dark);color:var(--white);
+      padding:14px 20px;border-radius:12px;font-size:13px;font-weight:500;
+      box-shadow:var(--sh-lg);transform:translateY(80px);opacity:0;
+      transition:all .3s cubic-bezier(.34,1.56,.64,1);z-index:9999;max-width:320px;}
+    .toast.show{transform:translateY(0);opacity:1;}
+    .toast.ok{border-left:4px solid var(--green);}
+    .toast.err{border-left:4px solid var(--red);}
+    @media(max-width:768px){.dash-body{padding:16px;}.dash-header{padding:0 16px;}
+      .stats-grid{grid-template-columns:repeat(2,1fr);}}
+    @keyframes spin{to{transform:rotate(360deg);}}
   </style>
 </head>
 <body>
 
-  <!-- ══ LOGIN PAGE ══ -->
-  <div id="loginPage">
-    <!-- Left: form -->
-    <div class="login-left">
-      <div class="login-logo">
-        <div class="login-logo-mark"><span>S</span></div>
-        <div class="login-logo-text">
-          Step-Up Summit
-          <small>3.0 Admin Portal</small>
-        </div>
+<!-- ═══ LOGIN PAGE ═══ -->
+<div id="loginPage">
+  <div class="login-left">
+    <div class="logo-wrap">
+      <div class="logo-mark"><span>S</span></div>
+      <div class="logo-text">Step-Up Summit<small>3.0 Admin Portal</small></div>
+    </div>
+    <h1 class="login-heading">Welcome<br/>back, staff.</h1>
+    <p class="login-sub">Enter your admin PIN to access live registrations, check-in, and sponsor management.</p>
+    <div class="login-form">
+      <div class="form-group">
+        <label class="form-label" for="adminPin">Admin PIN</label>
+        <input class="form-input" type="password" id="adminPin" placeholder="••••"
+          autocomplete="current-password" onkeydown="if(event.key==='Enter')login()" />
       </div>
-
-      <h1 class="login-heading">Welcome<br/>back, staff.</h1>
-      <p class="login-sub">Enter your admin PIN to access the live dashboard, registrations, and check-in management.</p>
-
-      <div class="login-form">
-        <div class="form-group">
-          <label class="form-label" for="adminPin">Admin PIN</label>
-          <input
-            class="form-input"
-            type="password"
-            id="adminPin"
-            placeholder="••••"
-            autocomplete="current-password"
-            onkeydown="if(event.key==='Enter') login()"
-          />
-        </div>
-        <button class="btn-login" onclick="login()" id="loginBtn">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+      <button class="btn-login" id="loginBtn" type="button" onclick="login()">
+        <span class="btn-inner">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/>
+          </svg>
           Sign In
-        </button>
-        <div id="loginError" class="login-error"></div>
-      </div>
-
-      <p class="login-footer">Step-Up Summit 3.0 &mdash; Admin Access Only</p>
+        </span>
+      </button>
+      <div id="loginError" class="err-box"></div>
     </div>
+    <p class="login-footer">Step-Up Summit 3.0 &mdash; Admin Access Only</p>
+  </div>
 
-    <!-- Right: visual -->
-    <div class="login-right">
-      <!-- Slideshow of event photos -->
-      <div class="slideshow" id="slideshow">
-        <img class="slide active" src="photos/260A6458.jpg"  alt="Step-Up Summit" />
-        <img class="slide"        src="photos/1.jpg"         alt="Step-Up Summit" />
-        <img class="slide"        src="photos/img1.JPG"      alt="Step-Up Summit" />
-        <img class="slide"        src="photos/pitch1.jpg"    alt="Step-Up Summit" />
-        <img class="slide"        src="photos/2.jpg"         alt="Step-Up Summit" />
-        <img class="slide"        src="photos/Pitch3.jpeg"   alt="Step-Up Summit" />
-        <img class="slide"        src="photos/3.jpg"         alt="Step-Up Summit" />
-        <img class="slide"        src="photos/img2.JPG"      alt="Step-Up Summit" />
-        <img class="slide"        src="photos/4.jpg"         alt="Step-Up Summit" />
-        <img class="slide"        src="photos/Pitch4.jpeg"   alt="Step-Up Summit" />
-        <img class="slide"        src="photos/imag2.jpg"     alt="Step-Up Summit" />
+  <div class="login-right">
+    <div class="slideshow">
+      <img class="slide active" src="photos/260A6458.jpg" alt="" />
+      <img class="slide" src="photos/1.jpg" alt="" />
+      <img class="slide" src="photos/img1.JPG" alt="" />
+      <img class="slide" src="photos/pitch1.jpg" alt="" />
+      <img class="slide" src="photos/2.jpg" alt="" />
+      <img class="slide" src="photos/Pitch3.jpeg" alt="" />
+      <img class="slide" src="photos/3.jpg" alt="" />
+      <img class="slide" src="photos/img2.JPG" alt="" />
+      <img class="slide" src="photos/4.jpg" alt="" />
+      <img class="slide" src="photos/Pitch4.jpeg" alt="" />
+      <img class="slide" src="photos/imag2.jpg" alt="" />
+    </div>
+    <div class="right-overlay"></div>
+    <div class="ticker-strip">
+      <div class="ticker-track" id="tickerTrack"></div>
+    </div>
+    <div class="right-caption">
+      <h2>Built for builders.<br/>Powered by ambition.</h2>
+      <p>Live check-in &middot; real-time registrations &middot; sponsor management</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DASHBOARD PAGE ═══ -->
+<div id="dashboardPage" class="hidden">
+  <header class="dash-header">
+    <div class="dh-left">
+      <div class="dh-mark"><span>S</span></div>
+      <div><div class="dh-title">Step-Up Summit 3.0</div><div class="dh-sub">Admin Dashboard</div></div>
+    </div>
+    <div class="dh-right">
+      <div class="live-badge"><span class="live-dot"></span> Live</div>
+      <button class="btn-logout" onclick="logout()">Sign Out</button>
+    </div>
+  </header>
+  <div class="dash-body">
+    <div class="stats-grid">
+      <div class="stat-card sc-blue"><div class="stat-label">Total Registered</div><div class="stat-value" id="sTotal">—</div></div>
+      <div class="stat-card sc-gold"><div class="stat-label">Paid Tickets</div><div class="stat-value" id="sPaid">—</div></div>
+      <div class="stat-card sc-cyan"><div class="stat-label">Free Registrations</div><div class="stat-value" id="sFree">—</div></div>
+      <div class="stat-card sc-green"><div class="stat-label">Checked In</div><div class="stat-value" id="sChecked">—</div></div>
+      <div class="stat-card sc-red"><div class="stat-label">Not Checked In</div><div class="stat-value" id="sNot">—</div></div>
+      <div class="stat-card sc-gold"><div class="stat-label">Sponsors</div><div class="stat-value" id="sSponsors">—</div></div>
+    </div>
+    <div class="toolbar">
+      <div class="srch-wrap">
+        <span class="srch-icon"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg></span>
+        <input class="srch-input" type="text" id="searchInput" placeholder="Search by name or email…" oninput="filterTable()" />
       </div>
-      <div class="login-right-overlay"></div>
-
-      <!-- Scrolling ticker strip at bottom 30vh -->
-      <div class="ticker-strip">
-        <div class="ticker-track" id="tickerTrack">
-          <!-- filled by JS -->
-        </div>
+      <div class="tab-group">
+        <button class="tab-btn active" id="tabAll"     onclick="setFilter('all')">All</button>
+        <button class="tab-btn"        id="tabTicket"  onclick="setFilter('ticket')">Tickets</button>
+        <button class="tab-btn"        id="tabSponsor" onclick="setFilter('sponsor')">Sponsors</button>
       </div>
-
-      <div class="login-right-caption">
-        <h2>Built for builders.<br/>Powered by ambition.</h2>
-        <p>Live check-in, real-time registrations, sponsor management — all in one place.</p>
+      <button class="act-btn" onclick="refreshData()">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 4v5h5M20 20v-5h-5M4.09 9A8 8 0 1120 15"/></svg>Refresh
+      </button>
+      <button class="act-btn gold" onclick="exportCSV()">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>Export CSV
+      </button>
+    </div>
+    <div class="tbl-wrap">
+      <div class="tbl-bar">
+        <span class="tbl-title" id="tblTitle">All Registrations</span>
+        <span class="tbl-count" id="tblCount"></span>
+      </div>
+      <div class="tbl-scroll">
+        <table><thead id="tblHead"></thead><tbody id="tblBody"></tbody></table>
       </div>
     </div>
   </div>
+</div>
+<div id="toast" class="toast"></div>
 
-  <!-- ══ DASHBOARD PAGE ══ -->
-  <div id="dashboardPage" class="hidden">
-    <header class="dash-header">
-      <div class="dash-header-left">
-        <div class="dash-header-mark"><span>S</span></div>
-        <div>
-          <div class="dash-header-title">Step-Up Summit 3.0</div>
-          <div class="dash-header-sub">Admin Dashboard</div>
-        </div>
-      </div>
-      <div class="dash-header-right">
-        <div class="live-badge"><span class="live-dot"></span> Live</div>
-        <button class="btn-logout" onclick="logout()">Sign Out</button>
-      </div>
-    </header>
+<script>
+  const API_BASE = window.location.origin;
+  let authToken = localStorage.getItem('adminToken') || '';
+  let allAttendees = [];
+  let currentFilter = 'all';
 
-    <div class="dash-body">
-      <!-- Stats -->
-      <div class="stats-grid">
-        <div class="stat-card blue">
-          <div class="stat-label">Total Registered</div>
-          <div class="stat-value" id="statTotal">—</div>
-        </div>
-        <div class="stat-card gold">
-          <div class="stat-label">Paid Tickets</div>
-          <div class="stat-value" id="statPaid">—</div>
-        </div>
-        <div class="stat-card cyan">
-          <div class="stat-label">Free Registrations</div>
-          <div class="stat-value" id="statFree">—</div>
-        </div>
-        <div class="stat-card green">
-          <div class="stat-label">Checked In</div>
-          <div class="stat-value" id="statChecked">—</div>
-        </div>
-        <div class="stat-card red">
-          <div class="stat-label">Not Checked In</div>
-          <div class="stat-value" id="statNot">—</div>
-        </div>
-        <div class="stat-card gold">
-          <div class="stat-label">Sponsors</div>
-          <div class="stat-value" id="statSponsors">—</div>
-        </div>
-      </div>
+  /* ── Ticker ── */
+  const WORDS = [
+    'Step Up','Summit 3.0','Build Your Future',
+    '1000+ Ambitious Young People','ICC Hall December 2026',
+    'Pitch. Network. Grow.','Young Founders Welcome',
+    'Live on Stage','Speakers. Workshops. Energy.',
+    'Your Idea. Our Stage.','Real Stakes. Real Prizes.',
+    "Nigeria's Next Generation",'Brands That Back Builders',
+  ];
 
-      <!-- Toolbar -->
-      <div class="toolbar">
-        <div class="search-wrap">
-          <span class="search-icon">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="M21 21l-4.35-4.35"/></svg>
-          </span>
-          <input class="search-input" type="text" id="searchInput" placeholder="Search by name or email…" oninput="filterTable()" />
-        </div>
-        <div class="tab-group">
-          <button class="tab-btn active" id="tabAll"     onclick="setFilter('all')">All</button>
-          <button class="tab-btn"        id="tabTicket"  onclick="setFilter('ticket')">Tickets</button>
-          <button class="tab-btn"        id="tabSponsor" onclick="setFilter('sponsor')">Sponsors</button>
-        </div>
-        <button class="action-btn" onclick="refreshData()">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 4v5h5M20 20v-5h-5M4.09 9A8 8 0 1120 15"/></svg>
-          Refresh
-        </button>
-        <button class="action-btn gold-btn" onclick="exportCSV()">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
-          Export CSV
-        </button>
-      </div>
+  function buildTicker() {
+    const track = document.getElementById('tickerTrack');
+    // 4 copies so -50% translateX seamless loop always has content
+    const items = [...WORDS,...WORDS,...WORDS,...WORDS];
+    track.innerHTML = items.map(w =>
+      `<span>${w}<span class="dot"> · </span></span>`
+    ).join('');
+    // Start animation now that content is in the DOM
+    track.style.animation = 'ticker-scroll 32s linear infinite';
+  }
 
-      <!-- Table -->
-      <div class="table-wrap">
-        <div class="table-header-bar">
-          <span class="table-title" id="tableTitle">All Registrations</span>
-          <span class="table-count" id="tableCount"></span>
-        </div>
-        <div class="table-scroll">
-          <table>
-            <thead id="tableHead"></thead>
-            <tbody id="attendeeTable"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
+  /* ── Slideshow ── */
+  function initSlideshow() {
+    const slides = document.querySelectorAll('.slide');
+    if (!slides.length) return;
+    let i = 0;
+    setInterval(() => {
+      slides[i].classList.remove('active');
+      i = (i + 1) % slides.length;
+      slides[i].classList.add('active');
+    }, 4500);
+  }
 
-  <!-- Toast -->
-  <div id="toast" class="toast"></div>
+  /* ── Helpers ── */
+  function hdrs() { return {'Content-Type':'application/json',Authorization:`Bearer ${authToken}`}; }
 
+  function toast(msg, type='ok') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = `toast ${type} show`;
+    clearTimeout(t._t);
+    t._t = setTimeout(() => { t.className = 'toast'; }, 3500);
+  }
 
-  <script>
-    // ── Config ──────────────────────────────────────────────────────────────
-    // API_BASE: always use the same origin so admin dashboard works whether
-    // served from Render (stepupsummit-backend.onrender.com) or a custom domain.
-    const API_BASE = window.location.origin;
+  function ini(name) {
+    if (!name) return '?';
+    const p = name.trim().split(' ');
+    return (p[0][0] + (p[1] ? p[1][0] : '')).toUpperCase();
+  }
 
-    let authToken = localStorage.getItem("adminToken") || "";
-    let allAttendees = [];
-    let currentFilter = "all";
+  function aColor(name) {
+    const c = ['#0B1F5C','#1a3a8f','#2f5ed4','#065f46','#92400e','#7c3aed','#be123c'];
+    let h = 0;
+    for (const ch of (name||'?')) h = ch.charCodeAt(0) + ((h<<5)-h);
+    return c[Math.abs(h) % c.length];
+  }
 
-    // ── Ticker words (from hero section) ────────────────────────────────────
-    const tickerWords = [
-      "Step Up", "Summit 3.0", "Build Your Future",
-      "1000+ Ambitious Young People", "ICC Hall December 2026",
-      "Pitch. Network. Grow.", "Young Founders Welcome",
-      "Live on Stage", "Speakers. Workshops. Energy.",
-      "Your Idea. Our Stage.", "Real Stakes. Real Prizes.",
-      "Nigeria's Next Generation", "Brands That Back Builders",
-    ];
-    (function buildTicker() {
-      const track = document.getElementById("tickerTrack");
-      // Repeat 4x so the seamless -50% translateX loop always has content
-      const quad = [...tickerWords, ...tickerWords, ...tickerWords, ...tickerWords];
-      track.innerHTML = quad.map(w =>
-        `<span>${w}<span class="dot">·</span></span>`
-      ).join("");
-    })();
+  /* ── Login ── */
+  async function login() {
+    const pinEl = document.getElementById('adminPin');
+    const errEl = document.getElementById('loginError');
+    const btn   = document.getElementById('loginBtn');
+    const pin   = pinEl.value.trim();
 
-    // ── Slideshow ────────────────────────────────────────────────────────────
-    (function initSlideshow() {
-      const slides = document.querySelectorAll(".slide");
-      if (!slides.length) return;
-      let idx = 0;
-      setInterval(() => {
-        slides[idx].classList.remove("active");
-        idx = (idx + 1) % slides.length;
-        slides[idx].classList.add("active");
-      }, 4500);
-    })();
+    errEl.classList.remove('show');
+    if (!pin) { errEl.textContent = 'Please enter your PIN.'; errEl.classList.add('show'); return; }
 
-    // ── Helpers ──────────────────────────────────────────────────────────────
-    function getHeaders() {
-      return { "Content-Type": "application/json", Authorization: `Bearer ${authToken}` };
-    }
+    btn.disabled = true;
+    btn.querySelector('.btn-inner').innerHTML =
+      `<svg style="width:18px;height:18px;animation:spin .8s linear infinite" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 4v5h5M20 20v-5h-5M4.09 9A8 8 0 1120 15"/></svg> Signing in…`;
 
-    function showToast(msg, type = "success") {
-      const t = document.getElementById("toast");
-      t.textContent = msg;
-      t.className = `toast ${type} show`;
-      clearTimeout(t._timer);
-      t._timer = setTimeout(() => { t.className = "toast"; }, 3500);
-    }
-
-    function initials(name) {
-      if (!name) return "?";
-      const parts = name.trim().split(" ");
-      return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
-    }
-
-    function avatarColor(name) {
-      const colors = ["#0B1F5C","#1a3a8f","#2f5ed4","#065f46","#92400e","#7c3aed","#be123c"];
-      let h = 0;
-      for (const c of (name || "?")) h = c.charCodeAt(0) + ((h << 5) - h);
-      return colors[Math.abs(h) % colors.length];
-    }
-
-    // ── Login ────────────────────────────────────────────────────────────────
-    async function login() {
-      const pinEl = document.getElementById("adminPin");
-      const errEl = document.getElementById("loginError");
-      const btn   = document.getElementById("loginBtn");
-      const pin   = pinEl.value.trim();
-
-      if (!pin) { errEl.textContent = "Please enter your PIN."; errEl.classList.add("show"); return; }
-
-      btn.disabled = true;
-      btn.innerHTML = `<svg class="spin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width:18px;height:18px;animation:spin 0.8s linear infinite"><path stroke-linecap="round" d="M4 4v5h5M20 20v-5h-5M4.09 9A8 8 0 1120 15"/></svg> Signing in…`;
-
-      try {
-        const res  = await fetch(`${API_BASE}/api/admin/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ pin }),
-        });
-        const data = await res.json();
-
-        if (data.success) {
-          authToken = data.token;
-          localStorage.setItem("adminToken", authToken);
-          showDashboard();
-        } else {
-          errEl.textContent = data.message || "Invalid PIN. Please try again.";
-          errEl.classList.add("show");
-          btn.disabled = false;
-          btn.innerHTML = `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg> Sign In`;
-        }
-      } catch {
-        errEl.textContent = "Network error. Please check your connection.";
-        errEl.classList.add("show");
-        btn.disabled = false;
-        btn.innerHTML = `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg> Sign In`;
-      }
-    }
-
-    function showDashboard() {
-      document.getElementById("loginPage").classList.add("hidden");
-      document.getElementById("dashboardPage").classList.remove("hidden");
-      refreshData();
-    }
-
-    function logout() {
-      localStorage.removeItem("adminToken");
-      authToken = "";
-      document.getElementById("dashboardPage").classList.add("hidden");
-      document.getElementById("loginPage").classList.remove("hidden");
-      document.getElementById("adminPin").value = "";
-    }
-
-    // ── Data ─────────────────────────────────────────────────────────────────
-    async function refreshData() {
-      try {
-        const [statsRes, attendeesRes] = await Promise.all([
-          fetch(`${API_BASE}/api/admin/stats`, { headers: getHeaders() }),
-          fetch(`${API_BASE}/api/admin/attendees?type=${currentFilter}`, { headers: getHeaders() }),
-        ]);
-
-        if (statsRes.status === 401 || attendeesRes.status === 401) {
-          logout(); return;
-        }
-
-        const statsData     = await statsRes.json();
-        const attendeesData = await attendeesRes.json();
-
-        if (statsData.success) {
-          const s = statsData.stats;
-          document.getElementById("statTotal").textContent   = s.totalRegistered ?? 0;
-          document.getElementById("statPaid").textContent    = s.totalPaid ?? 0;
-          document.getElementById("statFree").textContent    = s.totalFree ?? 0;
-          document.getElementById("statChecked").textContent = s.totalCheckedIn ?? 0;
-          document.getElementById("statNot").textContent     = s.totalNotCheckedIn ?? 0;
-          document.getElementById("statSponsors").textContent = s.totalSponsors ?? 0;
-        }
-
-        if (attendeesData.success) {
-          allAttendees = attendeesData.attendees;
-          filterTable();
-        }
-      } catch {
-        showToast("Failed to load data. Retrying…", "error");
-      }
-    }
-
-    function setFilter(type) {
-      currentFilter = type;
-      ["All","Ticket","Sponsor"].forEach(t => {
-        document.getElementById("tab" + t).classList.toggle("active", t.toLowerCase() === type || (type === "all" && t === "All"));
+    try {
+      const res  = await fetch(`${API_BASE}/api/admin/login`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ pin }),
       });
-      const titles = { all: "All Registrations", ticket: "Ticket Holders", sponsor: "Sponsors" };
-      document.getElementById("tableTitle").textContent = titles[type] || "Registrations";
-      refreshData();
-    }
-
-    // ── Table ─────────────────────────────────────────────────────────────────
-    function updateTableHeaders() {
-      const thead = document.getElementById("tableHead");
-      if (currentFilter === "sponsor") {
-        thead.innerHTML = `<tr>
-          <th>Contact</th><th>Brand / Organisation</th>
-          <th>Package</th><th>Amount Paid</th>
-          <th>Reference</th><th>Status</th>
-        </tr>`;
+      const data = await res.json();
+      if (data.success) {
+        authToken = data.token;
+        localStorage.setItem('adminToken', authToken);
+        showDash();
       } else {
-        thead.innerHTML = `<tr>
-          <th>Attendee</th><th>Ticket Type</th>
-          <th>Status</th><th>Check-in Time</th><th>Action</th>
-        </tr>`;
+        errEl.textContent = data.message || 'Invalid PIN.';
+        errEl.classList.add('show');
+        resetBtn();
       }
+    } catch {
+      errEl.textContent = 'Network error. Check your connection.';
+      errEl.classList.add('show');
+      resetBtn();
     }
+  }
 
-    function filterTable() {
-      const query = document.getElementById("searchInput").value.toLowerCase();
-      const tbody = document.getElementById("attendeeTable");
-      updateTableHeaders();
-      tbody.innerHTML = "";
+  function resetBtn() {
+    const btn = document.getElementById('loginBtn');
+    btn.disabled = false;
+    btn.querySelector('.btn-inner').innerHTML =
+      `<svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg> Sign In`;
+  }
 
-      let filtered = allAttendees;
-      if (currentFilter !== "all") filtered = filtered.filter(a => a.type === currentFilter);
-      if (query) filtered = filtered.filter(a =>
-        (a.name || "").toLowerCase().includes(query) ||
-        (a.email || "").toLowerCase().includes(query) ||
-        (a.brand || "").toLowerCase().includes(query)
+  function showDash() {
+    document.getElementById('loginPage').classList.add('hidden');
+    document.getElementById('dashboardPage').classList.remove('hidden');
+    refreshData();
+  }
+
+  function logout() {
+    localStorage.removeItem('adminToken');
+    authToken = '';
+    document.getElementById('dashboardPage').classList.add('hidden');
+    document.getElementById('loginPage').classList.remove('hidden');
+    document.getElementById('adminPin').value = '';
+  }
+
+  /* ── Data ── */
+  async function refreshData() {
+    try {
+      const [sr, ar] = await Promise.all([
+        fetch(`${API_BASE}/api/admin/stats`, { headers: hdrs() }),
+        fetch(`${API_BASE}/api/admin/attendees?type=${currentFilter}`, { headers: hdrs() }),
+      ]);
+      if (sr.status === 401 || ar.status === 401) { logout(); return; }
+      const sd = await sr.json();
+      const ad = await ar.json();
+      if (sd.success) {
+        const s = sd.stats;
+        document.getElementById('sTotal').textContent    = s.totalRegistered ?? 0;
+        document.getElementById('sPaid').textContent     = s.totalPaid ?? 0;
+        document.getElementById('sFree').textContent     = s.totalFree ?? 0;
+        document.getElementById('sChecked').textContent  = s.totalCheckedIn ?? 0;
+        document.getElementById('sNot').textContent      = s.totalNotCheckedIn ?? 0;
+        document.getElementById('sSponsors').textContent = s.totalSponsors ?? 0;
+      }
+      if (ad.success) { allAttendees = ad.attendees; filterTable(); }
+    } catch { toast('Failed to load data.','err'); }
+  }
+
+  function setFilter(type) {
+    currentFilter = type;
+    ['All','Ticket','Sponsor'].forEach(t => {
+      document.getElementById('tab'+t).classList.toggle(
+        'active', t.toLowerCase()===type || (type==='all' && t==='All')
       );
+    });
+    document.getElementById('tblTitle').textContent =
+      {all:'All Registrations',ticket:'Ticket Holders',sponsor:'Sponsors'}[type];
+    refreshData();
+  }
 
-      document.getElementById("tableCount").textContent = `${filtered.length} record${filtered.length !== 1 ? "s" : ""}`;
+  function filterTable() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    const tbody = document.getElementById('tblBody');
+    const thead = document.getElementById('tblHead');
 
-      if (!filtered.length) {
-        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state">
-          <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-          <p>No records found.</p></div></td></tr>`;
-        return;
-      }
+    thead.innerHTML = currentFilter === 'sponsor'
+      ? `<tr><th>Contact</th><th>Brand</th><th>Package</th><th>Amount</th><th>Reference</th><th>Status</th></tr>`
+      : `<tr><th>Attendee</th><th>Ticket Type</th><th>Status</th><th>Check-in Time</th><th>Action</th></tr>`;
 
-      filtered.forEach(a => {
-        const tr = document.createElement("tr");
-        const color = avatarColor(a.name);
+    tbody.innerHTML = '';
+    let rows = allAttendees;
+    if (currentFilter !== 'all') rows = rows.filter(a => a.type === currentFilter);
+    if (q) rows = rows.filter(a =>
+      (a.name||'').toLowerCase().includes(q) ||
+      (a.email||'').toLowerCase().includes(q) ||
+      (a.brand||'').toLowerCase().includes(q)
+    );
 
-        if (a.type === "sponsor") {
-          const statusClass = a.status === "PAID" ? "badge-paid" : "badge-inquiry";
-          tr.innerHTML = `
-            <td>
-              <div class="cell-name">
-                <div class="avatar" style="background:${color}">${initials(a.name)}</div>
-                <div><div class="cell-name-text">${a.name || "—"}</div><div class="cell-name-email">${a.email || ""}</div></div>
-              </div>
-            </td>
-            <td>${a.brand || "—"}</td>
-            <td><span class="badge badge-paid">${a.package || a.ticketType || "—"}</span></td>
-            <td>${a.amount ? "₦" + Number(a.amount).toLocaleString() : "—"}</td>
-            <td style="font-family:monospace;font-size:11px;">${a.reference || "—"}</td>
-            <td><span class="badge ${statusClass}"><span class="badge-dot"></span>${a.status || "—"}</span></td>
-          `;
-        } else {
-          const typeLC = (a.ticketType || "").toLowerCase();
-          const typeClass = typeLC.includes("vip") ? "badge-vip" : typeLC.includes("free") ? "badge-free" : "badge-regular";
-          const statusClass = a.status === "CHECKED_IN" ? "badge-checked" : "badge-not";
-          const actionCell = a.qrId
-            ? `<button class="verify-btn" onclick="manualVerify('${a.qrId}')">Verify</button>`
-            : "—";
-          tr.innerHTML = `
-            <td>
-              <div class="cell-name">
-                <div class="avatar" style="background:${color}">${initials(a.name)}</div>
-                <div><div class="cell-name-text">${a.name || "—"}</div><div class="cell-name-email">${a.email || ""}</div></div>
-              </div>
-            </td>
-            <td><span class="badge ${typeClass}">${a.ticketType || "—"}</span></td>
-            <td><span class="badge ${statusClass}"><span class="badge-dot"></span>${a.status || "—"}</span></td>
-            <td style="font-size:12px;color:var(--text-muted)">${a.checkinTime || "—"}</td>
-            <td>${actionCell}</td>
-          `;
-        }
-        tbody.appendChild(tr);
-      });
+    document.getElementById('tblCount').textContent = `${rows.length} record${rows.length!==1?'s':''}`;
+
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="6"><div class="empty">
+        <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        <p>No records found.</p></div></td></tr>`;
+      return;
     }
 
-    // ── Manual verify ─────────────────────────────────────────────────────────
-    async function manualVerify(qrId) {
-      const pin = prompt("Enter staff PIN for manual check-in override:");
-      if (!pin) return;
-      try {
-        const res  = await fetch(`${API_BASE}/api/verify-manual`, {
-          method: "POST", headers: getHeaders(),
-          body: JSON.stringify({ identifier: qrId, staffPin: pin }),
-        });
-        const data = await res.json();
-        showToast(data.message, data.success ? "success" : "error");
-        if (data.success) refreshData();
-      } catch {
-        showToast("Network error during verification.", "error");
-      }
-    }
-
-    // ── Export CSV ───────────────────────────────────────────────────────────
-    function exportCSV() {
-      let csv, filename;
-      if (currentFilter === "sponsor") {
-        csv = "Contact Name,Brand/Organisation,Email,Package,Amount Paid,Reference,Status\n";
-        allAttendees.filter(a => a.type === "sponsor").forEach(a => {
-          csv += `"${a.name}","${a.brand||""}","${a.email}","${a.package||a.ticketType}","${a.amount||""}","${a.reference||""}","${a.status}"\n`;
-        });
-        filename = "sus3-sponsors.csv";
+    rows.forEach(a => {
+      const tr = document.createElement('tr');
+      const bg = aColor(a.name);
+      if (a.type === 'sponsor') {
+        const sc = a.status==='PAID' ? 'b-paid' : 'b-inq';
+        tr.innerHTML = `
+          <td><div class="cell-name"><div class="avatar" style="background:${bg}">${ini(a.name)}</div>
+            <div><div class="cell-n">${a.name||'—'}</div><div class="cell-e">${a.email||''}</div></div></div></td>
+          <td>${a.brand||'—'}</td>
+          <td><span class="badge b-paid">${a.package||a.ticketType||'—'}</span></td>
+          <td>${a.amount?'₦'+Number(a.amount).toLocaleString():'—'}</td>
+          <td style="font-family:monospace;font-size:11px">${a.reference||'—'}</td>
+          <td><span class="badge ${sc}"><span class="bd"></span>${a.status||'—'}</span></td>`;
       } else {
-        csv = "Name,Email,Ticket Type,Status,Check-in Time\n";
-        allAttendees.filter(a => a.type !== "sponsor").forEach(a => {
-          csv += `"${a.name}","${a.email}","${a.ticketType}","${a.status}","${a.checkinTime||""}"\n`;
-        });
-        filename = "sus3-attendees.csv";
+        const tl = (a.ticketType||'').toLowerCase();
+        const tc = tl.includes('vip')?'b-vip':tl.includes('free')?'b-free':'b-reg';
+        const sc = a.status==='CHECKED_IN'?'b-chk':'b-not';
+        const ac = a.qrId ? `<button class="vbtn" onclick="mVerify('${a.qrId}')">Verify</button>` : '—';
+        tr.innerHTML = `
+          <td><div class="cell-name"><div class="avatar" style="background:${bg}">${ini(a.name)}</div>
+            <div><div class="cell-n">${a.name||'—'}</div><div class="cell-e">${a.email||''}</div></div></div></td>
+          <td><span class="badge ${tc}">${a.ticketType||'—'}</span></td>
+          <td><span class="badge ${sc}"><span class="bd"></span>${a.status||'—'}</span></td>
+          <td style="font-size:12px;color:var(--muted)">${a.checkinTime||'—'}</td>
+          <td>${ac}</td>`;
       }
-      const blob = new Blob([csv], { type: "text/csv" });
-      const url  = URL.createObjectURL(blob);
-      const el   = document.createElement("a");
-      el.href = url; el.download = filename; el.click();
-      URL.revokeObjectURL(url);
-      showToast("CSV downloaded.");
+      tbody.appendChild(tr);
+    });
+  }
+
+  async function mVerify(qrId) {
+    const pin = prompt('Enter staff PIN for manual check-in:');
+    if (!pin) return;
+    try {
+      const res  = await fetch(`${API_BASE}/api/verify-manual`,{
+        method:'POST',headers:hdrs(),
+        body:JSON.stringify({identifier:qrId,staffPin:pin}),
+      });
+      const data = await res.json();
+      toast(data.message, data.success?'ok':'err');
+      if (data.success) refreshData();
+    } catch { toast('Network error.','err'); }
+  }
+
+  function exportCSV() {
+    let csv, fn;
+    if (currentFilter==='sponsor') {
+      csv = 'Contact Name,Brand,Email,Package,Amount,Reference,Status\n';
+      allAttendees.filter(a=>a.type==='sponsor').forEach(a=>{
+        csv+=`"${a.name}","${a.brand||''}","${a.email}","${a.package||a.ticketType}","${a.amount||''}","${a.reference||''}","${a.status}"\n`;
+      });
+      fn='sus3-sponsors.csv';
+    } else {
+      csv='Name,Email,Ticket Type,Status,Check-in Time\n';
+      allAttendees.filter(a=>a.type!=='sponsor').forEach(a=>{
+        csv+=`"${a.name}","${a.email}","${a.ticketType}","${a.status}","${a.checkinTime||''}"\n`;
+      });
+      fn='sus3-attendees.csv';
     }
+    const b = new Blob([csv],{type:'text/csv'});
+    const u = URL.createObjectURL(b);
+    const el = document.createElement('a');
+    el.href=u; el.download=fn; el.click();
+    URL.revokeObjectURL(u);
+    toast('CSV downloaded.');
+  }
 
-    // ── Auto-refresh & init ───────────────────────────────────────────────────
-    if (authToken) { showDashboard(); }
-    setInterval(refreshData, 30000);
-
-    // Spin keyframe for login button loader
-    const style = document.createElement("style");
-    style.textContent = "@keyframes spin { to { transform: rotate(360deg); } }";
-    document.head.appendChild(style);
-  </script>
+  /* ── Init ── */
+  buildTicker();
+  initSlideshow();
+  if (authToken) showDash();
+  setInterval(refreshData, 30000);
+</script>
 </body>
 </html>
