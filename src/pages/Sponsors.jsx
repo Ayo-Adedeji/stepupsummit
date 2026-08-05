@@ -281,13 +281,11 @@ const SponsorPaymentForm = ({ selectedTier }) => {
 
   const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-  // TEST MODE amounts in kobo (₦100 each). Go-live amounts in kobo:
-  // headline: 500000000, gold: 250000000, silver: 150000000, bronze: 75000000
   const tierAmounts = {
-    headline: 10000,
-    gold: 10000,
-    silver: 10000,
-    bronze: 10000,
+    headline: 500000000, // ₦5,000,000
+    gold: 250000000,     // ₦2,500,000
+    silver: 150000000,   // ₦1,500,000
+    bronze: 75000000,    // ₦750,000
   };
 
   const handlePayment = async () => {

@@ -78,7 +78,7 @@ const PaymentForm = ({ selectedTier = "", selectedAmount = null }) => {
       const handler = window.PaystackPop.setup({
         key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
         email,
-        amount: 10000, // TEST MODE: ₦100. Go-live: Regular=500000, VIP=1000000
+        amount: ticketType === "VIP" ? 1000000 : 500000, // Regular = ₦5,000 | VIP = ₦10,000 (in kobo)
         ref: reference,
         metadata: {
           name: fullName,

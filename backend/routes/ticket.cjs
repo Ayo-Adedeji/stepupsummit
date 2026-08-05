@@ -98,18 +98,23 @@ router.post("/verify-ticket", async (req, res) => {
       });
     }
 
-    // Mark as checked in
+    // Mark as checked in — only update the two check-in columns, leave all other data intact
     const now = new Date().toISOString();
-    const statusColIndex = sheetType === "paid"
-      ? (await sheets.getRows(paidSheetId))[0].findIndex((h) => h.toLowerCase().includes("check-in status"))
-      : (await sheets.getRows(freeSheetId))[0].findIndex((h) => h.toLowerCase().includes("check-in status"));
-    const checkinTimeColIndex = sheetType === "paid"
-      ? (await sheets.getRows(paidSheetId))[0].findIndex((h) => h.toLowerCase().includes("check-in time"))
-      : (await sheets.getRows(freeSheetId))[0].findIndex((h) => h.toLowerCase().includes("check-in time"));
+    const headerRow = sheetType === "paid"
+      ? (await sheets.getRows(paidSheetId))[0]
+      : (await sheets.getRows(freeSheetId))[0];
+    const statusColIndex    = headerRow.findIndex((h) => h.toLowerCase().includes("check-in status"));
+    const checkinTimeColIndex = headerRow.findIndex((h) => h.toLowerCase().includes("check-in time"));
 
     const targetSheetId = sheetType === "paid" ? paidSheetId : freeSheetId;
-    const updateValues = new Array((await sheets.getRows(targetSheetId))[0].length).fill("");
-    updateValues[statusColIndex] = "CHECKED_IN";
+
+    // Fetch the existing row so we don't wipe other columns
+    const existingRows = await sheets.getRows(targetSheetId);
+    const existingRow  = existingRows[ticket.rowIndex - 1] || [];
+    // Pad to full header length
+    const updateValues = [...existingRow];
+    while (updateValues.length < headerRow.length) updateValues.push("");
+    updateValues[statusColIndex]    = "CHECKED_IN";
     updateValues[checkinTimeColIndex] = now;
 
     await sheets.updateRow(targetSheetId, ticket.rowIndex, updateValues);
@@ -182,7 +187,10 @@ router.post("/verify-manual", async (req, res) => {
     const statusCol = header.findIndex((h) => h.toLowerCase().includes("check-in status"));
     const checkinTimeCol = header.findIndex((h) => h.toLowerCase().includes("check-in time"));
 
-    const updateValues = new Array(header.length).fill("");
+    // Fetch existing row to preserve all other data
+    const existingRow = rows[ticket.rowIndex - 1] || [];
+    const updateValues = [...existingRow];
+    while (updateValues.length < header.length) updateValues.push("");
     updateValues[statusCol] = "CHECKED_IN";
     updateValues[checkinTimeCol] = `MANUAL_OVERRIDE - ${now}`;
 
