@@ -271,7 +271,7 @@ app.post("/api/admin/export-csv", adminLimiter, requireAdmin, async (req, res) =
 });
 
 // Test email route — hit GET /api/test-email to confirm email is working
-app.get("/api/test-email", async (req, res) => {
+app.get("/api/test-email", requireAdmin, async (req, res) => {
   try {
     const { Resend } = require("resend");
     const resendClient = new Resend(process.env.RESEND_API_KEY);

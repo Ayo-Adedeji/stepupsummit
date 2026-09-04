@@ -94,6 +94,61 @@ const Speakers = () => {
         </div>
       </section>
 
+      {/* PROPOSED SPEAKERS */}
+      <section className="bg-brand-blue py-20 text-white">
+        <div className="mx-auto max-w-6xl px-5 lg:px-8">
+          <p className="text-center text-xs font-semibold uppercase tracking-[0.12em] text-brand-gold">
+            Step-Up Summit 3.0
+          </p>
+          <h2 className="mt-3 text-center font-display text-[clamp(2rem,4vw,3rem)] font-extrabold leading-tight">
+            Proposed <em className="text-brand-gold not-italic">Speakers</em>
+          </h2>
+          <p className="mx-auto mt-4 max-w-[600px] text-center text-base leading-[1.8] text-white/70">
+            The voices shaping &lsquo;The Entrepreneur Rising.&rsquo; These are the founders, leaders, and thought leaders we&rsquo;re bringing to the ICC stage this December &mdash; to shift minds and show a generation how to build.
+          </p>
+
+          <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((num, i) => (
+              <ScrollReveal key={num} delay={i * 0.08}>
+                <div className="h-full rounded-2xl border border-white/10 bg-white/[0.06] transition duration-300 hover:-translate-y-1 hover:border-brand-gold/50">
+                  <div className="mx-4 mt-4 flex aspect-[3/4] items-center justify-center rounded-xl border border-dashed border-white/20 bg-white/[0.08]">
+                    <div className="text-center">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-white/40">Photo</p>
+                      <p className="mt-1 text-xs text-white/40">Speaker {num}</p>
+                    </div>
+                  </div>
+                  <div className="p-4 text-center">
+                    <h4 className="font-heading text-base font-bold text-white">[Speaker Name]</h4>
+                    <p className="mt-1 text-xs text-white/55">[Title &middot; Organisation]</p>
+                    <div className="mt-3 flex justify-center gap-2">
+                      {["in", "X", "IG"].map((label) => (
+                        <span
+                          key={label}
+                          className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-white/15 bg-white/[0.08] text-xs font-bold text-white/70 transition duration-200 hover:border-brand-gold hover:bg-brand-gold/20 hover:text-brand-gold"
+                        >
+                          {label}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+
+          <div className="mx-auto mt-12 max-w-2xl text-center">
+            <h3 className="font-display text-xl font-bold text-white sm:text-2xl">Hear them live in December.</h3>
+            <p className="mt-3 text-sm text-white/60">The best seats at ICC Hall go to the earliest names on the list.</p>
+            <a
+              href="/register"
+              className="mt-5 inline-block rounded-full bg-brand-gold px-8 py-3 font-heading text-sm font-semibold text-brand-dark transition hover:bg-brand-gold-light"
+            >
+              Register Free
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* APPLY TO SPEAK */}
       <section className="bg-brand-blue py-20 text-center text-white">
         <div className="mx-auto max-w-3xl px-5">

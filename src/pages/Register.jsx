@@ -349,7 +349,7 @@ const Register = () => {
           {/* FREE urgency banner */}
           <div className="mx-auto mb-10 flex max-w-3xl items-center justify-center gap-3 rounded-xl bg-brand-gold px-5 py-3 text-center text-sm font-bold text-brand-dark sm:text-base">
             <span aria-hidden>⚡</span>
-            200 free slots available , once they&apos;re gone, they&apos;re gone.
+            100 free slots available , once they&apos;re gone, they&apos;re gone.
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

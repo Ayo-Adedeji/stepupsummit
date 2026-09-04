@@ -125,20 +125,12 @@ router.post("/sponsor-initialize", async (req, res) => {
       return res.status(500).json({ success: false, message: "Paystack not configured" });
     }
 
-    // TEST MODE: send ₦100 (10,000 kobo) regardless of tier selected
-    // Go-live: remove the testAmount line and use Math.round(amount * 100) instead
-    // Go-live kobo amounts:
-    //   Headline → 500,000,000 kobo (₦5,000,000)
-    //   Gold     → 250,000,000 kobo (₦2,500,000)
-    //   Silver   → 150,000,000 kobo (₦1,500,000)
-    //   Bronze   →  75,000,000 kobo (₦750,000)
-    const testAmount = 10000; // TEST MODE: 10,000 kobo = ₦100
-    console.log(`💳 Sponsor Paystack init: ${email} | ${packageSelected} | test ₦100 (10,000 kobo)`);
+    console.log(`💳 Sponsor Paystack init: ${email} | ${packageSelected} | ₦${amount}`);
     const response = await axios.post(
       "https://api.paystack.co/transaction/initialize",
       {
         email,
-        amount: testAmount, // TEST MODE — go-live: Math.round(amount * 100)
+        amount: Math.round(amount * 100), // amount in naira from frontend, convert to kobo
         ...(clientReference ? { reference: clientReference } : {}),
         callback_url: `${process.env.FRONTEND_URL || "https://stepupsummit.org"}/payment/sponsor-verify`,
         metadata: {

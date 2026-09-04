@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion, useReducedMotion } from "framer-motion";
 import { Brain, Zap, Users, ChevronDown, Plane } from "lucide-react";
@@ -49,6 +49,28 @@ const item = {
 
 const Home = () => {
   const reduce = useReducedMotion();
+
+  const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0, live: true });
+
+  useEffect(() => {
+    const targetDate = new Date("2026-12-12T11:00:00+01:00");
+    const updateCountdown = () => {
+      const now = new Date();
+      const diff = targetDate - now;
+      if (diff <= 0) {
+        setCountdown({ days: 0, hours: 0, minutes: 0, seconds: 0, live: false });
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      setCountdown({ days, hours, minutes, seconds, live: true });
+    };
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const stats = [
     { end: 1100, suffix: "+", label: "Students Impacted" },
@@ -114,22 +136,48 @@ const Home = () => {
             >
               Shifting Minds: Raising Africa&apos;s Next Generation Of Entrepreneurs.
             </motion.p>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.9, duration: 0.6 }}
-              className="mt-5 w-full max-w-2xl text-base text-blue-white sm:text-lg"
-            >
-              Step-Up Summit 3.0 is taking off, one day of world-class speakers,
-              hands-on workshops, pitch battles, and the room that turns students
-              into founders. Your seat is ready.
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 2.1, duration: 0.6 }}
-              className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:justify-start"
-            >
+             <motion.p
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               transition={{ delay: 1.9, duration: 0.6 }}
+               className="mt-5 w-full max-w-2xl text-base text-blue-white sm:text-lg"
+             >
+               Step-Up Summit 3.0 is taking off, one day of world-class speakers,
+               hands-on workshops, pitch battles, and the room that turns students
+               into founders. Your seat is ready.
+             </motion.p>
+
+             <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
+               {countdown.live ? (
+                 <>
+                   {[
+                     { value: countdown.days, label: "Days" },
+                     { value: countdown.hours, label: "Hours" },
+                     { value: countdown.minutes, label: "Min" },
+                     { value: countdown.seconds, label: "Sec" },
+                   ].map((block, i) => (
+                     <React.Fragment key={block.label}>
+                       <div className="flex min-w-[72px] flex-col items-center rounded-2xl border border-white/10 bg-white/[0.06] px-5 py-4 shadow-[0_0_24px_rgba(201,168,76,0.08)] backdrop-blur-sm">
+                         <span className="font-heading text-3xl font-extrabold text-white sm:text-4xl">
+                           {String(block.value).padStart(2, "0")}
+                         </span>
+                         <span className="mt-1 text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-brand-gold">{block.label}</span>
+                       </div>
+                       {i < 3 && <span className="font-heading text-2xl text-brand-gold/80">:</span>}
+                     </React.Fragment>
+                   ))}
+                 </>
+               ) : (
+                 <span className="font-heading text-sm font-semibold text-brand-gold sm:text-base">Step-Up Summit 3.0 has taken off. See you at Edition 4.0.</span>
+               )}
+             </div>
+
+             <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 2.1, duration: 0.6 }}
+               className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:justify-start"
+             >
               <Link
                 to="/register"
                 className="rounded-full bg-brand-gold px-8 py-3 font-heading text-sm font-semibold text-brand-dark transition hover:bg-brand-gold-light sm:px-8 sm:py-3 sm:text-base min-w-[180px] text-center"

@@ -1,5 +1,6 @@
 import React from "react";
-import { Brain, Zap, Users, TrendingUp, Network } from "lucide-react";
+import { motion } from "framer-motion";
+import { Brain, Zap, Users, TrendingUp, Network, Globe, Rocket } from "lucide-react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ScrollReveal from "../components/ScrollReveal";
@@ -118,6 +119,50 @@ const About = () => {
             </blockquote>
             <p className="mt-4 pl-6 text-sm font-semibold text-gray-500">Impact recap, Edition 1.0</p>
           </ScrollReveal>
+        </div>
+      </section>
+
+      {/* VISION & MISSION */}
+      <section className="bg-brand-off-white py-20">
+        <div className="mx-auto max-w-6xl px-5 lg:px-8">
+          <div className="text-center">
+            <Spark center />
+            <Eyebrow className="mt-4 text-brand-gold">What drives us</Eyebrow>
+            <h2 className="mt-3 font-heading text-3xl font-bold text-brand-dark sm:text-4xl">Vision & Mission</h2>
+          </div>
+          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+            <motion.div
+              initial={{ opacity: 0, x: -60 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: false }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              className="rounded-2xl border-t-4 border-brand-gold bg-white p-8 shadow-md"
+            >
+              <div className="mb-5 flex h-[52px] w-[52px] items-center justify-center rounded-xl bg-brand-blue">
+                <Globe className="text-brand-gold" size={28} />
+              </div>
+              <h3 className="font-heading text-xl font-bold text-brand-dark">Our Vision</h3>
+              <p className="mt-3 leading-relaxed text-gray-600">
+                To build a generation of African youth who create value rather than wait for it — driving economic growth, employment, and innovation across the continent, and redefining what is possible for young people everywhere.
+              </p>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 60 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: false }}
+              transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
+              className="rounded-2xl border-t-4 border-[#4FC3F7] bg-white p-8 shadow-md"
+            >
+              <div className="mb-5 flex h-[52px] w-[52px] items-center justify-center rounded-xl bg-[#4FC3F7]/10">
+                <Rocket className="text-[#4FC3F7]" size={28} />
+              </div>
+              <h3 className="font-heading text-xl font-bold text-brand-dark">Our Mission</h3>
+              <p className="mt-3 leading-relaxed text-gray-600">
+                To shift the mindset of students and young people, and equip them with the leadership, skills, mentorship, and networks to move from ambition to enterprise — turning ideas into real, lasting businesses.
+              </p>
+            </motion.div>
+          </div>
         </div>
       </section>
 
