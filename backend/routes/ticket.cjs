@@ -68,7 +68,8 @@ router.post("/verify-ticket", async (req, res) => {
       const qrIdCol = header.findIndex((h) => h.toLowerCase().includes("qr code id"));
       const statusCol = header.findIndex((h) => h.toLowerCase().includes("check-in status"));
       const nameCol = header.findIndex((h) => h.toLowerCase().includes("full name") || h.toLowerCase().includes("name"));
-      const typeCol = header.findIndex((h) => h.toLowerCase().includes("i am a") || h.toLowerCase().includes("ticket type"));
+      // NOTE: The "I am a" column contains demographic data (Student, Founder, etc.), NOT the ticket category.
+      // All registrations through the free route are "Free Ticket" — hardcode it here.
 
       for (let i = 1; i < freeRows.length; i++) {
         if (freeRows[i][qrIdCol] === qrId) {
@@ -77,7 +78,7 @@ router.post("/verify-ticket", async (req, res) => {
             qrId: freeRows[i][qrIdCol],
             status: freeRows[i][statusCol],
             name: freeRows[i][nameCol],
-            ticketType: freeRows[i][typeCol] || "Free",
+            ticketType: "Free Ticket",
           };
           sheetType = "free";
           break;

@@ -9,7 +9,7 @@ const BRAND = {
   dark: "#111111",
 };
 
-function wrapEmail({ title, body, footer = "Step-Up Summit 3.0 · Powered by Precious Crafts" }) {
+function wrapEmail({ title, body, footer = "Step-Up Summit 3.0 · Powered by Step-Up Africa Ltd." }) {
   return `
     <div style="font-family:Arial, Helvetica, sans-serif; color:${BRAND.dark}; margin:0; padding:0;">
       <div style="background:${BRAND.blue}; padding:24px; text-align:center;">
@@ -70,6 +70,14 @@ async function sendFreeRegistrationEmail({ firstName, email, qrId, qrDataUrl }) 
       <p style="margin:0; font-weight:bold; color:#0B1F5C;">📵 Please do not scan this QR code yourself.</p>
       <p style="margin:8px 0 0; color:#444;">Your QR code is attached below. It will be scanned by our staff at the entrance on event day. Keep it safe and present it when you arrive.</p>
     </div>
+    <div style="background:#e8f5e9; border-left:4px solid #25D366; padding:14px 16px; margin:20px 0; border-radius:4px;">
+      <p style="margin:0; font-weight:bold; color:#0B1F5C;">💬 Join the Step-Up Summit WhatsApp Group</p>
+      <p style="margin:8px 0 8px; color:#444;">Stay updated with event announcements, reminders, and connect with other attendees.</p>
+      <a href="https://chat.whatsapp.com/LovryGPMUqaG5IIzdZOJvW" style="display:inline-block; background:#25D366; color:#ffffff; padding:10px 20px; border-radius:20px; text-decoration:none; font-weight:bold; font-size:14px;">Join the Step-Up Summit WhatsApp Group</a>
+      <p style="margin:12px 0 4px; color:#444; font-size:13px;"><b>After joining, introduce yourself with:</b></p>
+      <p style="margin:0; background:#ffffff; border:1px solid #c8e6c9; border-radius:6px; padding:10px 14px; font-family:monospace; font-size:13px; color:#333;">My name is ${firstName}. I registered for Step-Up Summit with a Free Ticket ticket.</p>
+      <p style="margin:8px 0 0; color:#888; font-size:12px;">You can copy and paste the message above after joining the group.</p>
+    </div>
     <p>Share with your network:
       <a href="https://wa.me/?text=I'm+attending+Step-Up+Summit+3.0!+Join+me:+${qrId}" style="color:${BRAND.blue};">WhatsApp</a>
     </p>
@@ -120,6 +128,14 @@ async function sendPaidTicketEmail({ name, email, ticketType, amount, reference,
     <div style="background:#fff8e1; border-left:4px solid #FFC107; padding:14px 16px; margin:20px 0; border-radius:4px;">
       <p style="margin:0; font-weight:bold; color:#0B1F5C;">📵 Please do not scan this QR code yourself.</p>
       <p style="margin:8px 0 0; color:#444;">Your QR code is attached below. It will be scanned by our staff at the entrance on event day. Simply show it at the door and our team will check you in.</p>
+    </div>
+    <div style="background:#e8f5e9; border-left:4px solid #25D366; padding:14px 16px; margin:20px 0; border-radius:4px;">
+      <p style="margin:0; font-weight:bold; color:#0B1F5C;">💬 Join the Step-Up Summit WhatsApp Group</p>
+      <p style="margin:8px 0 8px; color:#444;">Stay updated with event announcements, reminders, and connect with other attendees.</p>
+      <a href="https://chat.whatsapp.com/LovryGPMUqaG5IIzdZOJvW" style="display:inline-block; background:#25D366; color:#ffffff; padding:10px 20px; border-radius:20px; text-decoration:none; font-weight:bold; font-size:14px;">Join the Step-Up Summit WhatsApp Group</a>
+      <p style="margin:12px 0 4px; color:#444; font-size:13px;"><b>After joining, introduce yourself with:</b></p>
+      <p style="margin:0; background:#ffffff; border:1px solid #c8e6c9; border-radius:6px; padding:10px 14px; font-family:monospace; font-size:13px; color:#333;">My name is ${name}. I registered for Step-Up Summit with a ${ticketType} ticket.</p>
+      <p style="margin:8px 0 0; color:#888; font-size:12px;">You can copy and paste the message above after joining the group.</p>
     </div>
   `;
 
